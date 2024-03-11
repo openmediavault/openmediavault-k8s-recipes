@@ -1,0 +1,14 @@
+{
+  "name": "openmediavault-k8s-recipes",
+  "version": "0.0.0",
+  "description": "openmediavault Kubernetes recipes",
+  "repository": "https://github.com/openmediavault/openmediavault-k8s-recipes",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "fix": "prettier --write recipes/**/*.yaml"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}

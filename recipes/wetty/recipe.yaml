@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -24,21 +25,21 @@ spec:
         app.kubernetes.io/name: wetty
     spec:
       containers:
-      - image: docker.io/wettyoss/wetty:latest
-        imagePullPolicy: IfNotPresent
-        name: wetty
-        ports:
-        - containerPort: 3000
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 65534
-          runAsGroup: 65534
-        args:
-        - "--port 3000"
-        - "--base /wetty"
-        - "--force-ssh"
-        - "--ssh-port 22"
-        - "--ssh-host=<HOSTNAME>"
+        - image: docker.io/wettyoss/wetty:latest
+          imagePullPolicy: IfNotPresent
+          name: wetty
+          ports:
+            - containerPort: 3000
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+          args:
+            - "--port 3000"
+            - "--base /wetty"
+            - "--force-ssh"
+            - "--ssh-port 22"
+            - "--ssh-host=<HOSTNAME>"
 ---
 apiVersion: v1
 kind: Service
@@ -51,10 +52,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: wetty
-    port: 3000
-    protocol: TCP
-    targetPort: 3000
+    - name: wetty
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
   selector:
     app.kubernetes.io/instance: wetty
     app.kubernetes.io/name: wetty
@@ -66,12 +67,12 @@ metadata:
   namespace: wetty-app
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: PathPrefix(`/wetty`)
-    kind: Rule
-    services:
-    - name: wetty
-      port: 3000
+    - match: PathPrefix(`/wetty`)
+      kind: Rule
+      services:
+        - name: wetty
+          port: 3000
   tls:
     secretName: host-selfsigned-cert
