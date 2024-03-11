@@ -39,7 +39,7 @@ spec:
             - "--base /wetty"
             - "--force-ssh"
             - "--ssh-port 22"
-            - "--ssh-host=<HOSTNAME>"
+            - "--ssh-host=${HOSTNAME}" # <<< Replace with the hostname of your system.
 ---
 apiVersion: v1
 kind: Service
@@ -75,4 +75,4 @@ spec:
         - name: wetty
           port: 3000
   tls:
-    secretName: host-selfsigned-cert
+    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.

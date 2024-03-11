@@ -1,5 +1,5 @@
 name: WeTTY
 description: Terminal access in browser over http/https.
-url: https://butlerx.github.io/wetty
+url: https://butlerx.github.io/wetty/
 maintainers:
   - volker.theile@openmediavault.org

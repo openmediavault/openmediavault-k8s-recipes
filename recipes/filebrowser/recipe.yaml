@@ -7,7 +7,7 @@ metadata:
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
 metadata:
-  name: "shared-folder-data"
+  name: "root-dir"
   namespace: filebrowser-app
 spec:
   storageClassName: shared-folder
@@ -16,7 +16,7 @@ spec:
   resources:
     requests:
       storage: "2Gi"
-  volumeName: "shared-folder-data"
+  volumeName: "shared-folder-${NAME_OF_SHARED_FOLDER}" # <<< Replace with the name of the shared folder you want to use here.
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -34,7 +34,7 @@ spec:
       runAsGroup: 100
     rootDir:
       pvc:
-        existingClaim: "shared-folder-data"
+        existingClaim: "root-dir"
     config:
       baseURL: /filebrowser
 ---
@@ -53,4 +53,4 @@ spec:
         - name: filebrowser
           port: 80
   tls:
-    secretName: host-selfsigned-cert
+    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
