@@ -1,6 +1,6 @@
 name: FileBrowser
 description: Web file browser.
-version: 1.0
+version: "1.0"
 url: https://filebrowser.org/
 maintainers:
   - volker.theile@openmediavault.org
