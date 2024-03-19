@@ -1,3 +1,4 @@
+# The app can be reached at https://<FQDN>:8443/wetty
 ---
 apiVersion: v1
 kind: Namespace
@@ -40,6 +41,7 @@ spec:
             - "--force-ssh"
             - "--ssh-port 22"
             - "--ssh-host=${HOSTNAME}" # <<< Replace with the hostname of your system.
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service

@@ -1,3 +1,4 @@
+# The app can be reached at https://<FQDN>:8443/filebrowser
 ---
 apiVersion: v1
 kind: Namespace
