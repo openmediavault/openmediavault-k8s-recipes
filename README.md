@@ -1,4 +1,4 @@
-This repository contains recipes to easily deploy applications with the 
+This repository contains recipes to easily deploy container-based applications with the 
 openmediavault Kubernetes plugin. 
 
 The following rules should be observed in the recipes:
