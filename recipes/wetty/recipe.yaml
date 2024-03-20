@@ -40,7 +40,7 @@ spec:
             - "--base /wetty"
             - "--force-ssh"
             - "--ssh-port 22"
-            - "--ssh-host=${HOSTNAME}" # <<< Replace with the hostname of your system.
+            - "--ssh-host=<HOSTNAME>" # <<< Replace with the hostname of your system.
       restartPolicy: Always
 ---
 apiVersion: v1
