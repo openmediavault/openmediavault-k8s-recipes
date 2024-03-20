@@ -1,6 +1,6 @@
 name: FileBrowser
 description: Web file browser.
-category: media
+section: media
 architecture:
   - amd64
   - armel

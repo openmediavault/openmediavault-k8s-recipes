@@ -1,6 +1,6 @@
 name: WeTTY
 description: Terminal access in browser over http/https.
-category: network
+section: network
 architecture:
   - amd64
   - armel
