@@ -1,6 +1,11 @@
 name: WeTTY
 description: Terminal access in browser over http/https.
 category: network
+architecture:
+  - amd64
+  - armel
+  - armhf
+  - arm64
 url: https://butlerx.github.io/wetty/
 recipeVersion: "1.0"
 appVersion: latest
@@ -8,3 +13,4 @@ maintainers:
   - volker.theile@openmediavault.org
 sources:
   - https://butlerx.github.io/wetty/
+  - https://hub.docker.com/r/wettyoss/wetty/

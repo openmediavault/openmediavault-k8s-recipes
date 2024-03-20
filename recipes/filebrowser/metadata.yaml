@@ -1,6 +1,11 @@
 name: FileBrowser
 description: Web file browser.
 category: media
+architecture:
+  - amd64
+  - armel
+  - armhf
+  - arm64
 url: https://filebrowser.org/
 recipeVersion: "1.0"
 appVersion: latest
