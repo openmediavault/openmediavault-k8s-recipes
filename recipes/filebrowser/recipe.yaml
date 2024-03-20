@@ -5,20 +5,6 @@ kind: Namespace
 metadata:
   name: filebrowser-app
 ---
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "root-dir"
-  namespace: filebrowser-app
-spec:
-  storageClassName: shared-folder
-  accessModes:
-    - "ReadWriteMany"
-  resources:
-    requests:
-      storage: "2Gi"
-  volumeName: "shared-folder-${NAME_OF_SHARED_FOLDER}" # <<< Replace with the name of the shared folder you want to use here.
----
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
@@ -31,11 +17,12 @@ spec:
   valuesContent: |-
     securityContext:
       runAsNonRoot: true
-      runAsUser: 1001
-      runAsGroup: 100
+      runAsUser: <UID> # <<< Replace this with the UID of the user who has access to the shared folder.
+      runAsGroup: 100 # This is the GID of the `users` group.
     rootDir:
-      pvc:
-        existingClaim: "root-dir"
+      type: hostPath
+      hostPath:
+        path: <ABS_SHARED_FOLDER_PATH> # <<< Replace this with the absolute path of the shared folder you want to use.
     config:
       baseURL: /filebrowser
 ---

@@ -9,3 +9,4 @@ maintainers:
 sources:
   - https://filebrowser.org/
   - https://utkuozdemir.org/helm-charts/
+  - https://artifacthub.io/packages/helm/utkuozdemir/filebrowser/
