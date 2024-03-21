@@ -1,0 +1,13 @@
+name: PhotoPrism
+description: PhotoPrism® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.
+section: graphics
+architecture:
+  - amd64
+  - arm64
+url: https://www.photoprism.app/
+recipeVersion: "1.0"
+appVersion: latest
+maintainers:
+  - volker.theile@openmediavault.org
+sources:
+  - https://dl.photoprism.app/docker/docker-compose.yml
