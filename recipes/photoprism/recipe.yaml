@@ -63,27 +63,27 @@ spec:
         # Folder to store original media files (DO NOT REMOVE).
         - name: originals-volume
           hostPath:
+            type: Directory
             # Replace this with the absolute path of the shared folder you
             # want to use. Make sure the configured UID/GID the container
             # is running with has access to that directory.
             path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
-            type: Directory
         # Folder for cache, database, and sidecar files (DO NOT REMOVE).
         - name: storage-volume
           hostPath:
+            type: Directory
             # Replace this with the absolute path of the shared folder you
             # want to use. Make sure the configured UID/GID the container
             # is running with has access to that directory.
             path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
-            type: Directory
         # Folder from which files can be imported to originals.
         # - name: import-volume
         #   hostPath:
+        #     type: Directory
         #     # Replace this with the absolute path of the shared folder you
         #     # want to use. Make sure the configured UID/GID the container
         #     # is running with has access to that directory.
         #     path: <ABSOLUTE_SHARED_FOLDER_PATH>
-        #     type: Directory
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -139,11 +139,11 @@ spec:
       volumes:
         - name: db-volume
           hostPath:
+            type: Directory
             # Replace this with the absolute path of the shared folder you
             # want to use. Make sure the configured UID/GID the container
             # is running with has access to that directory.
-            path: <ABSOLUTE_SHARED_FOLDER_PATH>
-            type: Directory
+            path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
 ---
 apiVersion: v1
 kind: Secret
