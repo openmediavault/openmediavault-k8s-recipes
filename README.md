@@ -11,7 +11,7 @@ The following rules should be observed in the recipes:
 - Make use of a `NodePort` service only if the application does not work behind a reverse proxy.
 - Make use of the `HelmChart` resource if the application can be installed via Helm.
 
-Use this translation table for the architecture flag in the `metadata.yaml`:
+Use this translation table for the `architecture` flag in the `metadata.yaml` file:
 
 | Architecture | Also known as |
 |--------------|---------------|
@@ -20,3 +20,5 @@ Use this translation table for the architecture flag in the `metadata.yaml`:
 | armel        | armv6l        |
 | armhf        | armv7l        |
 | arm64        | aarch64       |
+
+The `section` value in the `metadata.yaml` file is inspired by those that are used in Debian, e.g. `graphics`, `net` or `utils`. Get a full list [here](https://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections).
