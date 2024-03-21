@@ -17,12 +17,18 @@ spec:
   valuesContent: |-
     securityContext:
       runAsNonRoot: true
-      runAsUser: <UID> # <<< Replace this with the UID of the user who has access to the shared folder.
-      runAsGroup: 100 # This is the GID of the `users` group.
+      # Specifies the UID for the process running in the container.
+      runAsUser: <UID> # <<< Replace
+      # Specifies the GID for the process running in the container.
+      # Defaults to `users`.
+      runAsGroup: 100 # <<< Replace if needed
     rootDir:
       type: hostPath
       hostPath:
-        path: <ABS_SHARED_FOLDER_PATH> # <<< Replace this with the absolute path of the shared folder you want to use.
+        # Replace this with the absolute path of the shared folder you
+        # want to use. Make sure the configured UID/GID the container
+        # is running with has access to that directory.
+        path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
     config:
       baseURL: /filebrowser
 ---
