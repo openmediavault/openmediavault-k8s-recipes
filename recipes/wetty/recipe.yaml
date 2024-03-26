@@ -33,8 +33,8 @@ spec:
             - containerPort: 3000
           securityContext:
             runAsNonRoot: true
-            runAsUser: 65534
-            runAsGroup: 65534
+            runAsUser: {{ gid('nobody') }}
+            runAsGroup: {{ gid('nogroup') }}
           args:
             - "--port 3000"
             - "--base /wetty"
