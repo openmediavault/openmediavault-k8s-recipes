@@ -21,7 +21,10 @@ spec:
   capacity:
     storage: 2Gi
   hostPath:
-    path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
+    # Insert the name of the shared folder you want to use.
+    # Make sure the configured UID/GID the container is running
+    # with has access to that directory.
+    path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
     type: Directory
   accessModes:
     - ReadWriteMany
@@ -60,10 +63,10 @@ spec:
       type: NodePort
     extraEnv:
       # Specifies the UID for the process running in the container.
-      PLEX_UID: "<UID>" # <<< Replace
+      PLEX_UID: "{{ uid('<NAME>') }}" # <<< Replace
       # Specifies the GID for the process running in the container.
       # Defaults to `users`.
-      PLEX_GID: "100" # <<< Replace if needed
+      PLEX_GID: "{{ gid('users') }}" # <<< Replace if needed
 ---
 # apiVersion: traefik.containo.us/v1alpha1
 # kind: IngressRoute

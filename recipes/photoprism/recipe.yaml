@@ -34,10 +34,10 @@ spec:
           securityContext:
             runAsNonRoot: true
             # Specifies the UID for the process running in the container.
-            runAsUser: <UID> # <<< Replace
+            runAsUser: {{ uid('<NAME>') }} # <<< Replace
             # Specifies the GID for the process running in the container.
             # Defaults to `users`.
-            runAsGroup: 100 # <<< Replace if needed
+            runAsGroup: {{ gid('users') }} # <<< Replace if needed
           env:
             - name: PHOTOPRISM_HTTP_PORT
               value: "2342"
@@ -64,26 +64,26 @@ spec:
         - name: originals-volume
           hostPath:
             type: Directory
-            # Replace this with the absolute path of the shared folder you
-            # want to use. Make sure the configured UID/GID the container
-            # is running with has access to that directory.
-            path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
         # Folder for cache, database, and sidecar files (DO NOT REMOVE).
         - name: storage-volume
           hostPath:
             type: Directory
-            # Replace this with the absolute path of the shared folder you
-            # want to use. Make sure the configured UID/GID the container
-            # is running with has access to that directory.
-            path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
         # Folder from which files can be imported to originals.
         # - name: import-volume
         #   hostPath:
         #     type: Directory
-        #     # Replace this with the absolute path of the shared folder you
-        #     # want to use. Make sure the configured UID/GID the container
-        #     # is running with has access to that directory.
-        #     path: <ABSOLUTE_SHARED_FOLDER_PATH>
+        #     # Insert the name of the shared folder you want to use.
+        #     # Make sure the configured UID/GID the container is running
+        #     # with has access to that directory.
+        #     path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -114,10 +114,10 @@ spec:
           securityContext:
             runAsNonRoot: true
             # Specifies the UID for the process running in the container.
-            runAsUser: <UID> # <<< Replace
+            runAsUser: {{ uid('<NAME>') }} # <<< Replace
             # Specifies the GID for the process running in the container.
             # Defaults to `users`.
-            runAsGroup: 100 # <<< Replace if needed
+            runAsGroup: {{ gid('users') }} # <<< Replace if needed
           args:
             - --innodb-buffer-pool-size=512M
             - --transaction-isolation=READ-COMMITTED
@@ -140,10 +140,10 @@ spec:
         - name: db-volume
           hostPath:
             type: Directory
-            # Replace this with the absolute path of the shared folder you
-            # want to use. Make sure the configured UID/GID the container
-            # is running with has access to that directory.
-            path: <ABSOLUTE_SHARED_FOLDER_PATH> # <<< Replace
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
 ---
 apiVersion: v1
 kind: Secret

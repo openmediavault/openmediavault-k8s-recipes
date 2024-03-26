@@ -39,8 +39,8 @@ spec:
             - "--port 3000"
             - "--base /wetty"
             - "--force-ssh"
-            - "--ssh-port 22"
-            - "--ssh-host=<HOSTNAME>" # <<< Replace with the hostname of your system.
+            - "--ssh-port {{ conf_get('conf.service.ssh') | get('port') }}"
+            - "--ssh-host {{ hostname() }}"
       restartPolicy: Always
 ---
 apiVersion: v1
