@@ -33,7 +33,7 @@ spec:
             - containerPort: 3000
           securityContext:
             runAsNonRoot: true
-            runAsUser: {{ gid('nobody') }}
+            runAsUser: {{ uid('nobody') }}
             runAsGroup: {{ gid('nogroup') }}
           args:
             - "--port 3000"
