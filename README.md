@@ -1,5 +1,5 @@
 This repository contains recipes to easily deploy container-based applications with the 
-openmediavault Kubernetes plugin. 
+`openmediavault-k8s` Kubernetes plugin. 
 
 The following rules should be observed in the recipes:
 
