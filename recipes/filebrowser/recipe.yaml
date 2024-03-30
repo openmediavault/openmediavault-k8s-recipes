@@ -25,10 +25,10 @@ spec:
     rootDir:
       type: hostPath
       hostPath:
-      # Insert the name of the shared folder you want to use.
-      # Make sure the configured UID/GID the container is running
-      # with has access to that directory.
-      path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+        # Insert the name of the shared folder you want to use.
+        # Make sure the configured UID/GID the container is running
+        # with has access to that directory.
+        path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
     config:
       baseURL: /filebrowser
 ---
