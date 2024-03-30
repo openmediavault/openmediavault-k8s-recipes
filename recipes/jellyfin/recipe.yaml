@@ -1,0 +1,48 @@
+# The app can be reached at http://<FQDN>:30096
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jellyfin-app
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: jellyfin
+  namespace: jellyfin-app
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: jellyfin
+  targetNamespace: jellyfin-app
+  valuesContent: |-
+    podSecurityContext:
+      runAsNonRoot: true
+      # Specifies the UID for the process running in the container.
+      runAsUser: {{ uid('<NAME>') }} # <<< Replace
+      # Specifies the GID for the process running in the container.
+      # Defaults to `users`.
+      runAsGroup: {{ gid('users') }} # <<< Replace if needed
+    env:
+      TZ: Europe/Berlin
+    persistence:
+      cache:
+        enabled: true
+        type: hostPath
+        # Insert the name of the shared folder you want to use.
+        # Make sure the configured UID/GID the container is running
+        # with has access to that directory.
+        hostPath: "{{ sharedfolder_path('<NAME>') }}" # <<< Replace
+      media:
+        enabled: true
+        type: hostPath
+        # Insert the name of the shared folder you want to use.
+        # Make sure the configured UID/GID the container is running
+        # with has access to that directory.
+        hostPath: "{{ sharedfolder_path('<NAME>') }}" # <<< Replace
+    service:
+      main:
+        ports:
+          http:
+            port: 8096
+            nodePort: 30096
+        type: NodePort
