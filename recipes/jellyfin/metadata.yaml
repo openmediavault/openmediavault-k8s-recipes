@@ -13,5 +13,4 @@ maintainers:
 sources:
   - https://github.com/jellyfin/jellyfin
   - https://hub.docker.com/r/jellyfin/jellyfin
-  - https://staging.artifacthub.io/packages/helm/k8s-at-home/jellyfin
-  - https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common
+  - https://jellyfin.org/docs
