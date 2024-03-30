@@ -1,0 +1,94 @@
+# The app can be reached at http://<FQDN>:30096
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jellyfin-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: jellyfin
+      app.kubernetes.io/name: jellyfin
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: jellyfin
+        app.kubernetes.io/name: jellyfin
+    spec:
+      containers:
+        - image: docker.io/jellyfin/jellyfin:latest
+          imagePullPolicy: IfNotPresent
+          name: jellyfin
+          ports:
+            - containerPort: 8096
+              name: http
+              protocol: TCP
+          securityContext:
+            runAsNonRoot: true
+            # Specifies the UID for the process running in the container.
+            runAsUser: {{ uid('<NAME>') }} # <<< Replace
+            # Specifies the GID for the process running in the container.
+            # Defaults to `users`.
+            runAsGroup: {{ gid('users') }} # <<< Replace if needed
+          volumeMounts:
+            - name: cache
+              mountPath: /cache
+            - name: config
+              mountPath: /config
+            - name: media
+              mountPath: /media
+      restartPolicy: Always
+      volumes:
+        - name: cache
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+        - name: config
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+        - name: media
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+  namespace: jellyfin-app
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 8096
+      nodePort: 30096
+      protocol: TCP
+      targetPort: 8096
+  selector:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin

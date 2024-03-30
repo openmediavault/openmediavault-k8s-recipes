@@ -1,0 +1,16 @@
+name: Jellyfin
+description: Jellyfin is the volunteer-built media solution that puts you in control of your media. Stream to any device from your own server, with no strings attached. Your media, your server, your way.
+section: net
+architecture:
+  - amd64
+  - armhf
+  - arm64
+url: https://jellyfin.org/
+recipeVersion: "1.0"
+appVersion: latest
+maintainers:
+  - volker.theile@openmediavault.org
+sources:
+  - https://github.com/jellyfin/jellyfin
+  - https://hub.docker.com/r/jellyfin/jellyfin
+  - https://jellyfin.org/docs
