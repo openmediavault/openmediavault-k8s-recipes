@@ -36,11 +36,11 @@ spec:
             runAsUser: {{ uid('nobody') }}
             runAsGroup: {{ gid('nogroup') }}
           args:
-            - "--port 3000"
-            - "--base /wetty"
+            - "--port=3000"
+            - "--base=/wetty"
             - "--force-ssh"
-            - "--ssh-port {{ conf_get('conf.service.ssh') | get('port') }}"
-            - "--ssh-host {{ hostname() }}"
+            - "--ssh-port={{ conf_get('conf.service.ssh') | get('port') }}"
+            - "--ssh-host={{ hostname() }}"
       restartPolicy: Always
 ---
 apiVersion: v1
