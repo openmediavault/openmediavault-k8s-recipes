@@ -1,0 +1,13 @@
+name: whoami
+description: Troubleshooting/exploration tool for Traefik configuration. Demonstrates use of Traefik middleware.
+section: net
+architecture:
+  - amd64
+url: https://hub.docker.com/r/traefik/whoami/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Richard Cottrill <richard_c@tpg.com.au>
+sources:
+  - https://github.com/traefik/whoami
+  - https://doc.traefik.io/traefik/middlewares/overview/
