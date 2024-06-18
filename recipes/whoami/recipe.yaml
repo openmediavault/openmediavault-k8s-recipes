@@ -1,0 +1,96 @@
+# https://<FQDN>:8443/whoami
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: whoami-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+  namespace: whoami-app
+spec:
+  ports:
+  - name: whoami
+    port: 80
+    targetPort: web
+  selector:
+    app: whoami
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: test-stripprefix
+  namespace: whoami-app
+spec:
+  stripPrefix:
+    prefixes:
+      - /whoami
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: whoami-app
+  name: whoami
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+          imagePullPolicy: Always
+          # Listen on port 8080 to run as non-root user
+          args:
+            - --port
+            - '8080'
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            # Run the container as nobody:nogroup
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: '50Mi'
+              cpu: '500m'
+          ports:
+            - name: web
+              containerPort: 8080
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami
+  namespace: whoami-app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: PathPrefix(`/whoami`)
+      kind: Rule
+      middlewares:
+        - name: test-stripprefix
+          namespace: whoami-app
+      services:
+        - name: whoami
+          port: 80
