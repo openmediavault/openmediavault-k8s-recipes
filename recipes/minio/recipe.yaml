@@ -114,6 +114,6 @@ spec:
 #     kind: Rule
 #     services:
 #     - name: minio
-#       port: 30901
+#       port: 9001
 #   tls:
 #     secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
