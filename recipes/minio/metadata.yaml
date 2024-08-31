@@ -1,0 +1,14 @@
+name: MinIO
+description: MinIO is a high-performance, S3 compatible object storage.
+section: net
+architecture:
+  - amd64
+  - arm64
+url: https://min.io/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - volker.theile@openmediavault.org
+sources:
+  - https://min.io/
+  - https://quay.io/repository/minio/minio
