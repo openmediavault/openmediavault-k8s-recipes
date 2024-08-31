@@ -1,10 +1,4 @@
----
-# Plex Media Server does not support running behind a reverse proxy with
-# subpath, e.g. https://omv7box.local:8443/plex.
-# You can only access it via NodePort, e.g. http://omv7box.local:32400/web
-#
-# Uncomment the `IngressRoute` if you want to access Plex Media Server
-# via https://omv7box.local:8443 for example.
+# The app can be reached at https://plex.<FQDN>:8443
 ---
 apiVersion: v1
 kind: Namespace
@@ -16,6 +10,9 @@ kind: PersistentVolume
 metadata:
   name: config-dir
   namespace: plex-app
+  labels:
+    app.kubernetes.io/instance: plex-media-server
+    app.kubernetes.io/name: plex-media-server
 spec:
   storageClassName: shared-folder
   capacity:
@@ -34,6 +31,9 @@ kind: "PersistentVolumeClaim"
 metadata:
   name: config-dir
   namespace: plex-app
+  labels:
+    app.kubernetes.io/instance: plex-media-server
+    app.kubernetes.io/name: plex-media-server
 spec:
   storageClassName: shared-folder
   accessModes:
@@ -48,6 +48,9 @@ kind: HelmChart
 metadata:
   name: plex-media-server
   namespace: plex-app
+  labels:
+    app.kubernetes.io/instance: plex-media-server
+    app.kubernetes.io/name: plex-media-server
 spec:
   repo: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
   chart: plex-media-server
@@ -60,7 +63,7 @@ spec:
     rclone:
       enabled: false
     service:
-      type: NodePort
+      type: ClusterIP
     extraEnv:
       # Specifies the UID for the process running in the container.
       PLEX_UID: "{{ uid('<NAME>') }}" # <<< Replace
@@ -68,19 +71,22 @@ spec:
       # Defaults to `users`.
       PLEX_GID: "{{ gid('users') }}" # <<< Replace if needed
 ---
-# apiVersion: traefik.containo.us/v1alpha1
-# kind: IngressRoute
-# metadata:
-#   name: plex-media-server-websecure
-#   namespace: plex-app
-# spec:
-#   entryPoints:
-#     - websecure
-#   routes:
-#     - match: PathPrefix(`/`)
-#       kind: Rule
-#       services:
-#         - name: plex-media-server
-#           port: 32400
-#   tls:
-#     secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: plex-media-server-websecure
+  namespace: plex-app
+  labels:
+    app.kubernetes.io/instance: plex-media-server
+    app.kubernetes.io/name: plex-media-server
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`plex.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: plex-media-server
+          port: 32400
+  tls:
+    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.

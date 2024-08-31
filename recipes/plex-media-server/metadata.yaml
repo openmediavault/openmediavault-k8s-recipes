@@ -4,10 +4,10 @@ section: video
 architecture:
   - amd64
 url: https://www.plex.tv/
-recipeVersion: "1.0.1"
+recipeVersion: "1.1.0"
 appVersion: latest
 maintainers:
-  - volker.theile@openmediavault.org
+  - Volker Theile <volker.theile@openmediavault.org>
 sources:
   - https://www.plex.tv/
   - https://github.com/plexinc/pms-docker/

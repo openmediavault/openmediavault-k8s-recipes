@@ -7,10 +7,10 @@ architecture:
   - armhf
   - arm64
 url: https://filebrowser.org/
-recipeVersion: "1.0.2"
+recipeVersion: "1.1.0"
 appVersion: latest
 maintainers:
-  - volker.theile@openmediavault.org
+  - Volker Theile <volker.theile@openmediavault.org>
 sources:
   - https://filebrowser.org/
   - https://utkuozdemir.org/helm-charts/

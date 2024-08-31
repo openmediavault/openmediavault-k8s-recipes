@@ -4,10 +4,11 @@ section: net
 architecture:
   - amd64
 url: https://hub.docker.com/r/traefik/whoami/
-recipeVersion: "1.0.0"
+recipeVersion: "1.1.0"
 appVersion: latest
 maintainers:
   - Richard Cottrill <richard_c@tpg.com.au>
+  - Volker Theile <volker.theile@openmediavault.org>
 sources:
   - https://github.com/traefik/whoami
   - https://doc.traefik.io/traefik/middlewares/overview/
