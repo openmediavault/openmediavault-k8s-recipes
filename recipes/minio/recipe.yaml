@@ -1,11 +1,5 @@
 ---
-# Can't get it working to access MinIO console via subpath, e.g.
-# https://omv7box.local:8443/minio, even when MINIO_BROWSER_REDIRECT_URL
-# and MINIO_BROWSER_CONTENT_SECURITY_POLICY are set. Contributions to
-# that issue are welcome.
-#
-# In the meanwhile you can only access it via NodePort, e.g.
-# http://omv7box.local:30901
+# The app can be reached at https://minio-console.<FQDN>:8443
 ---
 apiVersion: v1
 kind: Namespace
@@ -55,10 +49,6 @@ spec:
           value: "admin"
         - name: "MINIO_ROOT_PASSWORD"
           value: "openmediavault"
-#       - name: "MINIO_BROWSER_REDIRECT_URL"
-#         value: "https://omv7box.local:8443/minio"
-#       - name: "MINIO_BROWSER_CONTENT_SECURITY_POLICY"
-#         value: "default-src 'self' 'unsafe-eval' 'unsafe-inline';"
         ports:
         - containerPort: 9000
           name: api
@@ -82,38 +72,46 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: minio
+  name: minio-api
   namespace: minio-app
 spec:
   selector:
     app.kubernetes.io/instance: minio
     app.kubernetes.io/name: minio
-  type: NodePort
+  type: ClusterIP
   ports:
-  - name: api
-    port: 9000
+  - port: 9000
     protocol: TCP
     targetPort: 9000
-    nodePort: 30900
-  - name: console
-    port: 9001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-console
+  namespace: minio-app
+spec:
+  selector:
+    app.kubernetes.io/instance: minio
+    app.kubernetes.io/name: minio
+  type: ClusterIP
+  ports:
+  - port: 9001
     protocol: TCP
     targetPort: 9001
-    nodePort: 30901
 ---
-# apiVersion: traefik.containo.us/v1alpha1
-# kind: IngressRoute
-# metadata:
-#   name: minio-console-websecure
-#   namespace: minio-app
-# spec:
-#   entryPoints:
-#   - websecure
-#   routes:
-#   - match: PathPrefix(`/minio`)
-#     kind: Rule
-#     services:
-#     - name: minio
-#       port: 9001
-#   tls:
-#     secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio-console-websecure
+  namespace: minio-app
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`minio-console.{{ fqdn() }}`)
+    kind: Rule
+    services:
+    - name: minio-console
+      port: 9001
+  tls:
+    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
