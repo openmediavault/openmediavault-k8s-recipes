@@ -7,10 +7,10 @@ architecture:
   - armhf
   - arm64
 url: https://butlerx.github.io/wetty/
-recipeVersion: "1.0.2"
+recipeVersion: "1.1.0"
 appVersion: latest
 maintainers:
-  - volker.theile@openmediavault.org
+  - Volker Theile <volker.theile@openmediavault.org>
 sources:
   - https://butlerx.github.io/wetty/
   - https://hub.docker.com/r/wettyoss/wetty/

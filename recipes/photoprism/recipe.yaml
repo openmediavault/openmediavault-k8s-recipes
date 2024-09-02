@@ -1,4 +1,4 @@
-# The app can be reached at https://<FQDN>:8443/photoprism
+# The app can be reached at https://photoprism.<FQDN>:8443
 ---
 apiVersion: v1
 kind: Namespace
@@ -42,7 +42,9 @@ spec:
             - name: PHOTOPRISM_HTTP_PORT
               value: "2342"
             - name: PHOTOPRISM_SITE_URL
-              value: "http://localhost:2342/photoprism"
+              value: "https://photoprism.{{ fqdn() }}:8443"
+            - name: PHOTOPRISM_DISABLE_TLS
+              value: "true"
           envFrom:
             - secretRef:
                 name: photoprism
@@ -150,6 +152,9 @@ kind: Secret
 metadata:
   name: photoprism
   namespace: photoprism-app
+  labels:
+    app.kubernetes.io/instance: photoprism
+    app.kubernetes.io/name: photoprism
 stringData:
   PHOTOPRISM_ADMIN_PASSWORD: "admin"
   PHOTOPRISM_DATABASE_PASSWORD: "photoprism"
@@ -159,6 +164,9 @@ kind: Secret
 metadata:
   name: mariadb
   namespace: photoprism-app
+  labels:
+    app.kubernetes.io/instance: photoprism
+    app.kubernetes.io/name: photoprism
 stringData:
   MARIADB_PASSWORD: "photoprism"
   MARIADB_ROOT_PASSWORD: "photoprism"
@@ -178,6 +186,9 @@ kind: ConfigMap
 metadata:
   name: photoprism-db
   namespace: photoprism-app
+  labels:
+    app.kubernetes.io/instance: photoprism
+    app.kubernetes.io/name: photoprism
 data:
   PHOTOPRISM_DATABASE_DRIVER: "mysql"
   PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"
@@ -189,6 +200,9 @@ kind: ConfigMap
 metadata:
   name: mariadb
   namespace: photoprism-app
+  labels:
+    app.kubernetes.io/instance: photoprism
+    app.kubernetes.io/name: photoprism
 data:
   MARIADB_AUTO_UPGRADE: "1"
   MARIADB_INITDB_SKIP_TZINFO: "1"
@@ -236,11 +250,14 @@ kind: IngressRoute
 metadata:
   name: photoprism-websecure
   namespace: photoprism-app
+  labels:
+    app.kubernetes.io/instance: photoprism
+    app.kubernetes.io/name: photoprism
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: PathPrefix(`/photoprism`)
+    - match: Host(`photoprism.{{ fqdn() }}`)
       kind: Rule
       services:
         - name: photoprism

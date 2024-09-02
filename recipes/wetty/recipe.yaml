@@ -1,4 +1,4 @@
-# The app can be reached at https://<FQDN>:8443/wetty
+# The app can be reached at https://wetty.<FQDN>:8443
 ---
 apiVersion: v1
 kind: Namespace
@@ -37,7 +37,7 @@ spec:
             runAsGroup: {{ gid('nogroup') }}
           args:
             - "--port=3000"
-            - "--base=/wetty"
+            - "--base=/"
             - "--force-ssh"
             - "--ssh-port={{ conf_get('conf.service.ssh') | get('port') }}"
             - "--ssh-host={{ hostname() }}"
@@ -54,8 +54,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: wetty
-      port: 3000
+    - port: 3000
       protocol: TCP
       targetPort: 3000
   selector:
@@ -67,11 +66,14 @@ kind: IngressRoute
 metadata:
   name: wetty-websecure
   namespace: wetty-app
+  labels:
+    app.kubernetes.io/instance: wetty
+    app.kubernetes.io/name: wetty
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: PathPrefix(`/wetty`)
+    - match: Host(`wetty.{{ fqdn() }}`)
       kind: Rule
       services:
         - name: wetty

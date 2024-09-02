@@ -1,4 +1,4 @@
-# The app can be reached at https://<FQDN>:8443/filebrowser
+# The app can be reached at https://filebrowser.<FQDN>:8443
 ---
 apiVersion: v1
 kind: Namespace
@@ -10,6 +10,9 @@ kind: HelmChart
 metadata:
   name: filebrowser
   namespace: filebrowser-app
+  labels:
+    app.kubernetes.io/instance: filebrowser
+    app.kubernetes.io/name: filebrowser
 spec:
   repo: https://utkuozdemir.org/helm-charts
   chart: filebrowser
@@ -30,18 +33,21 @@ spec:
         # with has access to that directory.
         path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
     config:
-      baseURL: /filebrowser
+      baseURL: /
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: filebrowser-websecure
   namespace: filebrowser-app
+  labels:
+    app.kubernetes.io/instance: filebrowser
+    app.kubernetes.io/name: filebrowser
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: PathPrefix(`/filebrowser`)
+    - match: Host(`filebrowser.{{ fqdn() }}`)
       kind: Rule
       services:
         - name: filebrowser

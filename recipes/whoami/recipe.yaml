@@ -1,4 +1,4 @@
-# https://<FQDN>:8443/whoami
+# The app can be reached at https://whoami.<FQDN>:8443
 ---
 apiVersion: v1
 kind: Namespace
@@ -10,38 +10,37 @@ kind: Service
 metadata:
   name: whoami
   namespace: whoami-app
+  labels:
+    app.kubernetes.io/instance: whoami
+    app.kubernetes.io/name: whoami
 spec:
   ports:
-  - name: whoami
-    port: 80
-    targetPort: web
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
   selector:
-    app: whoami
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: test-stripprefix
-  namespace: whoami-app
-spec:
-  stripPrefix:
-    prefixes:
-      - /whoami
+    app.kubernetes.io/instance: whoami
+    app.kubernetes.io/name: whoami
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: whoami-app
   name: whoami
+  labels:
+    app.kubernetes.io/instance: whoami
+    app.kubernetes.io/name: whoami
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: whoami
+      app.kubernetes.io/instance: whoami
+      app.kubernetes.io/name: whoami
   template:
     metadata:
       labels:
-        app: whoami
+        app.kubernetes.io/instance: whoami
+        app.kubernetes.io/name: whoami
     spec:
       containers:
         - name: whoami
@@ -72,25 +71,26 @@ spec:
           resources:
             limits:
               memory: '50Mi'
-              cpu: '500m'
+              cpu: '500m' # 50%
           ports:
-            - name: web
-              containerPort: 8080
+            - containerPort: 8080
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: whoami
+  name: whoami-websecure
   namespace: whoami-app
+  labels:
+    app.kubernetes.io/instance: whoami
+    app.kubernetes.io/name: whoami
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: PathPrefix(`/whoami`)
+    - match: Host(`whoami.{{ fqdn() }}`)
       kind: Rule
-      middlewares:
-        - name: test-stripprefix
-          namespace: whoami-app
       services:
         - name: whoami
           port: 80
+  tls:
+    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.

@@ -89,6 +89,9 @@ kind: Service
 metadata:
   name: minio-console
   namespace: minio-app
+  labels:
+    app.kubernetes.io/instance: minio
+    app.kubernetes.io/name: minio
 spec:
   selector:
     app.kubernetes.io/instance: minio
@@ -104,6 +107,9 @@ kind: IngressRoute
 metadata:
   name: minio-console-websecure
   namespace: minio-app
+  labels:
+    app.kubernetes.io/instance: minio
+    app.kubernetes.io/name: minio
 spec:
   entryPoints:
   - websecure
