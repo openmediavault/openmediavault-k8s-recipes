@@ -1,0 +1,15 @@
+name: OwnTone
+description: OwnTone is an open source (audio) media server. It allows sharing and streaming your media library to iTunes (DAAP1), Roku (RSP), AirPlay devices (multi-room), Chromecast and also supports local playback.
+section: sound
+architecture:
+  - amd64
+  - arm64
+url: https://owntone.github.io/owntone-server/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/owntone/owntone-server/
+  - https://owntone.github.io/owntone-server/configuration/
+  - https://github.com/owntone/owntone-container/
