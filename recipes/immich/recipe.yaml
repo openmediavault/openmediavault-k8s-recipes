@@ -72,6 +72,15 @@ spec:
       enabled: true
     redis:
       enabled: true
+    persistence:
+      import:
+        enabled: true
+        type: hostPath
+        readOnly: true
+        # Use this path to import files to the library.
+        mountPath: /srv/import
+        hostPath: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+        hostPathType: Directory
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
