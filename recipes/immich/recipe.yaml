@@ -17,9 +17,8 @@ spec:
   capacity:
     storage: 2Gi
   hostPath:
+    # This is the path where the immich library will be stored.
     # Insert the name of the shared folder you want to use.
-    # Make sure the configured UID/GID the container is running
-    # with has access to that directory.
     path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
     type: Directory
   accessModes:
@@ -73,12 +72,13 @@ spec:
     redis:
       enabled: true
     persistence:
+      # This is the shared folder that is used to import existing files to the immich library.
+      # See https://immich.app/docs/guides/external-library/ for more information.
       import:
-        enabled: true
+        enabled: true # Set to false if you do not want to have an external library.
         type: hostPath
         readOnly: true
-        # Use this path to import files to the library.
-        mountPath: /srv/import
+        mountPath: /srv/import # Use this path in the `Add Import Path` dialog.
         hostPath: {{ sharedfolder_path('<NAME>') }} # <<< Replace
         hostPathType: Directory
 ---
