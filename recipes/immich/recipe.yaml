@@ -1,0 +1,94 @@
+# The app can be reached at https://immich.<FQDN>:8443
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: immich-app
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-library
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: immich
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: 2Gi
+  hostPath:
+    # Insert the name of the shared folder you want to use.
+    # Make sure the configured UID/GID the container is running
+    # with has access to that directory.
+    path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+    type: Directory
+  accessModes:
+    - ReadWriteMany
+---
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: immich-library
+  namespace: immich-app
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: immich
+spec:
+  storageClassName: shared-folder
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: "2Gi"
+  volumeName: immich-library
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: immich
+  namespace: immich-app
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: immich
+spec:
+  repo: https://immich-app.github.io/immich-charts
+  chart: immich
+  targetNamespace: immich-app
+  valuesContent: |-
+    securityContext:
+      runAsNonRoot: true
+      # Specifies the UID for the process running in the container.
+      runAsUser: {{ uid('<NAME>') }} # <<< Replace
+      # Specifies the GID for the process running in the container.
+      # Defaults to `users`.
+      runAsGroup: {{ gid('users') }} # <<< Replace if needed
+    image:
+      tag: v1.115.0
+    immich:
+      persistence:
+        library:
+          existingClaim: immich-library
+    postgresql:
+      enabled: true
+    redis:
+      enabled: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich-websecure
+  namespace: immich-app
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: immich
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`immich.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: immich-server
+          port: 3001
+  tls:
+    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
