@@ -1,0 +1,16 @@
+name: immich
+description: High performance self-hosted photo and video management solution.
+section: graphics
+architecture:
+  - amd64
+  - arm64
+url: https://immich.app/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/immich-app/immich/
+  - https://github.com/immich-app/immich-charts/
+  - https://immich.app/docs/overview/introduction/
+  - https://immich.app/docs/install/config-file/
