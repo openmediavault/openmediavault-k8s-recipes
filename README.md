@@ -33,15 +33,18 @@ The `section` value in the `metadata.yaml` file is inspired by those that are us
 The recipe import of the `openmediavault-k8s` plugin supports the following 
 placeholders. These are intended to simplify the handling of various system 
 settings, for example the mapping of user and group names to IDs.
-```
-- hostname()
-- domain()
-- fqdn()
-- uid('<NAME>')
-- gid('<NAME>')
-- sharedfolder_path('<NAME>')
-- conf_get('<DB_OBJ_ID>', '<UUID>')
-```
+
+- **hostname()** – Get the hostname of the host.
+- **domain()** – Get the domain name of the host.
+- **fqdn()** – Get the FQDN of the host.
+- **ipaddr(name=NULL)** – Get the IPv4 address of the specified network interface. If not set, the IPv4 address of the interface of the first default route is used.
+- **ipaddr6(name=NULL)** – Get the IPv6 address of the specified network interface. If not set, the IPv6 address of the interface of the first default route is used.
+- **uid(name)** – Get the UID of the specified user.
+- **gid(name)** – Get the GID of the specified group.
+- **sharedfolder_path(name)** – Get the full path of the specified shared folder.
+- **conf_get(id, uuid=NULL)** – Get the specified database configuration object.
+- **tz()** – Get the time zone of the host.
+
 ## Examples:
 ```yaml
 apiVersion: apps/v1
