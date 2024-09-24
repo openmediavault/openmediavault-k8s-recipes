@@ -1,4 +1,9 @@
 # The app can be reached at https://filebrowser.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+{% set rootSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
 kind: Namespace
@@ -21,17 +26,17 @@ spec:
     securityContext:
       runAsNonRoot: true
       # Specifies the UID for the process running in the container.
-      runAsUser: {{ uid('<NAME>') }} # <<< Replace
+      runAsUser: {{ uid(runAsUser) }}
       # Specifies the GID for the process running in the container.
       # Defaults to `users`.
-      runAsGroup: {{ gid('users') }} # <<< Replace if needed
+      runAsGroup: {{ gid(runAsGroup) }}
     rootDir:
       type: hostPath
       hostPath:
         # Insert the name of the shared folder you want to use.
         # Make sure the configured UID/GID the container is running
         # with has access to that directory.
-        path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+        path: {{ sharedfolder_path(rootSharedFolderName) }}
     config:
       baseURL: /
 ---
@@ -53,4 +58,5 @@ spec:
         - name: filebrowser
           port: 80
   tls:
-    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+    # Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+    secretName: host-selfsigned-cert

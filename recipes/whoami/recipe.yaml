@@ -1,4 +1,8 @@
 # The app can be reached at https://whoami.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'nogroup' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
 kind: Namespace
@@ -53,9 +57,8 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
-            # Run the container as nobody:nogroup
-            runAsUser: 65534
-            runAsGroup: 65534
+            runAsUser: {{ uid(runAsUser) }}
+            runAsGroup: {{ gid(runAsGroup) }}
             capabilities:
               drop:
                 - ALL
@@ -93,4 +96,5 @@ spec:
         - name: whoami
           port: 80
   tls:
-    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+    # Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+    secretName: host-selfsigned-cert
