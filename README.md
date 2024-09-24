@@ -28,11 +28,13 @@ Use this translation table for the `architecture` flag in the `metadata.yaml` fi
 
 The `section` value in the `metadata.yaml` file is inspired by those that are used in Debian, e.g. `graphics`, `net` or `utils`. Get a full list [here](https://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections).
 
-# Placeholders
+# Domain Specific Language
 
-The recipe import of the `openmediavault-k8s` plugin supports the following 
-placeholders. These are intended to simplify the handling of various system 
-settings, for example the mapping of user and group names to IDs.
+The recipe editor of the `openmediavault-k8s` has a DSL (Domain Specific Language)
+that supports the user in getting specific information from their openmediavault
+host system in Kubernetes manifests.
+
+The following functions are currently available:
 
 - **hostname()** – Get the hostname of the host.
 - **domain()** – Get the domain name of the host.
@@ -44,6 +46,15 @@ settings, for example the mapping of user and group names to IDs.
 - **sharedfolder_path(name)** – Get the full path of the specified shared folder.
 - **conf_get(id, uuid=NULL)** – Get the specified database configuration object.
 - **tz()** – Get the time zone of the host.
+
+The following filters are currently available:
+
+- **get(key, default=NULL)** – Get the specified key, e.g. foo.bar.baz from a dictionary.
+
+For the built-in features of the used template engine please have a look here:
+
+- [Basic knowledge](https://twig.symfony.com/doc/3.x/templates.html)
+- [Filters](https://twig.symfony.com/doc/3.x/filters/index.html) and [functions](https://twig.symfony.com/doc/3.x/functions/index.html)
 
 ## Examples:
 ```yaml
@@ -87,4 +98,21 @@ spec:
             type: Directory
             path: {{ sharedfolder_path('images') }}
   ...
+```
+```yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich-websecure
+  namespace: immich-app
+  ...
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`immich.{{ ipaddr() }}.sslip.io`)
+      kind: Rule
+      services:
+        - name: immich-server
+          port: 3001
 ```
