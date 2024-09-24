@@ -49,7 +49,7 @@ The following functions are currently available:
 
 The following filters are currently available:
 
-- **get(key, default=NULL)** – Get the specified key, e.g. foo.bar.baz from a dictionary.
+- **get(key, default=NULL)** – Get the specified key, e.g. `foo.bar.baz` from a dictionary.
 
 For the built-in features of the used template engine please have a look here:
 
