@@ -1,4 +1,10 @@
 # The app can be reached at https://immich.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+{% set librarySharedFolderName = '<MODIFY>' %}
+{% set importSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
 kind: Namespace
@@ -19,7 +25,7 @@ spec:
   hostPath:
     # This is the path where the immich library will be stored.
     # Insert the name of the shared folder you want to use.
-    path: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+    path: {{ sharedfolder_path(librarySharedFolderName) }}
     type: Directory
   accessModes:
     - ReadWriteMany
@@ -57,10 +63,10 @@ spec:
     securityContext:
       runAsNonRoot: true
       # Specifies the UID for the process running in the container.
-      runAsUser: {{ uid('<NAME>') }} # <<< Replace
+      runAsUser: {{ uid(runAsUser) }}
       # Specifies the GID for the process running in the container.
       # Defaults to `users`.
-      runAsGroup: {{ gid('users') }} # <<< Replace if needed
+      runAsGroup: {{ gid(runAsGroup) }}
     image:
       tag: v1.115.0
     immich:
@@ -79,7 +85,7 @@ spec:
         type: hostPath
         readOnly: true
         mountPath: /srv/import # Use this path in the `Add Import Path` dialog.
-        hostPath: {{ sharedfolder_path('<NAME>') }} # <<< Replace
+        hostPath: {{ sharedfolder_path(importSharedFolderName) }}
         hostPathType: Directory
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -100,4 +106,5 @@ spec:
         - name: immich-server
           port: 3001
   tls:
-    secretName: host-selfsigned-cert # <<< Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+    # Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+    secretName: host-selfsigned-cert

@@ -4,7 +4,7 @@ section: net
 architecture:
   - amd64
 url: https://hub.docker.com/r/traefik/whoami/
-recipeVersion: "1.1.0"
+recipeVersion: "1.2.0"
 appVersion: latest
 maintainers:
   - Richard Cottrill <richard_c@tpg.com.au>
