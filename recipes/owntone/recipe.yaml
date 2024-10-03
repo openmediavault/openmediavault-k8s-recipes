@@ -542,8 +542,10 @@ spec:
               value: "{{ gid(runAsGroup) }}"
           ports:
             - containerPort: 3688
+              hostPort: 3688
               protocol: TCP
             - containerPort: 3689
+              hostPort: 3689
               protocol: TCP
           volumeMounts:
             - name: config
