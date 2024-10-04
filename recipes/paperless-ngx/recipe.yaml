@@ -1,0 +1,119 @@
+# The app can be reached at https://paperless.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+{% set adminUser = 'admin' %}
+{% set adminPassword = 'admin' %}
+{% set dbPassword = 'paperless-ngx' %}
+{% set dbRootPassword = 'paperless-ngx' %}
+# https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html
+{% set ocrLanguage = 'eng' %}
+{% set dataSharedFolderName = '<MODIFY>' %}
+{% set mediaSharedFolderName = '<MODIFY>' %}
+{% set exportSharedFolderName = '<MODIFY>' %}
+{% set consumeSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: paperless-app
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: paperless
+  namespace: paperless-app
+data:
+  # https://docs.paperless-ngx.com/configuration/
+  USERMAP_UID: "{{ uid(runAsUser) }}"
+  USERMAP_GID: "{{ gid(runAsGroup) }}"
+  PAPERLESS_ADMIN_USER: "{{ adminUser }}"
+  PAPERLESS_FILENAME_DATE_ORDER: "YMD"
+  PAPERLESS_DATE_ORDER: "DMY"
+  PAPERLESS_URL: "https://paperless.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}"
+  PAPERLESS_CSRF_TRUSTED_ORIGINS: "https://*.{{ fqdn() }}"
+  PAPERLESS_ALLOWED_HOSTS: "paperless.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}"
+  PAPERLESS_OCR_LANGUAGE: "{{ ocrLanguage }}"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: paperless
+  namespace: paperless-app
+  labels:
+    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/name: paperless
+stringData:
+  PAPERLESS_ADMIN_PASSWORD: "{{ adminPassword }}"
+  paperless_DATABASE_PASSWORD: "paperless"
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: paperless
+  namespace: paperless-app
+  labels:
+    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/name: paperless
+spec:
+  repo: https://charts.gabe565.com
+  chart: paperless-ngx
+  targetNamespace: paperless-app
+  valuesContent: |-
+    image:
+      tag: 2.12.1
+    env:
+      TZ: {{ tz() }}
+    envFrom:
+      - secretRef:
+          name: paperless
+      - configMapRef:
+          name: paperless
+    mariadb:
+      enabled: true
+      auth:
+        password: {{ dbPassword }}
+        rootPassword: {{ dbRootPassword }}
+    persistence:
+      data:
+        enabled: true
+        type: hostPath
+        hostPath: {{ sharedfolder_path(dataSharedFolderName) }}
+        hostPathType: Directory
+      media:
+        enabled: true
+        type: hostPath
+        hostPath: {{ sharedfolder_path(mediaSharedFolderName) }}
+        hostPathType: Directory
+      export:
+        enabled: true
+        type: hostPath
+        hostPath: {{ sharedfolder_path(exportSharedFolderName) }}
+        hostPathType: Directory
+      consume:
+        enabled: true
+        type: hostPath
+        hostPath: {{ sharedfolder_path(consumeSharedFolderName) }}
+        hostPathType: Directory
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: paperless-websecure
+  namespace: paperless-app
+  labels:
+    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/name: paperless
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`paperless.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: paperless-paperless-ngx
+          port: 8000
+  tls:
+    # Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
+    secretName: host-selfsigned-cert
