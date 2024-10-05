@@ -50,7 +50,7 @@ spec:
             - name: PHOTOPRISM_HTTP_PORT
               value: "2342"
             - name: PHOTOPRISM_SITE_URL
-              value: "https://photoprism.{{ fqdn() }}:8443"
+              value: "https://photoprism.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}"
             - name: PHOTOPRISM_DISABLE_TLS
               value: "true"
           envFrom:
