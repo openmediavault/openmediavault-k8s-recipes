@@ -46,7 +46,6 @@ metadata:
     app.kubernetes.io/name: paperless
 stringData:
   PAPERLESS_ADMIN_PASSWORD: "{{ adminPassword }}"
-  paperless_DATABASE_PASSWORD: "paperless"
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
