@@ -56,7 +56,6 @@ spec:
           envFrom:
             - secretRef:
                 name: photoprism
-                optional: false
             - configMapRef:
                 name: photoprism
             - configMapRef:
