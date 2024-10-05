@@ -6,7 +6,7 @@ architecture:
   - arm64
 url: https://docs.paperless-ngx.com/
 recipeVersion: "1.0.1"
-appVersion: 2.12.1
+appVersion: "2.12.1"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:
