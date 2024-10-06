@@ -70,7 +70,7 @@ spec:
       containers:
         - securityContext:
             runAsNonRoot: true
-            runAsUser: {{ gid('nobody') }}
+            runAsUser: {{ uid('nobody') }}
             runAsGroup: {{ gid('nogroup') }}
           args:
             - "--port 3000"
