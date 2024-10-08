@@ -113,6 +113,4 @@ spec:
       services:
         - name: paperless-paperless-ngx
           port: 8000
-  tls:
-    # Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
-    secretName: host-selfsigned-cert
+  tls: {}
