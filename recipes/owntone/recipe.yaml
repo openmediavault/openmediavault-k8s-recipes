@@ -604,6 +604,4 @@ spec:
       services:
         - name: owntone
           port: 3689
-  tls:
-    # Use 'host-imported-cert' if you want to use the SSL cert specified in the settings.
-    secretName: host-selfsigned-cert
+  tls: {}
