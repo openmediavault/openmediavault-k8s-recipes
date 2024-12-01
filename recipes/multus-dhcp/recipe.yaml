@@ -1,0 +1,44 @@
+# Note, K3s >= v1.31.2+k3s1 is required to install Multus CNI.
+#
+# Use the `k8s.v1.cni.cncf.io/networks: default/multus-dhcp` annotation in
+# your pod spec to create an network interface managed by Multus CNI.
+#
+# Change the following variables to adapt the recipe to your needs.
+{% set ifaceName = 'ens6' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: multus
+  namespace: kube-system
+spec:
+  repo: https://rke2-charts.rancher.io
+  chart: rke2-multus
+  targetNamespace: kube-system
+  valuesContent: |-
+    config:
+      fullnameOverride: multus
+      cni_conf:
+        confDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+        binDir: /var/lib/rancher/k3s/data/cni/
+        kubeconfig: /var/lib/rancher/k3s/agent/etc/cni/net.d/multus.d/multus.kubeconfig
+    manifests:
+      dhcpDaemonSet: true
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: multus-dhcp
+  namespace: default
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "type": "macvlan",
+      "master": "{{ ifaceName }}",
+      "mode": "bridge",
+      "ipam": {
+        "type": "dhcp"
+      }
+    }
