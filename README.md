@@ -5,7 +5,7 @@ The following rules should be observed in the recipes:
 
 - Create a namespace for each application according the schema: `<APPNAME>-app`
 - Traefik is used by the `openmediavault-k8s` plugin. So use `IngressRoute` over `Ingress`.
-- For HTTPS ingresses use the TLS secret name `host-selfsigned-cert` if you want to use the auto-created self-signed certificate. Use `host-imported-cert` if you have configured an SSL certificate in the plugin settings that is managed via the openmediavault UI. 
+- For HTTPS ingresses apply `tls: {}` to make use of the default TLS certificate.
 - The default entry points for `IngressRoute` are `web` (HTTP) and `websecure` (HTTPS).
 - Make use of a `NodePort` service only if the application does not work behind a reverse proxy.
 - Make use of the `HelmChart` resource if the application can be installed via Helm.
