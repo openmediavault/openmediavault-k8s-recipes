@@ -58,6 +58,7 @@ metadata:
 spec:
   repo: https://immich-app.github.io/immich-charts
   chart: immich
+  version: 0.9.0
   targetNamespace: immich-app
   valuesContent: |-
     securityContext:
@@ -68,11 +69,12 @@ spec:
       # Defaults to `users`.
       runAsGroup: {{ gid(runAsGroup) }}
     image:
-      tag: v1.115.0
+      tag: v1.119.0
     immich:
       persistence:
         library:
           existingClaim: immich-library
+    useDeprecatedPostgresChart: true
     postgresql:
       enabled: true
     redis:
