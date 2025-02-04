@@ -1,0 +1,140 @@
+# The app can be reached at http://<FQDN>/smokeping:8080
+# Change the following variables to adapt the recipe to your needs.
+{% set emailPass = '<MODIFY>' %}
+{% set emailUser = '<MODIFY>' %}
+{% set emailHost = '<MODIFY>' %}
+{% set timezone = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: smokeping
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smokeping-config
+  namespace: smokeping
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: shared-folder
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smokeping-data
+  namespace: smokeping
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
+  storageClassName: shared-folder
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smokeping-ssmtp
+  namespace: smokeping
+data:
+  ssmtp.conf: |
+    root={{ emailUser }}
+    mailhub={{ emailHost }}
+    AuthUser={{ emailUser }}
+    AuthPass={{ emailPass }}
+    UseTLS=YES
+    UseSTARTTLS=YES
+    FromLineOverride=YES
+    hostname=smokeping.kubernetes.default.svc
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: smokeping-ingress
+  namespace: smokeping
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /smokeping
+            pathType: Prefix
+            backend:
+              service:
+                name: smokeping
+                port:
+                  number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smokeping
+  namespace: smokeping
+  labels:
+    k8s-app: smokeping
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    k8s-app: smokeping
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smokeping
+  namespace: smokeping
+  labels:
+    k8s-app: smokeping
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: smokeping
+  template:
+    metadata:
+      labels:
+        k8s-app: smokeping
+    spec:
+      containers:
+      - name: smokeping
+        image: linuxserver/smokeping:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: "/config"
+            name: config
+          - mountPath: "/data"
+            name: data
+          - mountPath: "/etc/ssmtp/ssmtp.conf"
+            name: ssmtp-config
+            subPath: ssmtp.conf
+            readOnly: true
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: {{ timezone }}
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: smokeping-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: smokeping-data
+        - name: ssmtp-config
+          configMap:
+            name: smokeping-ssmtp

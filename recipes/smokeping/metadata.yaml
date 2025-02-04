@@ -1,0 +1,14 @@
+name: Smokeping
+description: Smokeping keeps track of your network latency.
+section: net
+architecture:
+  - amd64
+  - armhf
+url: https://oss.oetiker.ch/smokeping/
+recipeVersion: "1.2.1"
+appVersion: latest
+maintainers:
+  - Moritz Meintker <moritz@thinksilicon.de>
+sources:
+  - https://oss.oetiker.ch/smokeping/
+  - https://docs.linuxserver.io/images/docker-smokeping/
