@@ -3,7 +3,6 @@
 {% set emailPass = '<MODIFY>' %}
 {% set emailUser = '<MODIFY>' %}
 {% set emailHost = '<MODIFY>' %}
-{% set timezone = '<MODIFY>' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
