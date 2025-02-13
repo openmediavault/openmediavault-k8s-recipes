@@ -9,6 +9,7 @@ recipeVersion: "1.2.1"
 appVersion: latest
 maintainers:
   - Moritz Meintker <moritz@thinksilicon.de>
+  - Volker Theile <volker.theile@openmediavault.org>
 sources:
   - https://oss.oetiker.ch/smokeping/
   - https://docs.linuxserver.io/images/docker-smokeping/
