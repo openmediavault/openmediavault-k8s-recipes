@@ -10,6 +10,19 @@ metadata:
   name: pyload-app
 ---
 apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: pyload-headers
+  namespace: pyload-app
+  labels:
+    app.kubernetes.io/instance: pyload
+    app.kubernetes.io/name: pyload
+spec:
+  headers:
+    customResponseHeaders:
+      X-Frame-Options: "SAMEORIGIN"
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: pyload-web
@@ -26,6 +39,8 @@ spec:
       services:
         - name: pyload
           port: 80
+      middlewares:
+        - name: pyload-headers
 ---
 apiVersion: v1
 kind: Service
