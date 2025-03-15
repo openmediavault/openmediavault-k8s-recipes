@@ -1,0 +1,124 @@
+# The app can be reached at http://pyload.<FQDN>:8080
+# Change the following variables to adapt the recipe to your needs.
+{% set configSharedFolderName = '<MODIFY>' %}
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pyload-app
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: pyload-headers
+  namespace: pyload-app
+  labels:
+    app.kubernetes.io/instance: pyload
+    app.kubernetes.io/name: pyload
+spec:
+  headers:
+    customResponseHeaders:
+      X-Frame-Options: "SAMEORIGIN"
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pyload-web
+  namespace: pyload-app
+  labels:
+    app.kubernetes.io/instance: pyload
+    app.kubernetes.io/name: pyload
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`pyload.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: pyload
+          port: 8000
+      middlewares:
+        - name: pyload-headers
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyload
+  namespace: pyload-app
+  labels:
+    app.kubernetes.io/instance: pyload
+    app.kubernetes.io/name: pyload
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/instance: pyload
+    app.kubernetes.io/name: pyload
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pyload
+  namespace: pyload-app
+  labels:
+    app.kubernetes.io/instance: pyload
+    app.kubernetes.io/name: pyload
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: pyload
+      app.kubernetes.io/name: pyload
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: pyload
+        app.kubernetes.io/name: pyload
+    spec:
+      containers:
+      - name: pyload
+        image: lscr.io/linuxserver/pyload-ng:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        - containerPort: 9666
+          name: clicknload
+          protocol: TCP
+          hostPort: 9666
+        volumeMounts:
+          - mountPath: "/config"
+            name: config
+          - mountPath: "/downloads"
+            name: data
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: {{ tz() }}
+      volumes:
+        - name: config
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path(configSharedFolderName) }}
+        - name: data
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path(dataSharedFolderName) }}

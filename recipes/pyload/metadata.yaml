@@ -1,0 +1,15 @@
+name: pyLoad
+description: Free and Open Source download manager written in Python
+section: net
+architecture:
+  - amd64
+  - arm64
+url: https://pyload.net/
+recipeVersion: "1.2.1"
+appVersion: latest
+maintainers:
+  - Moritz Meintker <moritz@thinksilicon.de>
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://pyload.net/
+  - https://github.com/linuxserver/docker-pyload-ng/
