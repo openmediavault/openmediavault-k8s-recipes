@@ -1,4 +1,4 @@
-# The app can be reached at http://<FQDN>:8080/pyload
+# The app can be reached at http://pyload.<FQDN>:8080
 # Change the following variables to adapt the recipe to your needs.
 {% set configSharedFolderName = '<MODIFY>' %}
 {% set dataSharedFolderName = '<MODIFY>' %}
@@ -34,11 +34,11 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/pyload`)
+    - match: Host(`pyload.{{ fqdn() }}`)
       kind: Rule
       services:
         - name: pyload
-          port: 80
+          port: 8000
       middlewares:
         - name: pyload-headers
 ---
@@ -52,7 +52,7 @@ metadata:
     app.kubernetes.io/name: pyload
 spec:
   ports:
-  - port: 80
+  - port: 8000
     targetPort: 8000
     protocol: TCP
     name: http
