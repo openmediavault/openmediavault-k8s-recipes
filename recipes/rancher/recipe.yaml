@@ -1,0 +1,47 @@
+# The app can be reached at https://rancher.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set bootstrapPassword = 'rancher' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cattle-system
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: rancher
+  namespace: cattle-system
+  labels:
+    app.kubernetes.io/instance: rancher
+    app.kubernetes.io/name: rancher
+spec:
+  repo: https://releases.rancher.com/server-charts/stable
+  chart: rancher
+  targetNamespace: cattle-system
+  valuesContent: |-
+    bootstrapPassword: "{{ bootstrapPassword }}"
+    hostname: "rancher.{{ fqdn() }}"
+    replicas: 1
+    ingress:
+      enabled: false
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-websecure
+  namespace: cattle-system
+  labels:
+    app.kubernetes.io/instance: rancher
+    app.kubernetes.io/name: rancher
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`rancher.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: rancher
+          port: 80
+  tls: {}

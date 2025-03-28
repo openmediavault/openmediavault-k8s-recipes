@@ -1,0 +1,17 @@
+name: Rancher
+description: Rancher is a Kubernetes management tool to deploy and run clusters anywhere and on any provider.
+section: net
+architecture:
+  - amd64
+  - arm64
+url: https://www.rancher.com/
+recipeVersion: "1.0.0"
+appVersion: "latest"
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://www.rancher.com/
+  - https://github.com/rancher/rancher/
+  - https://www.suse.com/suse-rancher/support-matrix/all-supported-versions/
+  - https://ranchermanager.docs.rancher.com/getting-started/installation-and-upgrade/install-upgrade-on-a-kubernetes-cluster/
+  - https://ranchermanager.docs.rancher.com/getting-started/installation-and-upgrade/installation-references/helm-chart-options/
