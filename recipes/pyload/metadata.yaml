@@ -5,7 +5,7 @@ architecture:
   - amd64
   - arm64
 url: https://pyload.net/
-recipeVersion: "1.2.1"
+recipeVersion: "1.2.2"
 appVersion: latest
 maintainers:
   - Moritz Meintker <moritz@thinksilicon.de>

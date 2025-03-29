@@ -590,7 +590,7 @@ spec:
     app.kubernetes.io/instance: owntone
     app.kubernetes.io/name: owntone
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: owntone-websecure

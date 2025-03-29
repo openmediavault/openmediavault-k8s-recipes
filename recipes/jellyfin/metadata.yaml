@@ -6,7 +6,7 @@ architecture:
   - armhf
   - arm64
 url: https://jellyfin.org/
-recipeVersion: "1.2.1"
+recipeVersion: "1.2.2"
 appVersion: latest
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
