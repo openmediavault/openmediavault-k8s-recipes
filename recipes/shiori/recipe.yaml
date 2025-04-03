@@ -1,0 +1,99 @@
+# The app can be reached at https://shiori.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shiori-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shiori
+  namespace: shiori-app
+  labels:
+    app.kubernetes.io/instance: shiori
+    app.kubernetes.io/name: shiori
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: shiori
+      app.kubernetes.io/name: shiori
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: shiori
+        app.kubernetes.io/name: shiori
+    spec:
+      volumes:
+      - name: app
+        hostPath:
+          type: Directory
+          path: {{ sharedfolder_path(dataSharedFolderName) }}
+      - name: tmp
+        emptyDir:
+          medium: Memory
+      containers:
+      - name: shiori
+        image: ghcr.io/go-shiori/shiori:latest
+        command: ["/usr/bin/shiori", "server"]
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          # Specifies the UID for the process running in the container.
+          runAsUser: {{ uid(runAsUser) }}
+          # Specifies the GID for the process running in the container.
+          # Defaults to `users`.
+          runAsGroup: {{ gid(runAsGroup) }}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SHIORI_DIR
+          value: /srv/shiori
+        volumeMounts:
+        - mountPath: /srv/shiori
+          name: app
+        - mountPath: /tmp
+          name: tmp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shiori
+  namespace: shiori-app
+  labels:
+    app.kubernetes.io/instance: shiori
+    app.kubernetes.io/name: shiori
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/instance: shiori
+    app.kubernetes.io/name: shiori
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: shiori-websecure
+  namespace: shiori-app
+  labels:
+    app.kubernetes.io/instance: shiori
+    app.kubernetes.io/name: shiori
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`shiori.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: shiori
+          port: 8080
+  tls: {}
