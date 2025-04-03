@@ -5,8 +5,8 @@ architecture:
   - amd64
   - armhf
   - arm64
-url: https://github.com/go-shiori/shiori/blob/master/docs/Usage.md
-recipeVersion: "1.0.0"
+url: https://github.com/go-shiori/shiori
+recipeVersion: "1.0.1"
 appVersion: "latest"
 maintainers:
   - Ronnie Bathoorn <b@thoorn.com>
@@ -15,3 +15,4 @@ sources:
   - https://github.com/go-shiori/shiori
   - https://github.com/go-shiori/shiori/blob/master/docs/Configuration.md
   - https://github.com/go-shiori/shiori/blob/master/docs/Installation.md#using-kubernetes-manifests
+  - https://github.com/go-shiori/shiori/blob/master/docs/Usage.md
