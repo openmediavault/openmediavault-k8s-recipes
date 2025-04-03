@@ -8,6 +8,9 @@
 {% set dbRootPassword = 'paperless-ngx' %}
 # https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html
 {% set ocrLanguage = 'eng' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
 {% set dataSharedFolderName = '<MODIFY>' %}
 {% set mediaSharedFolderName = '<MODIFY>' %}
 {% set exportSharedFolderName = '<MODIFY>' %}

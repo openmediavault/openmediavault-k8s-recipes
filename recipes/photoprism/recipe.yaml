@@ -2,6 +2,9 @@
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
 {% set originalsSharedFolderName = '<MODIFY>' %}
 {% set storageSharedFolderName = '<MODIFY>' %}
 {% set importSharedFolderName = '<MODIFY>' %}

@@ -1,5 +1,10 @@
 # The app can be reached at http://pyload.<FQDN>:8080
 # Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
 {% set configSharedFolderName = '<MODIFY>' %}
 {% set dataSharedFolderName = '<MODIFY>' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
@@ -87,6 +92,13 @@ spec:
       - name: pyload
         image: lscr.io/linuxserver/pyload-ng:latest
         imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          # Specifies the UID for the process running in the container.
+          runAsUser: {{ uid(runAsUser) }}
+          # Specifies the GID for the process running in the container.
+          # Defaults to `users`.
+          runAsGroup: {{ gid(runAsGroup) }}
         ports:
         - containerPort: 8000
           name: http
