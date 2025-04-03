@@ -1,4 +1,4 @@
-# The app can be reached at https://photoprism.<FQDN>:8443
+# The app can be reached at https://shiori.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -27,11 +27,13 @@ spec:
   template:
     metadata:
       labels:
-        app: shiori
+        app.kubernetes.io/instance: shiori
+        app.kubernetes.io/name: shiori
     spec:
       volumes:
       - name: app
         hostPath:
+          type: Directory
           path: {{ sharedfolder_path(dataSharedFolderName) }}
       - name: tmp
         emptyDir:
@@ -39,8 +41,15 @@ spec:
       containers:
       - name: shiori
         image: ghcr.io/go-shiori/shiori:latest
-        command: ["/usr/bin/shiori", "serve"]
+        command: ["/usr/bin/shiori", "server"]
         imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          # Specifies the UID for the process running in the container.
+          runAsUser: {{ uid(runAsUser) }}
+          # Specifies the GID for the process running in the container.
+          # Defaults to `users`.
+          runAsGroup: {{ gid(runAsGroup) }}
         ports:
         - containerPort: 8080
         env:
@@ -63,7 +72,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 8088
+    - port: 8080
       protocol: TCP
       targetPort: 8080
   selector:
@@ -86,5 +95,5 @@ spec:
       kind: Rule
       services:
         - name: shiori
-          port: 8088
+          port: 8080
   tls: {}
