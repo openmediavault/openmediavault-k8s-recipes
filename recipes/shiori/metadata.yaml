@@ -1,0 +1,15 @@
+name: Shiori
+description: Shiori is a simple bookmarks manager written in the Go language. Intended as a simple clone of Pocket. You can use it as a command line application or as a web application. This application is distributed as a single binary, which means it can be installed and used easily.
+section: net
+architecture:
+  - amd64
+  - armhf
+  - arm64
+url: https://github.com/go-shiori/shiori/blob/master/docs/Usage.md
+recipeVersion: "1.0.0"
+appVersion: "1.7.4"
+maintainers:
+  - Ronnie Bathoorn <b@thoorn.com>
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/go-shiori/shiori
