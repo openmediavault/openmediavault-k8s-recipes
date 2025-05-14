@@ -1,0 +1,152 @@
+# The app can be reached at https://transmission.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set user = 'admin' %}
+{% set password = 'transmission' %}
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set configSharedFolderName = '<MODIFY>' %}
+{% set downloadsSharedFolderName = '<MODIFY>' %}
+{% set watchSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: transmission-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+  name: transmission
+  namespace: transmission-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: transmission
+      app.kubernetes.io/name: transmission
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: transmission
+        app.kubernetes.io/name: transmission
+    spec:
+      containers:
+        - image: docker.io/linuxserver/transmission:latest
+          imagePullPolicy: IfNotPresent
+          name: transmission
+          ports:
+            - containerPort: 9091
+              protocol: TCP
+            - containerPort: 51413
+              protocol: TCP
+            - containerPort: 51413
+              protocol: UDP
+          securityContext:
+            runAsNonRoot: true
+            # Specifies the UID for the process running in the container.
+            runAsUser: {{ uid(runAsUser) }}
+            # Specifies the GID for the process running in the container.
+            # Defaults to `users`.
+            runAsGroup: {{ gid(runAsGroup) }}
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: {{ tz() }}
+            - name: USER
+              value: {{ user }}
+          envFrom:
+            - secretRef:
+                name: transmission
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: watch
+              mountPath: /watch
+      restartPolicy: Always
+      volumes:
+        - name: config
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path(configSharedFolderName) }}
+        - name: downloads
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path(downloadsSharedFolderName) }}
+        - name: watch
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path(watchSharedFolderName) }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: transmission
+  namespace: transmission-app
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+stringData:
+  PASS: {{ password }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission
+  namespace: transmission-app
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: web-interface
+      port: 9091
+    - protocol: TCP
+      name: torrent-tcp
+      port: 51413
+    - protocol: UDP
+      name: torrents-udp
+      port: 51413
+  selector:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: transmission-websecure
+  namespace: transmission-app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`transmission.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: transmission
+          port: 9091
+  tls: {}
