@@ -1,0 +1,16 @@
+name: Ollama
+description: Get up and running with large language models.
+section: science
+architecture:
+  - amd64
+  - arm64
+url: https://ollama.com/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/ollama/ollama/
+  - https://hub.docker.com/r/ollama/ollama/
+  - https://artifacthub.io/packages/helm/ollama-helm/ollama/
+  - https://otwld.github.io/ollama-helm/
