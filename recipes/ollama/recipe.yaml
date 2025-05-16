@@ -46,6 +46,8 @@ spec:
       models:
         pull:
           - llama3
+        run:
+          - llama3
 ---
 apiVersion: v1
 kind: PersistentVolume
