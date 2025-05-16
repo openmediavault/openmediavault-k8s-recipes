@@ -1,0 +1,12 @@
+name: letsencrypt
+description: Acquire a TLS certificate from LetsEncrypt (or other ACME-compatible CAs).
+section: net
+architecture:
+  - amd64
+url: https://cert-manager.io/docs/configuration/acme/
+recipeVersion: "1.2.2"
+appVersion: latest
+maintainers:
+  - Yuchen Shi <yuchenshi@google.com>
+sources:
+  - https://cert-manager.io/docs/configuration/acme/
