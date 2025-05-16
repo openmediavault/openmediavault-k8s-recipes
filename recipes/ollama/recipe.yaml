@@ -41,7 +41,8 @@ spec:
       selectorLabels:
         app.kubernetes.io/instance: ollama
         app.kubernetes.io/name: ollama
-      # The available model names can be found at https://ollama.com/library
+      # The available model names can be found at https://ollama.com/library.
+      # Keep in mind that the models require a lot of disk storage and RAM.
       models:
         pull:
           - gemma3:1b
