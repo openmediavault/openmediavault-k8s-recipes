@@ -68,21 +68,21 @@ spec:
   accessModes:
     - ReadWriteOnce
 ---
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: ollama-websecure
-  namespace: ollama-app
-  labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/name: ollama
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`ollama.{{ fqdn() }}`)
-      kind: Rule
-      services:
-        - name: ollama
-          port: 11434
-  tls: {}
+# apiVersion: traefik.io/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: ollama-websecure
+#   namespace: ollama-app
+#   labels:
+#     app.kubernetes.io/instance: ollama
+#     app.kubernetes.io/name: ollama
+# spec:
+#   entryPoints:
+#     - websecure
+#   routes:
+#     - match: Host(`ollama.{{ fqdn() }}`)
+#       kind: Rule
+#       services:
+#         - name: ollama
+#           port: 11434
+#   tls: {}
