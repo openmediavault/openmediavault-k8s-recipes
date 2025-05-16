@@ -5,12 +5,13 @@ architecture:
   - amd64
   - arm64
 url: https://ollama.com/
-recipeVersion: "1.0.1"
+recipeVersion: "1.0.2"
 appVersion: latest
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:
   - https://github.com/ollama/ollama/
+  - https://github.com/ollama/ollama/tree/main/docs
+  - https://github.com/otwld/ollama-helm
   - https://hub.docker.com/r/ollama/ollama/
   - https://artifacthub.io/packages/helm/ollama-helm/ollama/
-  - https://otwld.github.io/ollama-helm/

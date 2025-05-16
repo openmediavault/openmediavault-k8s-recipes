@@ -45,9 +45,16 @@ spec:
         app.kubernetes.io/name: ollama
       models:
         pull:
-          - llama3
+          - gemma3:1b
         run:
-          - llama3
+          - gemma3:1b
+    ingress:
+      enabled: true
+      hosts:
+        - host: ollama.{{ fqdn() }}
+          paths:
+            - path: /
+              pathType: Prefix
 ---
 apiVersion: v1
 kind: PersistentVolume
