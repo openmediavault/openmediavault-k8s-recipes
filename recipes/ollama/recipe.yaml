@@ -35,8 +35,6 @@ spec:
       app.kubernetes.io/name: ollama
     persistentVolume:
       enabled: true
-      accessModes:
-       - ReadWriteMany
       storageClass: shared-folder
       volumeName: data-dir
     ollama:
@@ -48,13 +46,6 @@ spec:
           - gemma3:1b
         run:
           - gemma3:1b
-    ingress:
-      enabled: true
-      hosts:
-        - host: ollama.{{ fqdn() }}
-          paths:
-            - path: /
-              pathType: Prefix
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -74,7 +65,7 @@ spec:
     path: {{ sharedfolder_path(dataSharedFolderName) }}
     type: Directory
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
