@@ -1,0 +1,50 @@
+# The app can be reached at https://openwebui.<FQDN>:8443
+# Note, this recipe requires the Ollama recipe to be deployed and running.
+# Change the following variables to adapt the recipe to your needs.
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openwebui-app
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: openwebui
+  namespace: openwebui-app
+  labels:
+    app.kubernetes.io/instance: openwebui
+    app.kubernetes.io/name: openwebui
+spec:
+  repo: https://helm.openwebui.com/
+  chart: open-webui
+  targetNamespace: openwebui-app
+  valuesContent: |-
+    ollama:
+      enabled: false
+    ollamaUrls:
+      - http://ollama.ollama-app.svc.cluster.local:11434
+    pipelines:
+      enabled: false
+    image:
+      tag: latest
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: openwebui-websecure
+  namespace: openwebui-app
+  labels:
+    app.kubernetes.io/instance: openwebui
+    app.kubernetes.io/name: openwebui
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`openwebui.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: open-webui
+          port: 80
+  tls: {}

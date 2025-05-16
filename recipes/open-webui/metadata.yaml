@@ -1,0 +1,16 @@
+name: Open WebUI
+description: Open WebUI is an extensible, self-hosted AI interface that adapts to your workflow, all while operating entirely offline.
+section: web
+architecture:
+  - amd64
+  - arm64
+url: https://www.openwebui.com/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/open-webui/open-webui/
+  - https://github.com/open-webui/pipelines/
+  - https://github.com/open-webui/helm-charts/
+  - https://artifacthub.io/packages/helm/open-webui/open-webui/
