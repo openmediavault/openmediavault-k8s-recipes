@@ -1,0 +1,45 @@
+# The app can be reached at https://speedtest.<FQDN>:8443
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: speedtest-app
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: speedtest
+  namespace: speedtest-app
+  labels:
+    app.kubernetes.io/instance: speedtest
+    app.kubernetes.io/name: speedtest
+spec:
+  repo: https://openspeedtest.github.io/Helm-chart/
+  chart: openspeedtest
+  targetNamespace: speedtest-app
+  valuesContent: |-
+    fullnameOverride: speedtest
+    image:
+      tag: latest
+    service:
+      type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: speedtest-websecure
+  namespace: speedtest-app
+  labels:
+    app.kubernetes.io/instance: speedtest
+    app.kubernetes.io/name: speedtest
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`speedtest.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: speedtest
+          port: 3000
+  tls: {}

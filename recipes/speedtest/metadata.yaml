@@ -1,0 +1,18 @@
+name: SpeedTest
+description: Broadband Speed Test That Works on Any Web Browser.
+section: net
+architecture:
+  - amd64
+  - arm64
+  - armhf
+  - i386
+url: https://openspeedtest.com/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/openspeedtest/Speed-Test/
+  - https://artifacthub.io/packages/helm/speedtest/openspeedtest/
+  - https://hub.docker.com/r/openspeedtest/
+  - https://openspeedtest.github.io/Helm-chart/
