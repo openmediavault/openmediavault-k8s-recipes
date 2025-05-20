@@ -16,13 +16,13 @@ The following rules should be observed in the recipes:
 
 Use this translation table for the `architecture` flag in the `metadata.yaml` file:
 
-| Architecture | Also known as |
-|--------------|---------------|
-| i386         | i386          |
-| amd64        | x86_64        |
-| armel        | armv6l        |
-| armhf        | armv7l        |
-| arm64        | aarch64       |
+| Architecture  | Also known as              |
+|---------------|----------------------------|
+| `i386`        | `i386`                     |
+| `amd64`       | `x86_64`                   |
+| `armel`       | `armv6l`, `linux/arm/v6`   |
+| `armhf`       | `armv7l`, `linux/arm/v7`   |
+| `arm64`       | `aarch64`                  |
 
 ## Section
 
