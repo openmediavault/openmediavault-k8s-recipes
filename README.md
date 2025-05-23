@@ -34,6 +34,10 @@ Use this translation table for the `architecture` field in the `metadata.yaml` f
 
 The `section` field in the `metadata.yaml` file is inspired by those that are used in Debian, e.g. `graphics`, `net` or `utils`. Get a full list [here](https://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections).
 
+Additionally, you can use:
+
+- `kubernetes`
+
 # Domain Specific Language
 
 The recipe editor of the `openmediavault-k8s` has a DSL (Domain Specific Language)
