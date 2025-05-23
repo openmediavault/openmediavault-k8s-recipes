@@ -1,4 +1,4 @@
-This repository contains recipes to easily deploy container-based applications with the 
+This repository contains a recipe collection for easy deployment of container-based applications with the 
 `openmediavault-k8s` Kubernetes plugin. 
 
 The following rules should be observed in the recipes:
@@ -15,6 +15,8 @@ The following rules should be observed in the recipes:
 ## Depends
 
 The `depends` field is used to declare a dependency relationship by one recipe on another.
+
+Please note that the recipes do not have a package management-like function to automatically install dependent recipes. This would go beyond the scope of the recipe collection and is therefore up to the user.
 
 ## Architecture
 
