@@ -1,10 +1,12 @@
-name: letsencrypt
+name: Let's Encrypt
 description: Acquire a TLS certificate from LetsEncrypt (or other ACME-compatible CAs).
 section: net
 architecture:
   - amd64
+depends:
+  - reflector
 url: https://cert-manager.io/docs/configuration/acme/
-recipeVersion: "1.2.2"
+recipeVersion: "1.0.0"
 appVersion: latest
 maintainers:
   - Yuchen Shi <yuchenshi@google.com>
