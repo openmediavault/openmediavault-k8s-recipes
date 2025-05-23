@@ -12,9 +12,13 @@ The following rules should be observed in the recipes:
 
 # metadata.yaml
 
+## Depends
+
+The `depends` field is used to declare a dependency relationship by one recipe on another.
+
 ## Architecture
 
-Use this translation table for the `architecture` flag in the `metadata.yaml` file:
+Use this translation table for the `architecture` field in the `metadata.yaml` file:
 
 | Architecture  | Also known as              |
 |---------------|----------------------------|
@@ -26,7 +30,7 @@ Use this translation table for the `architecture` flag in the `metadata.yaml` fi
 
 ## Section
 
-The `section` value in the `metadata.yaml` file is inspired by those that are used in Debian, e.g. `graphics`, `net` or `utils`. Get a full list [here](https://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections).
+The `section` field in the `metadata.yaml` file is inspired by those that are used in Debian, e.g. `graphics`, `net` or `utils`. Get a full list [here](https://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections).
 
 # Domain Specific Language
 

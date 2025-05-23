@@ -4,6 +4,8 @@ section: web
 architecture:
   - amd64
   - arm64
+depends:
+  - ollama
 url: https://www.openwebui.com/
 recipeVersion: "1.0.0"
 appVersion: latest
