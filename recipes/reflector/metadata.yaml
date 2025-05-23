@@ -1,0 +1,16 @@
+name: reflector
+description: Custom Kubernetes controller that can be used to replicate secrets, configmaps and certificates.
+section: kubernetes
+architecture:
+  - amd64
+  - arm64
+  - armhf
+url: https://github.com/emberstack/kubernetes-reflector/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/emberstack/kubernetes-reflector/
+  - https://artifacthub.io/packages/helm/emberstack/reflector/
+  - https://hub.docker.com/r/emberstack/kubernetes-reflector/

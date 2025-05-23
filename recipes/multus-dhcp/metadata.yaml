@@ -1,6 +1,6 @@
 name: multus-dhcp
 description: A CNI meta-plugin for multi-homed pods in Kubernetes. The DHCP IPAM will be installed.
-section: net
+section: kubernetes
 architecture:
   - amd64
   - arm64

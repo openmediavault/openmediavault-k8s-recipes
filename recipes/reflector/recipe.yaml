@@ -1,0 +1,15 @@
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: reflector
+  namespace: kube-system
+spec:
+  repo: https://emberstack.github.io/helm-charts
+  chart: reflector
+  targetNamespace: kube-system
+  valuesContent: |-
+    fullnameOverride: reflector
+    image:
+      tag: latest
