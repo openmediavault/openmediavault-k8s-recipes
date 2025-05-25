@@ -1,0 +1,117 @@
+# This recipe acquires TLS certs for your domain. There's no web page / API.
+# Note, this recipe requires the reflector recipe to be deployed and running.
+# Change the following variables and solvers to adapt the recipe to your needs.
+#
+# This must be a public domain name that you own (resolvable via global DNS).
+# If fqdn() is private / internal, use a different domain like this:
+# {% set domain = 'optional-nested-domain.my-domain.tld' %}
+{% set domain = fqdn() %}
+# It is highly recommended to try staging first to avoid rate limiting.
+# Once it works, flip this to false to get a new cert trusted by the browsers.
+{% set staging = true %}
+#
+# To use the certificate(s), recipes must be modified in the following ways:
+# 1. Each routes[*].match statement in IngressRoute must reference the same
+#    domain name as specified above. (The certificate will not be used if there
+#    is no `Host` in match or the domain is not covered by the certificate. By
+#    default a wildcard cert is requested, but note that it only covers one
+#    level below like `sub.{{ domain }}`, not `nested.sub.{{ domain }}`.)
+# 2. The tls section of each IngressRoute must explicitly reference the secret.
+#    (This recipe will take care of copying the TLS secret to all namespaces.)
+#
+# Example (only showing relevant parts):
+# ---
+# kind: IngressRoute
+# spec:
+#   routes:
+#   # 1. If you picked a different domain than fqdn() then remember to change
+#   # all match statements that contain `someapp.{{ fqdn() }}`. Make sure:
+#   # This string  vvvvvvvvvvvvvvv must be {{ domain }} or a direct subdomain.
+#   - match: Host(`sub.example.com`)
+#     kind: Rule
+#     ...
+#   # 2. Change every occurrence of `tls: {}` to these two lines instead.
+#   tls:
+#     secretName: letsencrypt-cert
+#   # ... (other fields can be left untouched.)
+# ...
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: letsencrypt-app
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt{{ staging ? '-staging' }}
+  namespace: letsencrypt-app
+  labels:
+    app.kubernetes.io/instance: letsencrypt{{ staging ? '-staging' }}
+    app.kubernetes.io/name: letsencrypt
+spec:
+  acme:
+    server: https://acme{{ staging ? '-staging' }}-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt{{ staging ? '-staging' }}
+    solvers:
+      # dns01 must be used instead of http if you want wildcard certs.
+      - dns01:
+          # TODO: Configure your own solver, such as acmeDNS, webhook, etc.
+          # https://cert-manager.io/docs/configuration/acme/
+          # The sample config below works with the acme-dns recipe.
+          acmeDNS:
+            host: http://acme-dns.acme-dns-app
+            accountSecretRef:
+              name: acme-dns
+              key: acmedns.json
+---
+# This sample secret works with the acme-dns recipe -- just fill in the JSON.
+# If you use another solver, you may need a different secret structure, e.g.
+# username + password / API key from your DNS provider. See:
+# https://cert-manager.io/docs/configuration/acme/
+apiVersion: v1
+kind: Secret
+metadata:
+  name: acme-dns
+  namespace: cert-manager # This has to be in the "cluster resource namespace".
+type: Opaque
+stringData:
+  acmedns.json: |
+    {
+      "{{ domain }}": {
+        "username":"<your-registered-username-from-acmedns>",
+        "password":"<your-registered-password-from-acmedns>",
+        "fulldomain":"<your-registered-fulldomain-from-acmedns>",
+        "subdomain":"<your-registered-subdomain-from-acmedns>",
+        "allowfrom":[]
+      }
+    }
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: letsencrypt-cert
+  namespace: letsencrypt-app
+spec:
+  commonName: '{{ domain }}'
+  dnsNames:
+    # Recommended setting: a single cert for base domain + wildcard subdomains.
+    # If dns01 challenge is not viable, remove the wildcard entry and add one
+    # Certificate covering each subdomain.{{ domain }}.
+    # WARNING: Beware of the (rather tight) rate limits! You may not hit it on
+    # staging, but you'll very likely hit it on prod with one-cert-for-each.
+    # https://letsencrypt.org/docs/rate-limits/
+    - '{{ domain }}'
+    - '*.{{ domain }}'
+  issuerRef:
+    name: letsencrypt{{ staging ? '-staging' }}
+    kind: ClusterIssuer
+  secretName: letsencrypt-cert
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "^(?!(?:cert-manager|kube-system|kube-node-lease|kube-public)$).*"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "" # all namespaces, filtered by allowed namespaces

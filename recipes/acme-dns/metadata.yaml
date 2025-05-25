@@ -1,0 +1,12 @@
+name: acme-dns
+description: Run a simplified DNS server to automate ACME DNS challenges.
+section: net
+architecture:
+  - amd64
+url: https://github.com/joohoi/acme-dns/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Yuchen Shi <yuchenshi@google.com>
+sources:
+  - https://github.com/joohoi/acme-dns/

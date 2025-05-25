@@ -1,0 +1,180 @@
+# The acme-dns API can be reached at https://acme-dns.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+# Change this to the domain (zone) that ACME DNS should manage.
+{% set domain = 'auth.' ~ fqdn() %}
+# At your DNS provider, create the following record:
+#     {{ domain }}. NS {{ nsname }}.
+# Example:
+#     auth.example.org. NS auth-ns.example.org.
+# Change this to a domain that has an A/AAAA record with your public IP.
+# It may be a DDNS domain or dynamically updated as the IP changes.
+# It must not be the same or a subdomain of the above.
+{% set nsname = 'auth-ns.' ~ fqdn() %}
+# See README.md for required port forwarding and DNS records setup.
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: acme-dns-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-dns
+  namespace: acme-dns-app
+  labels:
+    app.kubernetes.io/instance: acme-dns
+    app.kubernetes.io/name: acme-dns
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/instance: acme-dns
+    app.kubernetes.io/name: acme-dns
+  ports:
+  - name: dns-tcp
+    port: 53
+    nodePort: 30053
+    protocol: TCP
+  - name: dns-udp
+    port: 53
+    nodePort: 30053
+    protocol: UDP
+  - name: http
+    port: 80
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: acme-dns-config
+  namespace: acme-dns-app
+  labels:
+    app.kubernetes.io/instance: acme-dns
+    app.kubernetes.io/name: acme-dns
+data:
+  config.cfg: |
+    [general]
+    listen = ":53"
+    protocol = "both"
+    # domain name to serve the requests off of
+    domain = "{{ domain }}"
+    # zone name server
+    nsname = "{{ nsname }}"
+    # admin email address, where @ is substituted with .
+    nsadmin = "ns-admin.{{ nsname }}"
+    # predefined records served in addition to the TXT
+    records = [
+        # specify that {{ nsname }} will resolve any *.{{ domain }} records
+        "{{ domain }}. NS {{ nsname }}.",
+        # Note: We intentionally don't add an A record for either domain to
+        # avoid hard-coding IP addresses that may change on a home network.
+        # To access the API server, use acme-dns.{{ fqdn() }} instead (route below).
+    ]
+    # debug messages from CORS etc
+    debug = false
+
+    [database]
+    # Database engine to use, sqlite3 or postgres
+    engine = "sqlite3"
+    # Connection string, filename for sqlite3 and postgres://$username:$password@$host/$db_name for postgres
+    connection = "/var/lib/acme-dns/acme-dns.db"
+    # connection = "postgres://user:password@localhost/acmedns_db"
+
+    [api]
+    ip = "0.0.0.0"
+    # disable registration endpoint
+    disable_registration = false
+    port = "80"
+    tls = "none"
+    # CORS AllowOrigins, wildcards can be used
+    corsorigins = [
+        "*"
+    ]
+    # use HTTP header to get the client ip
+    use_header = false
+    # header name to pull the ip address / list of ip addresses from
+    header_name = "X-Forwarded-For"
+
+    [logconfig]
+    # logging level: "error", "warning", "info" or "debug"
+    loglevel = "debug"
+    logtype = "stdout"
+    # format, either "json" or "text"
+    logformat = "text"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: acme-dns-app
+  name: acme-dns
+  labels:
+    app.kubernetes.io/instance: acme-dns
+    app.kubernetes.io/name: acme-dns
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: acme-dns
+      app.kubernetes.io/name: acme-dns
+  serviceName: acme-dns-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: acme-dns
+        app.kubernetes.io/name: acme-dns
+    spec:
+      containers:
+      - name: acme-dns
+        image: joohoi/acme-dns:latest
+        imagePullPolicy: Always
+        securityContext:
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+        resources:
+          limits:
+            memory: '50Mi'
+            cpu: '500m' # 50%
+        volumeMounts:
+        - name: acme-dns-data
+          mountPath: /var/lib/acme-dns
+        - name: acme-dns-config
+          mountPath: /etc/acme-dns
+      volumes:
+        - name: acme-dns-config
+          configMap:
+            name: acme-dns-config
+  volumeClaimTemplates:
+  - metadata:
+      name: acme-dns-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 200Mi
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: acme-dns-websecure
+  namespace: acme-dns-app
+  labels:
+    app.kubernetes.io/instance: acme-dns
+    app.kubernetes.io/name: acme-dns
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`acme-dns.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: acme-dns
+          port: 80
+  tls: {}
