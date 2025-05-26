@@ -1,6 +1,15 @@
 This repository contains a recipe collection for easy deployment of container-based applications with the 
 `openmediavault-k8s` Kubernetes plugin. 
 
+# Table of contents
+
+- [General information](#general-information)
+- [metadata.yaml](#metadatayaml)
+- [Domain Specific Language](#domain-specific-language)
+- [FAQ](#faq)
+
+# General information
+
 The following rules should be observed in the recipes:
 
 - Create a namespace for each application according the schema: `<APPNAME>-app`
