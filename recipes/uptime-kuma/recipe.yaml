@@ -1,0 +1,68 @@
+# The app can be reached at https://uptime-kuma.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+# Insert the name of the shared folder you want to use.
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: uptime-kuma-app
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: uptime-kuma
+  namespace: uptime-kuma-app
+  labels:
+    app.kubernetes.io/instance: uptime-kuma
+    app.kubernetes.io/name: uptime-kuma
+spec:
+  repo: https://helm.irsigler.cloud
+  chart: uptime-kuma
+  targetNamespace: uptime-kuma-app
+  valuesContent: |-
+    fullnameOverride: uptime-kuma
+    image:
+      tag: latest
+    volume:
+      storageClassName: shared-folder
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-dir
+  labels:
+    app.kubernetes.io/instance: uptime-kuma
+    app.kubernetes.io/name: uptime-kuma
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: 4Gi
+  hostPath:
+    # Insert the name of the shared folder you want to use.
+    # Make sure the configured UID/GID the container is running
+    # with has access to that directory.
+    path: {{ sharedfolder_path(dataSharedFolderName) }}
+    type: Directory
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: uptime-kuma-websecure
+  namespace: uptime-kuma-app
+  labels:
+    app.kubernetes.io/instance: uptime-kuma
+    app.kubernetes.io/name: uptime-kuma
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`uptime-kuma.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: uptime-kuma
+          port: 3001
+  tls: {}
