@@ -1,0 +1,16 @@
+name: Uptime Kuma
+description: A self-hosted monitoring tool.
+section: net
+architecture:
+  - amd64
+  - arm64
+  - armhf
+url: https://uptime.kuma.pet//
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/louislam/uptime-kuma/
+  - https://github.com/dirsigler/uptime-kuma-helm/
+  - https://hub.docker.com/r/louislam/uptime-kuma/
