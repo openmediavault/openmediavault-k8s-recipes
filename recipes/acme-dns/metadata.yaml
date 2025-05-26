@@ -1,4 +1,4 @@
-name: acme-dns
+name: ACME DNS
 description: Run a simplified DNS server to automate ACME DNS challenges.
 section: net
 architecture:
