@@ -126,3 +126,14 @@ spec:
         - name: immich-server
           port: 3001
 ```
+
+# FAQ
+
+## Why do recipes use subdomains instead of URL path prefixes?
+
+Using subdomains (e.g., app.mynas.internal) is preferred over path prefixes (e.g., mynas.internal/app) for accessing apps via the Traefik reverse proxy in the openmediavault Kubernetes plugin because:
+  - Cleaner and simpler routing – Subdomains keep Ingress rules modular and avoid complex path rewrites.
+  - Fewer compatibility issues – Many apps assume they run at / and break when served under a path prefix due to issues with relative URLs, static assets, or routing.
+  - Avoids URL rewriting problems – With path prefixes, you often need to rewrite URLs or modify the app, which can cause subtle bugs or failures.
+  - Better isolation and security – Subdomains help enforce security boundaries between apps.
+  - Easier scaling and maintenance – Apps on subdomains are more portable, scalable, and microservice-friendly.
