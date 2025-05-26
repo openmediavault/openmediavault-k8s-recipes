@@ -39,6 +39,8 @@ Use this translation table for the `architecture` field in the `metadata.yaml` f
 | `armhf`       | `armv7l`, `linux/arm/v7`   |
 | `arm64`       | `aarch64`                  |
 
+The [architecture names](https://wiki.debian.org/SupportedArchitectures) are taken from Debian project.
+
 ## Section
 
 The `section` field in the `metadata.yaml` file is inspired by those that are used in Debian, e.g. `graphics`, `net` or `utils`. Get a full list [here](https://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections).
