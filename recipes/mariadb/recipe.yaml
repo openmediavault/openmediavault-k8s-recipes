@@ -53,6 +53,9 @@ spec:
           matchLabels:
             app.kubernetes.io/instance: mariadb
             app.kubernetes.io/name: mariadb
+      extraEnvVars:
+        - name: TZ
+          value: "{{ tz() }}"
 ---
 apiVersion: v1
 kind: PersistentVolume
