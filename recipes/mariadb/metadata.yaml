@@ -1,0 +1,15 @@
+name: MariaDB
+description: MariaDB Server is a high performing open source relational database, forked from MySQL.
+section: database
+architecture:
+  - amd64
+  - arm64
+url: https://mariadb.org/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/MariaDB/server/
+  - https://hub.docker.com/r/bitnami/mariadb
+  - https://artifacthub.io/packages/helm/bitnami/mariadb
