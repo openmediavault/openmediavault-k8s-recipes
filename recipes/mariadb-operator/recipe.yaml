@@ -1,0 +1,38 @@
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mariadb-operator-app
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: mariadb-operator-crds
+  namespace: mariadb-operator-app
+  labels:
+    app.kubernetes.io/instance: mariadb-operator-crds
+    app.kubernetes.io/name: mariadb-operator-crds
+spec:
+  repo: https://helm.mariadb.com/mariadb-operator/
+  chart: mariadb-operator-crds
+  targetNamespace: mariadb-operator-app
+  valuesContent: |-
+    image:
+      tag: latest
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: mariadb-operator
+  namespace: mariadb-operator-app
+  labels:
+    app.kubernetes.io/instance: mariadb-operator
+    app.kubernetes.io/name: mariadb-operator
+spec:
+  repo: https://helm.mariadb.com/mariadb-operator/
+  chart: mariadb-operator
+  targetNamespace: mariadb-operator-app
+  valuesContent: |-
+    image:
+      tag: latest

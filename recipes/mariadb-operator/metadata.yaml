@@ -1,0 +1,16 @@
+name: MariaDB Operator
+description: Run and operate MariaDB in a cloud native way.
+section: database
+architecture:
+  - amd64
+  - arm64
+url: https://github.com/mariadb-operator/mariadb-operator/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/mariadb-operator/mariadb-operator/
+  - https://github.com/mariadb-operator/mariadb-operator-helm/
+  - https://operatorhub.io/operator/mariadb-operator/
+  - https://kubeadm.org/mariadb-operator-kubernetes/
