@@ -4,9 +4,10 @@ section: net
 architecture:
   - amd64
 url: https://github.com/joohoi/acme-dns/
-recipeVersion: "1.0.0"
+recipeVersion: "1.0.1"
 appVersion: latest
 maintainers:
   - Yuchen Shi <yuchenshi@google.com>
 sources:
   - https://github.com/joohoi/acme-dns/
+  - https://hub.docker.com/r/joohoi/acme-dns/
