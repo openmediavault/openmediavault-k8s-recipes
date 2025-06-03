@@ -1,0 +1,14 @@
+name: Firefox
+description: Firefox Browser, also known as Mozilla Firefox or simply Firefox, is a free and open-source web browser developed by the Mozilla Foundation and its subsidiary, the Mozilla Corporation. Firefox uses the Gecko layout engine to render web pages, which implements current and anticipated web standards.
+section: web
+architecture:
+  - amd64
+  - arm64
+url: https://www.mozilla.org/firefox/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://docs.linuxserver.io/images/docker-firefox/
+  - https://hub.docker.com/r/linuxserver/firefox/
