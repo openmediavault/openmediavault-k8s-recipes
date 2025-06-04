@@ -1,0 +1,14 @@
+name: Piwigo
+description: Piwigo is open source photo management software. Manage, organize and share your photo easily on the web. Designed for organisations, teams and individuals.
+section: graphics
+architecture:
+  - amd64
+  - arm64
+url: https://www.piwigo.org/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://docs.linuxserver.io/images/docker-piwigo/
+  - https://hub.docker.com/r/linuxserver/piwigo/
