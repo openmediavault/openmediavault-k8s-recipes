@@ -141,7 +141,6 @@ spec:
           envFrom:
             - secretRef:
                 name: mariadb
-                optional: false
             - configMapRef:
                 name: mariadb
           volumeMounts:

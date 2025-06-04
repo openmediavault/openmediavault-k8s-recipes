@@ -72,7 +72,6 @@ spec:
           envFrom:
             - secretRef:
                 name: firefox
-                optional: false
             - configMapRef:
                 name: firefox-env
           volumeMounts:
