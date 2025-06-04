@@ -1,7 +1,7 @@
 # The app can be reached at https://firefox.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
-{% set authUser = 'admin' %}
-{% set authPassword = 'admin' %}
+{% set user = 'admin' %}
+{% set password = 'firefox' %}
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
 # Insert the name of the shared folder you want to use. Make sure the
@@ -18,11 +18,11 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: firefox-config
+  name: firefox-env
   namespace: firefox-app
 data:
-  CUSTOM_USER: "{{ authUser }}"
-  PASSWORD: "{{ authPassword }}"
+  CUSTOM_USER: "{{ user }}"
+  PASSWORD: "{{ password }}"
   PUID: "{{ uid(runAsUser) }}"
   PGID: "{{ gid(runAsGroup) }}"
   TZ: "{{ tz() }}"
@@ -61,7 +61,7 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: firefox-config
+                name: firefox-env
           volumeMounts:
             - name: "config"
               mountPath: "/config"
