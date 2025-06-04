@@ -16,13 +16,23 @@ metadata:
   name: firefox-app
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: firefox
+  namespace: firefox-app
+  labels:
+    app.kubernetes.io/instance: firefox
+    app.kubernetes.io/name: firefox
+stringData:
+  PASSWORD: "{{ password }}"
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: firefox-env
   namespace: firefox-app
 data:
   CUSTOM_USER: "{{ user }}"
-  PASSWORD: "{{ password }}"
   PUID: "{{ uid(runAsUser) }}"
   PGID: "{{ gid(runAsGroup) }}"
   TZ: "{{ tz() }}"
@@ -60,6 +70,9 @@ spec:
             - containerPort: 3000
               protocol: TCP
           envFrom:
+            - secretRef:
+                name: firefox
+                optional: false
             - configMapRef:
                 name: firefox-env
           volumeMounts:
