@@ -1,5 +1,5 @@
 # The app can be reached at https://piwigo.<FQDN>:8443
-# Use `mariadb.piwigo-app.svc.cluster.local` in the `MySQL-Host` form field.
+# Use `mariadb` in the `MySQL-Host` form field.
 # Change the following variables to adapt the recipe to your needs.
 {% set dbName = 'piwigo' %}
 {% set dbUser = 'piwigo' %}
