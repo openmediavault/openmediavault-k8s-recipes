@@ -31,7 +31,7 @@ spec:
     path: {{ sharedfolder_path(librarySharedFolderName) }}
     type: Directory
   accessModes:
-    - ReadWriteMany
+    - "ReadWriteOnce"
 ---
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
@@ -44,7 +44,7 @@ metadata:
 spec:
   storageClassName: shared-folder
   accessModes:
-    - "ReadWriteMany"
+    - "ReadWriteOnce"
   resources:
     requests:
       storage: "2Gi"
