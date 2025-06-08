@@ -12,7 +12,7 @@
 # directory.
 {% set configSharedFolderName = '<MODIFY>' %}
 {% set gallerySharedFolderName = '<MODIFY>' %}
-{% set mariadbSharedFolderName = '<MODIFY>' %}
+{% set dbSharedFolderName = '<MODIFY>' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
@@ -107,7 +107,7 @@ spec:
             - configMapRef:
                 name: mariadb-env
           volumeMounts:
-            - name: "database"
+            - name: "db"
               mountPath: /var/lib/mysql
       restartPolicy: Always
       volumes:
@@ -125,13 +125,13 @@ spec:
             # Make sure the configured UID/GID the container is running
             # with has access to that directory.
             path: "{{ sharedfolder_path(gallerySharedFolderName) }}"
-        - name: "database"
+        - name: "db"
           hostPath:
             type: Directory
             # Insert the name of the shared folder you want to use.
             # Make sure the configured UID/GID the container is running
             # with has access to that directory.
-            path: {{ sharedfolder_path(mariadbSharedFolderName) }}
+            path: {{ sharedfolder_path(dbSharedFolderName) }}
 ---
 apiVersion: v1
 kind: Service
