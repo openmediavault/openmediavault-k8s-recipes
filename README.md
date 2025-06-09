@@ -31,13 +31,13 @@ Please note that the recipes do not have a package management-like function to a
 
 Use this translation table for the `architecture` field in the `metadata.yaml` file:
 
-| Architecture  | Also known as              |
-|---------------|----------------------------|
-| `i386`        | `i386`                     |
-| `amd64`       | `x86_64`                   |
-| `armel`       | `armv6l`, `linux/arm/v6`   |
-| `armhf`       | `armv7l`, `linux/arm/v7`   |
-| `arm64`       | `aarch64`                  |
+| Architecture  | Also known as               |
+|---------------|-----------------------------|
+| `i386`        | `i386`                      |
+| `amd64`       | `x86_64`                    |
+| `armel`       | `armv6l`, `linux/arm/v6`    |
+| `armhf`       | `armv7l`, `linux/arm/v7`    |
+| `arm64`       | `aarch64`, `linux/arm64/v8` |
 
 The [architecture names](https://wiki.debian.org/SupportedArchitectures) are taken from Debian project.
 
