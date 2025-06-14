@@ -48,13 +48,11 @@ spec:
           # Defaults to `users`.
           runAsGroup: {{ gid(runAsGroup) }}
         env:
-        - name: "FILEBROWSER_ADMIN_PASSWORD"
-          value: {{ adminPassword }}
         - name: "FILEBROWSER_CONFIG"
           value: "/data/config.yaml"
         ports:
         - containerPort: 80
-          name: ui
+          name: web-ui
           protocol: TCP
         volumeMounts:
         - name: data
@@ -78,6 +76,35 @@ spec:
           # with has access to that directory.
           path: {{ sharedfolder_path(rootSharedFolderName) }}
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: filebrowser-quantum
+  namespace: filebrowser-quantum-app
+  labels:
+    app.kubernetes.io/instance: filebrowser-quantum
+    app.kubernetes.io/name: filebrowser-quantum
+stringData:
+  FILEBROWSER_ADMIN_PASSWORD: {{ adminPassword }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filebrowser-quantum
+  namespace: filebrowser-quantum-app
+  labels:
+    app.kubernetes.io/instance: filebrowser-quantum
+    app.kubernetes.io/name: filebrowser-quantum
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: web-ui
+      port: 80
+  selector:
+    app.kubernetes.io/instance: filebrowser-quantum
+    app.kubernetes.io/name: filebrowser-quantum
+---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -95,4 +122,3 @@ spec:
       services:
         - name: filebrowser-quantum
           port: 80
-  tls: {}
