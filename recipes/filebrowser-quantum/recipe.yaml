@@ -1,0 +1,98 @@
+# The app can be reached at https://filebrowser.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Set the admin password for the web-ui
+{% set adminPassword = '<MODIFY>' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set dataSharedFolderName = '<MODIFY>' %}
+{% set rootSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: filebrowser-quantum-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: filebrowser-quantum
+    app.kubernetes.io/name: filebrowser-quantum
+  name: filebrowser-quantum
+  namespace: filebrowser-quantum-app
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: filebrowser-quantum
+      app.kubernetes.io/name: filebrowser-quantum
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: filebrowser-quantum
+        app.kubernetes.io/name: filebrowser-quantum
+    spec:
+      containers:
+      - name: filebrowser-quantum
+        image: ghcr.io/gtsteffaniak/filebrowser
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsNonRoot: true
+          # Specifies the UID for the process running in the container.
+          runAsUser: {{ uid(runAsUser) }}
+          # Specifies the GID for the process running in the container.
+          # Defaults to `users`.
+          runAsGroup: {{ gid(runAsGroup) }}
+        env:
+        - name: "FILEBROWSER_ADMIN_PASSWORD"
+          value: {{ adminPassword }}
+        - name: "FILEBROWSER_CONFIG"
+          value: "/data/config.yaml"
+        ports:
+        - containerPort: 80
+          name: ui
+          protocol: TCP
+        volumeMounts:
+        - name: data
+          mountPath: "/data/"
+        - name: shared
+          mountPath: "/shared/"
+      restartPolicy: Always
+      volumes:
+      - name: data
+        hostPath:
+          type: Directory
+          # Insert the name of the shared folder you want to use.
+          # Make sure the configured UID/GID the container is running
+          # with has access to that directory.
+          path: {{ sharedfolder_path(dataSharedFolderName) }}
+      - name: shared
+        hostPath:
+          type: Directory
+          # Insert the name of the shared folder you want to use.
+          # Make sure the configured UID/GID the container is running
+          # with has access to that directory.
+          path: {{ sharedfolder_path(rootSharedFolderName) }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: filebrowser-quantum-websecure
+  namespace: filebrowser-quantum-app
+  labels:
+    app.kubernetes.io/instance: filebrowser-quantum
+    app.kubernetes.io/name: filebrowser-quantum
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`filebrowser.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: filebrowser-quantum
+          port: 80
+  tls: {}
