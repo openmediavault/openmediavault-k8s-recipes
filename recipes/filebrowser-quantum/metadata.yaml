@@ -1,0 +1,16 @@
+name: FileBrowser Quantum
+description: Web file browser.
+section: net
+architecture:
+  - amd64
+  - armel
+  - armhf
+  - arm64
+url: https://github.com/gtsteffaniak/filebrowser
+recipeVersion: "1.2.3"
+appVersion: "latest"
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/gtsteffaniak/filebrowser
+  - https://github.com/gtsteffaniak/filebrowser/pkgs/container/filebrowser
