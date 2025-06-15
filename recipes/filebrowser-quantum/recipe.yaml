@@ -51,9 +51,12 @@ spec:
         - containerPort: 80
           name: web-ui
           protocol: TCP
+      - env:
+        - name: FILEBROWSER_CONFIG
+          value: /data/config.yaml
         volumeMounts:
         - name: data
-          mountPath: "/home/filebrowser/data"
+          mountPath: "/data"
         - name: srv
           mountPath: "/srv"
       restartPolicy: Always
