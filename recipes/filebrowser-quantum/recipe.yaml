@@ -53,7 +53,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: data
-          mountPath: "/home/filebrowser"
+          mountPath: "/home/filebrowser/data"
         - name: srv
           mountPath: "/srv"
       restartPolicy: Always
