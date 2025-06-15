@@ -47,18 +47,15 @@ spec:
           # Specifies the GID for the process running in the container.
           # Defaults to `users`.
           runAsGroup: {{ gid(runAsGroup) }}
-        env:
-        - name: "FILEBROWSER_CONFIG"
-          value: "/data/config.yaml"
         ports:
         - containerPort: 80
           name: web-ui
           protocol: TCP
         volumeMounts:
         - name: data
-          mountPath: "/data/"
-        - name: shared
-          mountPath: "/shared/"
+          mountPath: "/home/filebrowser"
+        - name: srv
+          mountPath: "/srv"
       restartPolicy: Always
       volumes:
       - name: data
@@ -68,7 +65,7 @@ spec:
           # Make sure the configured UID/GID the container is running
           # with has access to that directory.
           path: {{ sharedfolder_path(dataSharedFolderName) }}
-      - name: shared
+      - name: srv
         hostPath:
           type: Directory
           # Insert the name of the shared folder you want to use.
@@ -122,3 +119,4 @@ spec:
       services:
         - name: filebrowser-quantum
           port: 80
+  tls: {}
