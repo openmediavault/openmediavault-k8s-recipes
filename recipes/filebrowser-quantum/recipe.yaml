@@ -51,7 +51,7 @@ spec:
         - containerPort: 80
           name: web-ui
           protocol: TCP
-      - env:
+        env:
         - name: FILEBROWSER_CONFIG
           value: /data/config.yaml
         volumeMounts:
