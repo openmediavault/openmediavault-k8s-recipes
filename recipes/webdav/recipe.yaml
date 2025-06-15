@@ -1,0 +1,137 @@
+# The app can be reached at https://webdav.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set user = 'admin' %}
+{% set password = 'webdav' %}
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webdav-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webdav
+  namespace: webdav-app
+  labels:
+    app.kubernetes.io/instance: webdav
+    app.kubernetes.io/name: webdav
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: webdav
+    app.kubernetes.io/name: webdav
+  ports:
+    - name: webdav
+      port: 80
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: webdav
+  namespace: webdav-app
+  labels:
+    app.kubernetes.io/instance: webdav
+    app.kubernetes.io/name: webdav
+stringData:
+  WEBDAV_PASSWORD: "{{ password }}"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webdav-env
+  namespace: webdav-app
+data:
+  WEBDAV_USERNAME: "{{ user }}"
+  PUID: "{{ uid(runAsUser) }}"
+  PGID: "{{ gid(runAsGroup) }}"
+  TZ: "{{ tz() }}"
+  SERVER_NAMES: "webdav.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}"
+  CLIENT_MAX_BODY_SIZE: "120M" # must end with M(egabytes) or G(igabytes)
+  TIMEOUTS_S: "1200" # these are seconds
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/instance: webdav
+    app.kubernetes.io/name: webdav
+  name: webdav
+  namespace: webdav-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: webdav
+      app.kubernetes.io/name: webdav
+  serviceName: webdav
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: webdav
+        app.kubernetes.io/name: webdav
+    spec:
+      containers:
+        - envFrom:
+          - secretRef:
+              name: webdav
+          - configMapRef:
+              name: webdav-env
+          image: dgraziotin/nginx-webdav-nononsense:latest
+          name: webdav
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: webdav-config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+      restartPolicy: Always
+      volumes:
+        - name: data
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: "{{ sharedfolder_path(dataSharedFolderName) }}"
+  volumeClaimTemplates:
+    - metadata:
+        labels:
+          app.kubernetes.io/instance: webdav
+          app.kubernetes.io/name: webdav
+        name: webdav-config
+        namespace: webdav-app
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: webdav-websecure
+  namespace: webdav-app
+  labels:
+    app.kubernetes.io/instance: webdav
+    app.kubernetes.io/name: webdav
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`webdav.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: webdav
+          port: 80
+  tls: {}
