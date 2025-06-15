@@ -54,6 +54,8 @@ spec:
         env:
         - name: FILEBROWSER_CONFIG
           value: /data/config.yaml
+        - name: FILEBROWSER_DATABASE
+          value: /data/database.db
         volumeMounts:
         - name: data
           mountPath: "/data"
