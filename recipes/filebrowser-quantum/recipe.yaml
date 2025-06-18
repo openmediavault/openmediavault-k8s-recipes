@@ -4,6 +4,8 @@
 {% set runAsGroup = 'users' %}
 # Set the admin password for the web-ui
 {% set adminPassword = '<MODIFY>' %}
+{% set configFilename = 'default_config.yaml' %}
+{% set baseURL = '/' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
@@ -15,6 +17,37 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: filebrowser-quantum-app
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebrowser-quantum-config
+  namespace: filebrowser-quantum-app
+data:
+  default_config.yaml: |
+    server:
+      port: 80
+      baseURL:  {{ baseURL }}
+      logging:
+        - levels: "info|warning|error"
+      cacheDir: /data/tmp
+      sources:
+        - path: "/srv"
+    userDefaults:
+      preview:
+        image: true
+        popup: true
+        video: false
+        office: false
+        highQuality: false
+      darkMode: true
+      disableSettings: false
+      singleClick: false
+      permissions:
+        admin: false
+        modify: false
+        share: false
+        api: false
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -53,12 +86,19 @@ spec:
           protocol: TCP
         env:
         - name: FILEBROWSER_CONFIG
-          value: /data/config.yaml
+          value: /data/{{ configFilename }}
         - name: FILEBROWSER_DATABASE
           value: /data/database.db
+        envFrom:
+        - secretRef:
+            name: filebrowser-quantum
         volumeMounts:
         - name: data
           mountPath: "/data"
+        - name: default-config
+          mountPath: "/data/default_config.yaml"
+          readOnly: true
+          subPath: default_config.yaml
         - name: srv
           mountPath: "/srv"
       restartPolicy: Always
@@ -70,6 +110,9 @@ spec:
           # Make sure the configured UID/GID the container is running
           # with has access to that directory.
           path: {{ sharedfolder_path(dataSharedFolderName) }}
+      - name: default-config
+        configMap:
+          name: filebrowser-quantum-config
       - name: srv
         hostPath:
           type: Directory
