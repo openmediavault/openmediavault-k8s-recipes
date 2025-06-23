@@ -12,5 +12,6 @@ appVersion: "latest"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:
-  - https://github.com/gtsteffaniak/filebrowser
-  - https://github.com/gtsteffaniak/filebrowser/pkgs/container/filebrowser
+  - https://github.com/gtsteffaniak/filebrowser/
+  - https://github.com/gtsteffaniak/filebrowser/pkgs/container/filebrowser/
+  - https://github.com/gtsteffaniak/filebrowser/wiki/

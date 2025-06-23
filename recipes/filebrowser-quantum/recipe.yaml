@@ -22,6 +22,7 @@ metadata:
   namespace: filebrowser-quantum-app
 data:
   default_config.yaml: |
+    # https://github.com/gtsteffaniak/filebrowser/wiki/Full-Config-Example
     server:
       port: 80
       baseURL: "/"
@@ -80,6 +81,7 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+        # https://github.com/gtsteffaniak/filebrowser/wiki/Environment-Variables
         env:
         - name: FILEBROWSER_CONFIG
           value: /data/default_config.yaml
