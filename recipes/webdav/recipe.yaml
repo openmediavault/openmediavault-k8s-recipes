@@ -1,7 +1,7 @@
 # The app can be reached at https://webdav.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
-{% set user = 'admin' %}
-{% set password = 'webdav' %}
+{% set userName = 'admin' %}
+{% set userPassword = 'admin' %}
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
 # Insert the name of the shared folder you want to use. Make sure the
@@ -41,7 +41,7 @@ metadata:
     app.kubernetes.io/instance: webdav
     app.kubernetes.io/name: webdav
 stringData:
-  WEBDAV_PASSWORD: "{{ password }}"
+  WEBDAV_PASSWORD: "{{ userPassword }}"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -49,7 +49,7 @@ metadata:
   name: webdav-env
   namespace: webdav-app
 data:
-  WEBDAV_USERNAME: "{{ user }}"
+  WEBDAV_USERNAME: "{{ userName }}"
   PUID: "{{ uid(runAsUser) }}"
   PGID: "{{ gid(runAsGroup) }}"
   TZ: "{{ tz() }}"

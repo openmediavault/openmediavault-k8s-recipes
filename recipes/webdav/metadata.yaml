@@ -3,11 +3,12 @@ description: Aims to enable a no-nonsense WebDAV docker system on the latest ava
 section: net
 architecture:
   - amd64
-url: https://github.com/dgraziotin/docker-nginx-webdav-nononsense
+  - arm64
+url: https://github.com/dgraziotin/docker-nginx-webdav-nononsense/
 recipeVersion: "1.0.0"
 appVersion: latest
 maintainers:
   - Yuchen Shi <yuchenshi@google.com>
 sources:
-  - https://github.com/dgraziotin/docker-nginx-webdav-nononsense
+  - https://github.com/dgraziotin/docker-nginx-webdav-nononsense/
   - https://hub.docker.com/r/dgraziotin/nginx-webdav-nononsense/
