@@ -2,10 +2,7 @@
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
-# Set the admin password for the web-ui
-{% set adminPassword = '<MODIFY>' %}
-{% set configFilename = 'default_config.yaml' %}
-{% set baseURL = '/' %}
+{% set adminPassword = 'admin' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
@@ -27,7 +24,7 @@ data:
   default_config.yaml: |
     server:
       port: 80
-      baseURL:  {{ baseURL }}
+      baseURL: "/"
       logging:
         - levels: "info|warning|error"
       cacheDir: /data/tmp
@@ -82,11 +79,10 @@ spec:
           runAsGroup: {{ gid(runAsGroup) }}
         ports:
         - containerPort: 80
-          name: web-ui
           protocol: TCP
         env:
         - name: FILEBROWSER_CONFIG
-          value: /data/{{ configFilename }}
+          value: /data/default_config.yaml
         - name: FILEBROWSER_DATABASE
           value: /data/database.db
         envFrom:
@@ -144,7 +140,6 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      name: web-ui
       port: 80
   selector:
     app.kubernetes.io/instance: filebrowser-quantum
