@@ -7,8 +7,8 @@ architecture:
   - armhf
   - arm64
 url: https://filebrowser.org/
-recipeVersion: "1.2.5"
-appVersion:
+recipeVersion: "1.2.6"
+appVersion: "v2.32.3"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:
