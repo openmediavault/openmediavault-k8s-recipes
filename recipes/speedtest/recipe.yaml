@@ -20,8 +20,6 @@ spec:
   targetNamespace: speedtest-app
   valuesContent: |-
     fullnameOverride: speedtest
-    image:
-      tag: latest
     service:
       type: ClusterIP
 ---

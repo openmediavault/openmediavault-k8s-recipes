@@ -6,8 +6,8 @@ architecture:
   - arm64
   - armhf
 url: https://uptime.kuma.pet//
-recipeVersion: "1.0.0"
-appVersion: latest
+recipeVersion: "1.0.1"
+appVersion:
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:

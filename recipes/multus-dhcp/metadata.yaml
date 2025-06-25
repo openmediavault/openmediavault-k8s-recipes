@@ -5,8 +5,8 @@ architecture:
   - amd64
   - arm64
 url: https://docs.k3s.io/networking/multus-ipams/
-recipeVersion: "1.0.1"
-appVersion: latest
+recipeVersion: "1.0.2"
+appVersion:
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:

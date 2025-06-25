@@ -23,8 +23,6 @@ spec:
   targetNamespace: uptime-kuma-app
   valuesContent: |-
     fullnameOverride: uptime-kuma
-    image:
-      tag: latest
     volume:
       storageClassName: shared-folder
 ---

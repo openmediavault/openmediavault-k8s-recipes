@@ -24,8 +24,6 @@ spec:
   chart: ollama
   targetNamespace: ollama-app
   valuesContent: |-
-    image:
-      tag: latest
     deployment:
       labels:
         app.kubernetes.io/instance: ollama

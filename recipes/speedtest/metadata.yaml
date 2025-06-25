@@ -8,7 +8,7 @@ architecture:
   - i386
 url: https://openspeedtest.com/
 recipeVersion: "1.0.0"
-appVersion: latest
+appVersion:
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:

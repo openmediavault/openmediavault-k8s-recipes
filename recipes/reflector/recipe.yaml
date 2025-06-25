@@ -11,5 +11,3 @@ spec:
   targetNamespace: kube-system
   valuesContent: |-
     fullnameOverride: reflector
-    image:
-      tag: latest
