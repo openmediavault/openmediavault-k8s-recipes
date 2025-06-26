@@ -24,6 +24,7 @@ metadata:
 spec:
   repo: https://utkuozdemir.org/helm-charts
   chart: filebrowser
+  version: 1.0.0
   targetNamespace: filebrowser-app
   valuesContent: |-
     image:
