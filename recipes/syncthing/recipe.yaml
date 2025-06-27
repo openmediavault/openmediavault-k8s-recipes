@@ -1,0 +1,63 @@
+# The app can be reached at https://syncthing.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: syncthing-app
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: syncthing
+  namespace: syncthing-app
+  labels:
+    app.kubernetes.io/instance: syncthing
+    app.kubernetes.io/name: syncthing
+spec:
+  repo: http://brandan-schmitz.github.io/helm-charts
+  chart: syncthing
+  targetNamespace: syncthing-app
+  valuesContent: |-
+    controllers:
+      main:
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            # Specifies the UID for the process running in the container.
+            runAsUser: {{ uid(runAsUser) }}
+            # Specifies the GID for the process running in the container.
+            # Defaults to `users`.
+            runAsGroup: {{ gid(runAsGroup) }}
+            fsGroup: {{ gid(runAsGroup) }}
+    persistence:
+      config:
+        type: hostPath
+        hostPath: {{ sharedfolder_path(dataSharedFolderName) }}
+        hostPathType: Directory
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: syncthing-websecure
+  namespace: syncthing-app
+  labels:
+    app.kubernetes.io/instance: syncthing
+    app.kubernetes.io/name: syncthing
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`syncthing.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: syncthing
+          port: 8384
+  tls: {}
