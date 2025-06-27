@@ -28,7 +28,7 @@ spec:
   targetNamespace: filebrowser-app
   valuesContent: |-
     image:
-      tag: "v2.32.0"
+      tag: "v2.32.3"
     securityContext:
       runAsNonRoot: true
       # Specifies the UID for the process running in the container.
