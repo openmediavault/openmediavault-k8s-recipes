@@ -47,7 +47,6 @@ spec:
             # Specifies the UID for the process running in the container.
             runAsUser: {{ uid(runAsUser) }}
             # Specifies the GID for the process running in the container.
-            # Defaults to `users`.
             runAsGroup: {{ gid(runAsGroup) }}
           env:
             - name: PHOTOPRISM_HTTP_PORT
@@ -128,7 +127,6 @@ spec:
             # Specifies the UID for the process running in the container.
             runAsUser: {{ uid(runAsUser) }}
             # Specifies the GID for the process running in the container.
-            # Defaults to `users`.
             runAsGroup: {{ gid(runAsGroup) }}
           args:
             - --innodb-buffer-pool-size=512M

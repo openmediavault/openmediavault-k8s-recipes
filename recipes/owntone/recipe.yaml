@@ -540,7 +540,6 @@ spec:
             - name: "UID"
               value: "{{ uid(runAsUser) }}"
             # Specifies the GID for the process running in the container.
-            # Defaults to `users`.
             - name: "GID"
               value: "{{ gid(runAsGroup) }}"
           ports:

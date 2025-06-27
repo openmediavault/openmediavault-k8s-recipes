@@ -75,7 +75,6 @@ spec:
       # Specifies the UID for the process running in the container.
       PLEX_UID: "{{ uid(runAsUser) }}"
       # Specifies the GID for the process running in the container.
-      # Defaults to `users`.
       PLEX_GID: "{{ gid(runAsGroup) }}"
 ---
 apiVersion: traefik.io/v1alpha1

@@ -97,7 +97,6 @@ spec:
           # Specifies the UID for the process running in the container.
           runAsUser: {{ uid(runAsUser) }}
           # Specifies the GID for the process running in the container.
-          # Defaults to `users`.
           runAsGroup: {{ gid(runAsGroup) }}
         ports:
         - containerPort: 8000
