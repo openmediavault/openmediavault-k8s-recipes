@@ -1,0 +1,17 @@
+name: Syncthing
+description: Open source continuous file synchronization.
+section: utils
+architecture:
+  - amd64
+  - armhf
+  - arm64
+url: https://syncthing.net/
+recipeVersion: "1.0.0"
+appVersion:
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://syncthing.net/
+  - https://github.com/syncthing/syncthing/
+  - https://hub.docker.com/r/syncthing/syncthing/
+  - https://artifacthub.io/packages/helm/brandan-schmitz-helm-charts/syncthing/
