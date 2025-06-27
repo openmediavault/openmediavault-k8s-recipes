@@ -24,11 +24,11 @@ metadata:
 spec:
   repo: https://utkuozdemir.org/helm-charts
   chart: filebrowser
-  version: 1.0.0
+  version: "1.0.0"
   targetNamespace: filebrowser-app
   valuesContent: |-
     image:
-      tag: "v2.32.3"
+      tag: "v2.32.0"
     securityContext:
       runAsNonRoot: true
       # Specifies the UID for the process running in the container.
