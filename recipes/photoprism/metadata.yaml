@@ -10,4 +10,5 @@ appVersion: latest
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:
-  - https://dl.photoprism.app/docker/docker-compose.yml
+  - https://dl.photoprism.app/docker/compose.yaml
+  - https://hub.docker.com/r/photoprism/photoprism
