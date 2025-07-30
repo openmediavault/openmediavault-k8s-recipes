@@ -6,7 +6,7 @@ architecture:
   - armhf
   - arm64
 url: https://github.com/gtsteffaniak/filebrowser
-recipeVersion: "1.0.0"
+recipeVersion: "1.0.1"
 appVersion: "latest"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

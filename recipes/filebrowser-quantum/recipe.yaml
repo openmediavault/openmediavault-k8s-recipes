@@ -61,6 +61,8 @@ spec:
       app.kubernetes.io/instance: filebrowser-quantum
       app.kubernetes.io/name: filebrowser-quantum
   replicas: 1
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

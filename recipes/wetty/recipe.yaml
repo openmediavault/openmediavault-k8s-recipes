@@ -23,6 +23,8 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: wetty
       app.kubernetes.io/name: wetty
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

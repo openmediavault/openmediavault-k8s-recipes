@@ -27,6 +27,8 @@ spec:
       app.kubernetes.io/instance: minio
       app.kubernetes.io/name: minio
   replicas: 1
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

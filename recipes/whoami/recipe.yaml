@@ -40,6 +40,8 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: whoami
       app.kubernetes.io/name: whoami
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

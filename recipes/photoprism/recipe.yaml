@@ -30,6 +30,8 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: photoprism
       app.kubernetes.io/name: photoprism
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -110,6 +112,8 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: mariadb
       app.kubernetes.io/name: mariadb
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

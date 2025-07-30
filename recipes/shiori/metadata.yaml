@@ -6,7 +6,7 @@ architecture:
   - armhf
   - arm64
 url: https://github.com/go-shiori/shiori
-recipeVersion: "1.0.1"
+recipeVersion: "1.0.2"
 appVersion: "latest"
 maintainers:
   - Ronnie Bathoorn <b@thoorn.com>

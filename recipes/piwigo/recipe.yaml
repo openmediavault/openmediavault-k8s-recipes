@@ -68,6 +68,8 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: piwigo
       app.kubernetes.io/name: piwigo
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

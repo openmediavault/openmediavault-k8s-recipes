@@ -27,6 +27,8 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: shiori
       app.kubernetes.io/name: shiori
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
