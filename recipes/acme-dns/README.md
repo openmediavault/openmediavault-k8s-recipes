@@ -1,6 +1,6 @@
 The acme-dns HTTPS API is reverse-proxied through `https://acme-dns.<FQDN>:8443` .
 
-Note: Unlike default acme-dns setup, the API is **not accessible** at `https://auth.<your-domain>/` !
+> ℹ️ **Info:** Unlike default acme-dns setup, the API is **not accessible** at `https://auth.<your-domain>/` !
 
 ----
 
