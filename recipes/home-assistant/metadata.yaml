@@ -1,0 +1,18 @@
+name: Home Assistant
+description: Open source home automation that puts local control and privacy first. Powered by a worldwide community of tinkerers and DIY enthusiasts.
+section: net
+architecture:
+  - i386
+  - amd64
+  - armel
+  - armhf
+  - arm64
+url: https://www.home-assistant.io/
+recipeVersion: "1.0.0"
+appVersion: stable
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/home-assistant/core/pkgs/container/home-assistant/
+  - https://www.home-assistant.io/installation/alternative/
+  - https://www.home-assistant.io/integrations/http/
