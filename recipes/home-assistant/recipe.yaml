@@ -1,0 +1,131 @@
+# The app can be reached at https://home-assistant.<FQDN>:8443
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set configSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: home-assistant-app
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: custom-config
+  namespace: home-assistant-app
+  labels:
+    app.kubernetes.io/instance: home-assistant
+    app.kubernetes.io/name: home-assistant
+data:
+  configuration.yaml: |
+    default_config:
+    frontend:
+      themes: !include_dir_merge_named themes
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        - 127.0.0.1
+        - ::1
+        - 10.42.0.0/16
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: home-assistant
+    app.kubernetes.io/name: home-assistant
+  name: home-assistant
+  namespace: home-assistant-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: home-assistant
+      app.kubernetes.io/name: home-assistant
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: home-assistant
+        app.kubernetes.io/name: home-assistant
+    spec:
+      containers:
+        - image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          name: home-assistant
+          ports:
+            - containerPort: 8123
+              protocol: TCP
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: custom-config
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+            - name: d-bus
+              mountPath: /run/dbus
+            - name: localtime
+              mountPath: /etc/localtime
+            - name: zigbee
+              mountPath: /dev/ttyUSB0
+      hostNetwork: true
+      restartPolicy: Always
+      volumes:
+        - name: config
+          hostPath:
+            type: Directory
+            path: {{ sharedfolder_path(configSharedFolderName) }}
+        - name: d-bus
+          hostPath:
+            path: /run/dbus
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+        - name: zigbee
+          hostPath:
+            path: /dev/ttyUSB0
+        - name: custom-config
+          configMap:
+            name: custom-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: home-assistant
+  namespace: home-assistant-app
+  labels:
+    app.kubernetes.io/instance: home-assistant
+    app.kubernetes.io/name: home-assistant
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: home-assistant
+    app.kubernetes.io/name: home-assistant
+  ports:
+    - protocol: TCP
+      port: 8123
+      targetPort: 8123
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: home-assistant-websecure
+  namespace: home-assistant-app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`home-assistant.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: home-assistant
+          port: 8123
+  tls: {}
