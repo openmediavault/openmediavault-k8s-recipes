@@ -10,29 +10,6 @@ kind: Namespace
 metadata:
   name: home-assistant-app
 ---
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: custom-config
-  namespace: home-assistant-app
-  labels:
-    app.kubernetes.io/instance: home-assistant
-    app.kubernetes.io/name: home-assistant
-data:
-  configuration.yaml: |
-    default_config:
-    frontend:
-      themes: !include_dir_merge_named themes
-    automation: !include automations.yaml
-    script: !include scripts.yaml
-    scene: !include scenes.yaml
-    http:
-      use_x_forwarded_for: true
-      trusted_proxies:
-        - 127.0.0.1
-        - ::1
-        - 10.42.0.0/16
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -67,9 +44,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: custom-config
-              mountPath: /config/configuration.yaml
-              subPath: configuration.yaml
             - name: d-bus
               mountPath: /run/dbus
             - name: localtime
@@ -92,9 +66,6 @@ spec:
         - name: zigbee
           hostPath:
             path: /dev/ttyUSB0
-        - name: custom-config
-          configMap:
-            name: custom-config
 ---
 apiVersion: v1
 kind: Service
