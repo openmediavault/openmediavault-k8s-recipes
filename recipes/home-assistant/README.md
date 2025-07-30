@@ -19,7 +19,6 @@ The `configuration.yaml` file needs to be modified by including the following li
 at the bottom of the file:
 
 ```yaml
-...
 http:
   use_x_forwarded_for: true
   trusted_proxies:
