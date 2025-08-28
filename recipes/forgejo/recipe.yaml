@@ -7,10 +7,6 @@
 # directory.
 {% set homeSharedFolderName = '<MODIFY>' %}
 {% set configSharedFolderName = '<MODIFY>' %}
-# This is the HTTPS port of the load balancer. The service needs to be aware of
-# the port to be able to show the correct clone URLs in the web interface. This
-# only needs to be changed if you changed it.
-{% set loadBalancerHttpsPort = '8443' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
@@ -52,7 +48,7 @@ spec:
             - name: FORGEJO__server__DOMAIN
               value: "forgejo.{{ fqdn() }}"
             - name: FORGEJO__server__ROOT_URL
-              value: "https://forgejo.{{ fqdn() }}:{{ loadBalancerHttpsPort }}/"
+              value: "https://forgejo.{{ fqdn() }}:{{ conf_get('conf.service.k8s'") | get('websecureport') }}/"
             - name: FORGEJO__server__SSH_DOMAIN
               value: "{{ fqdn() }}"
             - name: FORGEJO__server__SSH_PORT
@@ -102,7 +98,6 @@ spec:
           hostPath:
             type: File
             path: /etc/localtime
-
 ---
 apiVersion: v1
 kind: Service
