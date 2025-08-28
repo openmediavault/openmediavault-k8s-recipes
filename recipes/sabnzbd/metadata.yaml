@@ -1,0 +1,16 @@
+name: SABnzbd
+description: An automated Usenet download tool written in Python.
+section: net
+architecture:
+  - amd64
+  - arm64
+  - riscv64
+url: https://sabnzbd.org/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Jan Holthuis <jan.holthuis@ruhr-uni-bochum.de>
+sources:
+  - https://sabnzbd.org/
+  - https://github.com/sabnzbd/sabnzbd
+  - https://hub.docker.com/r/linuxserver/sabnzbd/
