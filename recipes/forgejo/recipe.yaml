@@ -1,4 +1,4 @@
-# The app can be reached at http://forgejo.<FQDN>:8080
+# The app can be reached at https://forgejo.<FQDN>:8080
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -48,7 +48,7 @@ spec:
             - name: FORGEJO__server__DOMAIN
               value: "forgejo.{{ fqdn() }}"
             - name: FORGEJO__server__ROOT_URL
-              value: "https://forgejo.{{ fqdn() }}:{{ conf_get('conf.service.k8s'") | get('websecureport') }}/"
+              value: "https://forgejo.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}/"
             - name: FORGEJO__server__SSH_DOMAIN
               value: "{{ fqdn() }}"
             - name: FORGEJO__server__SSH_PORT
