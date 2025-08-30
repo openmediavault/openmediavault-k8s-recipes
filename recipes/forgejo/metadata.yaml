@@ -1,0 +1,13 @@
+name: Forgejo
+description: A self-hosted software development platform, offering Git repository mangement, bug tracking and project management. It is a fork of Gitea.
+section: net
+architecture:
+  - amd64
+url: https://forgejo.org/
+recipeVersion: "1.0.0"
+appVersion: "12"
+maintainers:
+  - Jan Holthuis <jan.holthuis@ruhr-uni-bochum.de>
+sources:
+  - https://forgejo.org/docs/latest/admin/installation/docker/
+  - https://codeberg.org/forgejo/forgejo
