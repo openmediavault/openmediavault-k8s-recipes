@@ -1,4 +1,4 @@
-# The app can be reached at http://sabnzbd.<FQDN>:8080
+# The app can be reached at https://sabnzbd.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -48,7 +48,7 @@ spec:
             # Specifies the GID for the process running in the container.
             runAsGroup: {{ gid(runAsGroup) }}
           ports:
-            - containerPort: 8085
+            - containerPort: 8080
               protocol: TCP
           volumeMounts:
              - name: config
@@ -87,8 +87,8 @@ spec:
     app.kubernetes.io/name: sabnzbd
   ports:
     - protocol: TCP
-      port: 8085
-      targetPort: 8085
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -104,5 +104,5 @@ spec:
       kind: Rule
       services:
         - name: sabnzbd
-          port: 8085
+          port: 8080
   tls: {}
