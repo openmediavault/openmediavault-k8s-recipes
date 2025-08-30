@@ -1,4 +1,4 @@
-# The app can be reached at https://forgejo.<FQDN>:8080
+# The app can be reached at https://forgejo.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
