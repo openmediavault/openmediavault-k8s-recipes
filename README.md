@@ -39,7 +39,7 @@ Use this translation table for the `architecture` field in the `metadata.yaml` f
 | `armhf`       | `armv7l`, `linux/arm/v7`    |
 | `arm64`       | `aarch64`, `linux/arm64/v8` |
 
-The [architecture names](https://wiki.debian.org/SupportedArchitectures) are taken from Debian project.
+The [architecture names](https://wiki.debian.org/SupportedArchitectures) are taken from the Debian project.
 
 ## Section
 
@@ -51,7 +51,7 @@ Additionally, you can use:
 
 # Domain Specific Language
 
-The recipe editor of the `openmediavault-k8s` has a DSL (Domain Specific Language)
+The recipe editor of the `openmediavault-k8s` plugin has a DSL (Domain Specific Language)
 that supports the user in getting specific information from their openmediavault
 host system in Kubernetes manifests.
 
