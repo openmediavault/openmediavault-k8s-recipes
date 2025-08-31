@@ -1,0 +1,22 @@
+name: Music Player Daemon (MPD)
+description: >-
+  Music Player Daemon (MPD) is a flexible, powerful, server-side application for playing music. Through plugins and libraries it can play a variety of sound files while being controlled by its network protocol.
+section: audio
+architecture:
+  - i386
+  - amd64
+  - armel
+  - armhf
+  - arm64
+  - ppc64le
+  - riscv64
+url: https://www.musicpd.org/
+recipeVersion: "1.0.0"
+appVersion: stable
+maintainers:
+  - Jan Holthuis <jan.holthuis@ruhr-uni-bochum.de>
+sources:
+  - https://github.com/MusicPlayerDaemon/MPD
+  - https://mpd.readthedocs.io/en/stable/index.html
+  - https://hub.docker.com/r/gists/mpd
+  - https://github.com/vgist/dockerfiles/tree/master/mpd
