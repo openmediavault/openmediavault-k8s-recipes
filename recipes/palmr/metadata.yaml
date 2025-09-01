@@ -1,0 +1,15 @@
+name: Palmr
+description: Palmr is a fast and secure platform for sharing files, built with performance and privacy in mind.
+section: utils
+architecture:
+  - amd64
+  - arm64
+url: https://palmr.kyantech.com.br/
+recipeVersion: "1.0.0"
+appVersion: "latest"
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/kyantech/Palmr/
+  - https://hub.docker.com/r/kyantech/palmr/
+  - https://palmr.kyantech.com.br/docs/3.2-beta/quick-start/

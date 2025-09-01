@@ -1,0 +1,116 @@
+# The app can be reached at http://palmr.<FQDN>:8080
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: palmr-app
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: palmr-env
+  namespace: palmr-app
+data:
+  # Optional: Uncomment and configure as needed (if you don`t use, you can remove)
+  # ENABLE_S3: true # Set to true to enable S3-compatible storage
+  # DISABLE_FILESYSTEM_ENCRYPTION: false # Set to false to enable file encryption
+  # ENCRYPTION_KEY: your-secure-key-min-32-chars # Required only if encryption is enabled
+  PALMR_UID: "{{ uid(runAsUser) }}" # UID for the container processes (default is 1000)
+  PALMR_GID: "{{ gid(runAsGroup) }}" # GID for the container processes (default is 1000)
+  SECURE_SITE: "true" # Set to true if you are using a reverse proxy
+  # DEFAULT_LANGUAGE: en-US # Default language for the application (optional, defaults to en-US)
+  # PRESIGNED_URL_EXPIRATION: 3600 # Duration in seconds for presigned URL expiration (optional, defaults to 3600 seconds / 1 hour)
+  # DOWNLOAD_MAX_CONCURRENT: 5 # Maximum simultaneous downloads (auto-scales if not set)
+  # DOWNLOAD_MEMORY_THRESHOLD_MB: 2048 # Memory threshold in MB before throttling (auto-scales if not set)
+  # DOWNLOAD_QUEUE_SIZE: 25 # Maximum queue size for pending downloads (auto-scales if not set)
+  # DOWNLOAD_MIN_FILE_SIZE_GB: 3.0 # Minimum file size in GB to activate memory management (default: 3.0)
+  # DOWNLOAD_AUTO_SCALE: true # Enable auto-scaling based on system memory (default: true)
+  # NODE_OPTIONS: --expose-gc # Enable garbage collection for large downloads (recommended for production)
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: palmr-websecure
+  namespace: palmr-app
+  labels:
+    app.kubernetes.io/instance: palmr
+    app.kubernetes.io/name: palmr
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`palmr.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: palmr
+          port: 5487
+  tls: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: palmr
+  namespace: palmr-app
+  labels:
+    app.kubernetes.io/instance: palmr
+    app.kubernetes.io/name: palmr
+spec:
+  ports:
+  - port: 5487
+    targetPort: 5487
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/instance: palmr
+    app.kubernetes.io/name: palmr
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: palmr
+  namespace: palmr-app
+  labels:
+    app.kubernetes.io/instance: palmr
+    app.kubernetes.io/name: palmr
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: palmr
+      app.kubernetes.io/name: palmr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: palmr
+        app.kubernetes.io/name: palmr
+    spec:
+      containers:
+      - name: palmr
+        image: kyantech/palmr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5487
+          name: http
+          protocol: TCP
+        volumeMounts:
+          - mountPath: "/app/server"
+            name: data
+        envFrom:
+          - configMapRef:
+              name: palmr-env
+      volumes:
+        - name: data
+          hostPath:
+            type: Directory
+            path: {{ sharedfolder_path(dataSharedFolderName) }}
