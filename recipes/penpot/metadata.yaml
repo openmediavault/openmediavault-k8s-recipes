@@ -1,0 +1,18 @@
+name: Penpot
+description: Penpot is the web-based open-source design tool that bridges the gap between designers and developers.
+section: devel
+architecture:
+  - amd64
+  - arm64
+url: https://penpot.app/
+recipeVersion: "1.0.0"
+appVersion: "2.9.0"
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://artifacthub.io/packages/helm/penpot/penpot/
+  - https://artifacthub.io/packages/helm/bitnami/postgresql/
+  - https://artifacthub.io/packages/helm/bitnami/valkey/
+  - https://hub.docker.com/u/penpotapp/
+  - https://help.penpot.app/technical-guide/getting-started/#install-with-kubernetes/
+  - https://github.com/penpot/penpot-helm/blob/main/charts/penpot/values.yaml
