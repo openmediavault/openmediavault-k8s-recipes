@@ -1,0 +1,157 @@
+# The app can be reached at https://penpot.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+{% set sizeDataAssets = '20Gi' %}
+{% set sizeDataPostgresql = '8Gi' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set assetsSharedFolderName = '<MODIFY>' %}
+{% set postgresqlSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: penpot-app
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: penpot-data-assets
+  labels:
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: "{{ sizeDataAssets }}"
+  hostPath:
+    path: {{ sharedfolder_path(assetsSharedFolderName) }}
+    type: Directory
+  accessModes:
+    - "ReadWriteOnce"
+---
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: penpot-data-assets
+  namespace: penpot-app
+  labels:
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot
+spec:
+  storageClassName: shared-folder
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "{{ sizeDataAssets }}"
+  volumeName: penpot-data-assets
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: penpot-data-postgresql
+  labels:
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: "{{ sizeDataPostgresql }}"
+  hostPath:
+    path: {{ sharedfolder_path(postgresqlSharedFolderName) }}
+    type: Directory
+  accessModes:
+    - "ReadWriteOnce"
+---
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: penpot-data-postgresql
+  namespace: penpot-app
+  labels:
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot
+spec:
+  storageClassName: shared-folder
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "{{ sizeDataPostgresql }}"
+  volumeName: penpot-data-postgresql
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: penpot
+  namespace: penpot-app
+  labels:
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot
+spec:
+  repo: http://helm.penpot.app
+  chart: penpot
+  version: "0.26.0"
+  targetNamespace: penpot-app
+  valuesContent: |-
+    global:
+      postgresqlEnabled: true
+      valkeyEnabled: true
+    config:
+      publicUri: "https://penpot.{{ fqdn() }}"
+    backend:
+      podSecurityContext:
+        fsGroup: {{ gid(runAsGroup) }}
+      containerSecurityContext:
+        runAsUser: {{ uid(runAsUser) }}
+    exporter:
+      podSecurityContext:
+        fsGroup: {{ gid(runAsGroup) }}
+      containerSecurityContext:
+        runAsUser: {{ uid(runAsUser) }}
+    persistence:
+      assets:
+        enabled: true
+        existingClaim: "penpot-data-assets"
+        size: "{{ sizeDataAssets }}"
+        accessModes:
+          - "ReadWriteOnce"
+    postgresql:
+      primary:
+        containerSecurityContext:
+          runAsUser: {{ uid(runAsUser) }}
+          runAsGroup: {{ gid(runAsGroup) }}
+        persistence:
+          enabled: true
+          volumeName: "penpot-data-postgresql"
+          existingClaim: "penpot-data-postgresql"
+          size: "{{ sizeDataPostgresql }}"
+          accessModes:
+            - "ReadWriteOnce"
+    valkey:
+      primary:
+        persistence:
+          enabled: false
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: penpot-websecure
+  namespace: penpot-app
+  labels:
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`penpot.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: penpot
+          port: 8080
+  tls: {}
