@@ -1,0 +1,96 @@
+# The app can be reached at https://actual.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: actual-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: actual
+    app.kubernetes.io/name: actual
+  name: actual
+  namespace: actual-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: actual
+      app.kubernetes.io/name: actual
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: actual
+        app.kubernetes.io/name: actual
+    spec:
+      containers:
+        - name: actual
+          image: actualbudget/actual-server:latest
+          imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+            # Specifies the UID for the process running in the container.
+            runAsUser: {{ uid(runAsUser) }}
+            # Specifies the GID for the process running in the container.
+            runAsGroup: {{ gid(runAsGroup) }}
+          env:
+            - name: ACTUAL_PORT
+              value: "5006"
+          ports:
+            - containerPort: 5006
+              protocol: TCP
+          volumeMounts:
+             - name: data
+               mountPath: /data
+      restartPolicy: Always
+      volumes:
+        - name: data
+          hostPath:
+            type: Directory
+            path: {{ sharedfolder_path(dataSharedFolderName) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: actual
+  namespace: actual-app
+  labels:
+    app.kubernetes.io/instance: actual
+    app.kubernetes.io/name: actual
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: actual
+    app.kubernetes.io/name: actual
+  ports:
+    - protocol: TCP
+      port: 5006
+      targetPort: 5006
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: actual-websecure
+  namespace: actual-app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`actual.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: actual
+          port: 5006
+  tls: {}

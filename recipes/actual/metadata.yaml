@@ -1,0 +1,17 @@
+name: Actual Budget
+description: >
+  Actual Budget is a super fast and privacy-focused app for managing your
+  finances. At its heart is the well proven and much loved Envelope Budgeting
+  methodology.
+section: finance
+architecture:
+  - amd64
+url: https://actualbudget.org/
+recipeVersion: "1.0.0"
+appVersion: "latest"
+maintainers:
+  - Jan Holthuis <jan.holthuis@ruhr-uni-bochum.de>
+sources:
+  - https://github.com/actualbudget/actual
+  - https://actualbudget.org/docs/install/docker
+  - https://hub.docker.com/r/actualbudget/actual-server
