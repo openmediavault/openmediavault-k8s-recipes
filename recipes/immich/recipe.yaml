@@ -80,6 +80,9 @@ spec:
     postgresql:
       enabled: true
       primary:
+        # This fixes startup issues for a fresh install. See this issue
+        # for details:
+        # https://github.com/immich-app/immich-charts/issues/130#issuecomment-2410351150
         resourcesPreset: large
     server:
       probes:
@@ -87,7 +90,7 @@ spec:
           spec:
             # This fixes startup issues for a fresh install. See this issue
             # for details:
-            # <https://github.com/immich-app/immich-charts/issues/130#issuecomment-2410351150>
+            # https://github.com/immich-app/immich-charts/issues/130#issuecomment-2414043494
             failureThreshold: 360
     redis:
       enabled: true
