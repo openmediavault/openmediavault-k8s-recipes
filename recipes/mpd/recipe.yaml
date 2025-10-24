@@ -103,6 +103,16 @@ spec:
           env:
             - name: HOME
               value: /var/lib/mpd
+          ports:
+            - name: mpd-tcp
+              protocol: TCP
+              containerPort: 6600
+            - name: http-mp3
+              protocol: TCP
+              containerPort: 8081
+            - name: http-flac
+              protocol: TCP
+              containerPort: 8082
           volumeMounts:
             - name: home
               mountPath: /var/lib/mpd
@@ -113,7 +123,6 @@ spec:
             - name: config
               mountPath: /etc/mpd.conf.default
               subPath: mpd.conf.default
-      hostNetwork: true
       restartPolicy: Always
       volumes:
         - name: home
@@ -131,3 +140,67 @@ spec:
         - name: config
           configMap:
             name: mpd-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mpd
+  namespace: mpd-app
+  labels:
+    app.kubernetes.io/instance: mpd
+    app.kubernetes.io/name: mpd
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: mpd
+    app.kubernetes.io/name: mpd
+  ports:
+    - name: mpd-tcp
+      protocol: TCP
+      port: 6600
+      targetPort: 6600
+    - name: http-mp3
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: http-flac
+      protocol: TCP
+      port: 8082
+      targetPort: 8082
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mpd-http
+  namespace: mpd-app
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`stream.mpd.{{ fqdn() }}`) && Path(`/mp3`)
+      kind: Rule
+      services:
+        - name: mpd
+          port: 8081
+    - match: Host(`stream.mpd.{{ fqdn() }}`) && Path(`/flac`)
+      kind: Rule
+      services:
+        - name: mpd
+          port: 8082
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: mpd-tcp
+  namespace: mpd-app
+spec:
+  entryPoints:
+    - mpd
+  routes:
+  - match: HostSNI(`*`)
+    priority: 10
+    services:
+    - name: mpd
+      port: 6600
+      weight: 10
