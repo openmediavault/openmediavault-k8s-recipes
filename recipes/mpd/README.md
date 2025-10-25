@@ -9,11 +9,10 @@ You need to expose the port by running the following commands as root:
 # omv-salt deploy run k3s
 ```
 
-If no `mpd.conf` file exists in the config directory, the recipe will create one that exposes three outputs:
+If no `mpd.conf` file exists in the config directory, the recipe will create one with two predefined outputs:
 
 - an ALSA output
-- an MP3 HTTP stream on port 8081
-- a FLAC HTTP stream on port 8082
+- a 320kpbs MP3 stream that streams to the Icecast mountpoint at `http://icecast.mpd.<FQDN>:8080/listen.mp3`
 
-The outputs can be disabled from your MPD client, or removed from the configuration
+The outputs can be disabled from your MPD client, or removed from the configuration.
 Refer to the [example `mpd.conf` file][mpdconf-example] for a full list of available configuration options.

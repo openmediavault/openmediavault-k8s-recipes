@@ -8,6 +8,16 @@
 # directory.
 {% set configSharedFolderName = '<MODIFY>' %}
 {% set musicSharedFolderName = '<MODIFY>' %}
+# The following settings can be used to configure the Icecast server. You shout
+# at least set custom passwords.
+{% set icecastSourcePassword = 'changeme' %}
+{% set icecastRelayPassword = 'changeme' %}
+{% set icecastAdminPassword = 'changeme' %}
+{% set icecastAdminUsername = 'admin' %}
+{% set icecastAdminEmail = 'noreply@example.com' %}
+{% set icecastLocation = 'MPD server' %}
+{% set icecastMaxClients = '10' %}
+{% set icecastMaxSources = '1' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
@@ -44,24 +54,22 @@ data:
     }
 
     audio_output {
-        type            "httpd"
-        name            "MP3 Stream"
-        port            "8081"
-        tags            "yes"
-        always_on       "no"
-        encoder         "lame"
-        bitrate         "320"
-        # max_clients     "10"       # optional 0=no limit
-    }
-
-    audio_output {
-        type            "httpd"
-        name            "FLAC Stream"
-        port            "8082"
-        tags            "yes"
-        always_on       "no"
-        encoder         "flac"
-        # max_clients     "10"       # optional 0=no limit
+      type              "shout"
+      encoder           "lame"   # optional
+      name              "Icecast"
+      host              "localhost"
+      port              "8000"
+      mount             "/listen.mp3"
+      bitrate           "320"
+      format            "44100:16:1"
+      protocol          "icecast2" # optional
+      password          "{{ icecastSourcePassword }}"
+      # description       "My Stream Description" # optional
+      # url               "http://example.com" # optional
+      # genre             "jazz"   # optional
+      # public            "no"     # optional
+      # timeout           "2"      # optional
+      # mixer_type        "software" # optional
     }
 ---
 apiVersion: apps/v1
@@ -107,12 +115,6 @@ spec:
             - name: mpd-tcp
               protocol: TCP
               containerPort: 6600
-            - name: http-mp3
-              protocol: TCP
-              containerPort: 8081
-            - name: http-flac
-              protocol: TCP
-              containerPort: 8082
           volumeMounts:
             - name: home
               mountPath: /var/lib/mpd
@@ -120,9 +122,41 @@ spec:
               mountPath: /music
             - name: sound-devices
               mountPath: /dev/snd
-            - name: config
+            - name: mpd-config
               mountPath: /etc/mpd.conf.default
               subPath: mpd.conf.default
+        - name: icecast2
+          image: libretime/icecast:2.4.4-alpine
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            # Specifies the UID for the process running in the container.
+            runAsUser: 1000  # Needs to be the "icecast" user
+            # Specifies the GID for the process running in the container.
+            runAsGroup: {{ gid(runAsGroup) }}
+          env:
+            - name: ICECAST_SOURCE_PASSWORD
+              value: "{{ icecastSourcePassword }}"
+            - name: ICECAST_RELAY_PASSWORD
+              value: "{{ icecastRelayPassword }}"
+            - name: ICECAST_ADMIN_PASSWORD
+              value: "{{ icecastAdminPassword }}"
+            - name: ICECAST_ADMIN_USERNAME
+              value: "{{ icecastAdminUsername }}"
+            - name: ICECAST_ADMIN_EMAIL
+              value: "{{ icecastAdminEmail }}"
+            - name: ICECAST_LOCATION
+              value: "{{ icecastLocation }}"
+            - name: ICECAST_HOSTNAME
+              value: "icecast.mpd.{{ fqdn() }}"
+            - name: ICECAST_MAX_CLIENTS
+              value: "{{ icecastMaxClients }}"
+            - name: ICECAST_MAX_SOURCES
+              value: "{{ icecastMaxSources }}"
+          ports:
+            - name: stream
+              protocol: TCP
+              containerPort: 8000
       restartPolicy: Always
       volumes:
         - name: home
@@ -137,7 +171,7 @@ spec:
           hostPath:
             type: Directory
             path: /dev/snd
-        - name: config
+        - name: mpd-config
           configMap:
             name: mpd-configmap
 ---
@@ -159,35 +193,26 @@ spec:
       protocol: TCP
       port: 6600
       targetPort: 6600
-    - name: http-mp3
+    - name: icecast
       protocol: TCP
-      port: 8081
-      targetPort: 8081
-    - name: http-flac
-      protocol: TCP
-      port: 8082
-      targetPort: 8082
+      port: 8000
+      targetPort: 8000
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: mpd-http
+  name: icecast
   namespace: mpd-app
 spec:
   entryPoints:
     - web
     - websecure
   routes:
-    - match: Host(`stream.mpd.{{ fqdn() }}`) && Path(`/mp3`)
+    - match: Host(`icecast.mpd.{{ fqdn() }}`)
       kind: Rule
       services:
         - name: mpd
-          port: 8081
-    - match: Host(`stream.mpd.{{ fqdn() }}`) && Path(`/flac`)
-      kind: Rule
-      services:
-        - name: mpd
-          port: 8082
+          port: 8000
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP
