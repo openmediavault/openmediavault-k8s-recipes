@@ -16,3 +16,7 @@ If no `mpd.conf` file exists in the config directory, the recipe will create one
 
 The outputs can be disabled from your MPD client, or removed from the configuration.
 Refer to the [example `mpd.conf` file][mpdconf-example] for a full list of available configuration options.
+
+In addition, a web interface provided by [myMPD] is provided at `http://mpd.<FQDN>:8080/`.
+
+[myMPD]: https://jcorporation.github.io/myMPD/
