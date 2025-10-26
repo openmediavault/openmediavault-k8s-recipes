@@ -8,8 +8,6 @@ architecture:
   - armel
   - armhf
   - arm64
-  - ppc64le
-  - riscv64
 url: https://www.musicpd.org/
 recipeVersion: "1.0.0"
 appVersion: stable
