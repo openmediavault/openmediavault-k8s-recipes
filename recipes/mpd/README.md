@@ -1,13 +1,6 @@
 # Music Player Daemon (MPD)
 
 The MPD server will listen on port 6600 by default.
-You need to expose the port by running the following commands as root:
-
-```
-# omv-env set OMV_K8S_TRAEFIK_PORTS "{mpd: {port: 6600, exposedPort: 6600, expose: {default: true}}}"
-# omv-salt stage run prepare
-# omv-salt deploy run k3s
-```
 
 If no `mpd.conf` file exists in the config directory, the recipe will create one with two predefined outputs:
 
@@ -19,4 +12,8 @@ Refer to the [example `mpd.conf` file][mpdconf-example] for a full list of avail
 
 In addition, a web interface provided by [myMPD] is provided at `http://mpd.<FQDN>:8080/`.
 
+MPD audio is also provided to a [Snapcast] server.
+The corresponding web interface can be reached under `http://snapcast.mpd.<FQDN>:8080/`.
+
 [myMPD]: https://jcorporation.github.io/myMPD/
+[Snapcast]: https://github.com/badaix/snapcast
