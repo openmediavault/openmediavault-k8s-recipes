@@ -1,3 +1,5 @@
+> ⚠️ **Warning:** The Filebrowser project is on maintenance-only mode.
+
 The default login is:
 
 **Username** - admin  
