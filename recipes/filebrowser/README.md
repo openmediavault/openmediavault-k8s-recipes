@@ -1,4 +1,4 @@
-> ⚠️ **Warning:** The Filebrowser project is on maintenance-only mode.
+> ⚠️ **Warning:** The Filebrowser project is on maintenance-only mode. Since the used Helm Chart has not been updated, newer images cannot be used. Therefore, this recipe only uses version v2.32.3.
 
 The default login is:
 
