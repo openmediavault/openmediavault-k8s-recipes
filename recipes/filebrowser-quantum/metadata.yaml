@@ -3,11 +3,10 @@ description: Web file browser.
 section: net
 architecture:
   - amd64
-  - armhf
   - arm64
-url: https://github.com/gtsteffaniak/filebrowser
-recipeVersion: "1.0.1"
-appVersion: "latest"
+url: https://filebrowserquantum.com/
+recipeVersion: "1.0.2"
+appVersion: "stable"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
 sources:

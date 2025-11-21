@@ -2,6 +2,7 @@
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
+{% set adminUsername = 'admin' %}
 {% set adminPassword = 'admin' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
@@ -21,16 +22,22 @@ metadata:
   name: filebrowser-quantum-config
   namespace: filebrowser-quantum-app
 data:
-  default_config.yaml: |
+  config.yaml: |
     # https://github.com/gtsteffaniak/filebrowser/wiki/Full-Config-Example
     server:
+      disableUpdateCheck: true
       port: 80
       baseURL: "/"
       logging:
         - levels: "info|warning|error"
-      cacheDir: /data/tmp
+      cacheDir: "/data/tmp"
+      database: "/data/database.db"
       sources:
         - path: "/srv"
+          config:
+            defaultEnabled: true
+    auth:
+      adminUsername: "{{ adminUsername }}"
     userDefaults:
       preview:
         image: true
@@ -71,7 +78,7 @@ spec:
     spec:
       containers:
       - name: filebrowser-quantum
-        image: ghcr.io/gtsteffaniak/filebrowser
+        image: ghcr.io/gtsteffaniak/filebrowser:stable
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsNonRoot: true
@@ -85,7 +92,7 @@ spec:
         # https://github.com/gtsteffaniak/filebrowser/wiki/Environment-Variables
         env:
         - name: FILEBROWSER_CONFIG
-          value: /data/default_config.yaml
+          value: /data/config.yaml
         - name: FILEBROWSER_DATABASE
           value: /data/database.db
         envFrom:
@@ -94,10 +101,10 @@ spec:
         volumeMounts:
         - name: data
           mountPath: "/data"
-        - name: default-config
-          mountPath: "/data/default_config.yaml"
+        - name: config
+          mountPath: "/data/config.yaml"
           readOnly: true
-          subPath: default_config.yaml
+          subPath: config.yaml
         - name: srv
           mountPath: "/srv"
       restartPolicy: Always
@@ -109,7 +116,7 @@ spec:
           # Make sure the configured UID/GID the container is running
           # with has access to that directory.
           path: {{ sharedfolder_path(dataSharedFolderName) }}
-      - name: default-config
+      - name: config
         configMap:
           name: filebrowser-quantum-config
       - name: srv
