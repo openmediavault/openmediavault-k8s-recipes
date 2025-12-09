@@ -1,0 +1,171 @@
+# The app can be reached at https://nextcloud.<FQDN>:8443
+# Change the following variables to adapt the recipe to your needs.
+{% set userName = 'admin' %}
+{% set userPassword = 'admin' %}
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+{% set dataStorage = '8Gi' %}
+{% set dbName = 'nextcloud' %}
+{% set dbUser = 'nextcloud' %}
+{% set dbPassword = 'nextcloud' %}
+{% set dbRootPassword = 'nextcloud' %}
+{% set dbStorage = '8Gi' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set dataSharedFolderName = '<MODIFY>' %}
+{% set dbSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nextcloud-app
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-nextcloud
+  labels:
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/name: nextcloud
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: "{{ dataStorage }}"
+  hostPath:
+    # This is the path where the nextcloud library will be stored.
+    # Insert the name of the shared folder you want to use.
+    path: {{ sharedfolder_path(dataSharedFolderName) }}
+    type: Directory
+  accessModes:
+    - "ReadWriteOnce"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-db
+  labels:
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/name: nextcloud
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: "{{ dbStorage }}"
+  hostPath:
+    # This is the path where the nextcloud library will be stored.
+    # Insert the name of the shared folder you want to use.
+    path: {{ sharedfolder_path(dbSharedFolderName) }}
+    type: Directory
+  accessModes:
+    - "ReadWriteOnce"
+---
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: nextcloud-db
+  namespace: nextcloud-app
+  labels:
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/name: nextcloud
+spec:
+  storageClassName: shared-folder
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "{{ dbStorage }}"
+  volumeName: nextcloud-db
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nextcloud
+  namespace: nextcloud-app
+  labels:
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/name: nextcloud
+spec:
+  repo: https://nextcloud.github.io/helm/
+  chart: nextcloud
+  targetNamespace: nextcloud-app
+  # https://github.com/nextcloud/helm/blob/main/charts/nextcloud/values.yaml
+  valuesContent: |-
+    image:
+      tag: "production"
+    nextcloud:
+      host: "nextcloud.{{ fqdn() }}"
+      username: "{{ userName }}"
+      password: "{{ userPassword }}"
+      containerPort: 80
+      trustedDomains:
+        - "{{ fqdn() }}"
+        - "10.42.0.0/16"
+      securityContext:
+        runAsNonRoot: true
+        # Specifies the UID for the process running in the container.
+        runAsUser: {{ uid(runAsUser) }}
+        # Specifies the GID for the process running in the container.
+        runAsGroup: {{ gid(runAsGroup) }}
+    internalDatabase:
+      enabled: false
+    externalDatabase:
+      enabled: true
+      type: "mysql"
+      host: "nextcloud-mariadb:3306"
+      database: "{{ dbName }}"
+      user: "{{ dbUser }}"
+      password: "{{ dbPassword }}"
+    # https://github.com/bitnami/charts/blob/main/bitnami/mariadb/values.yaml
+    # https://github.com/bitnami/containers/blob/main/bitnami/mariadb/README.md#environment-variables
+    mariadb:
+      enabled: true
+      auth:
+        database: "{{ dbName }}"
+        username: "{{ dbUser }}"
+        password: "{{ dbPassword }}"
+        rootPassword: "{{ dbRootPassword }}"
+      primary:
+        containerSecurityContext:
+          runAsNonRoot: true
+          # Specifies the UID for the process running in the container.
+          runAsUser: {{ uid(runAsUser) }}
+          # Specifies the GID for the process running in the container.
+          runAsGroup: {{ gid(runAsGroup) }}
+        persistence:
+          enabled: true
+          existingClaim: "nextcloud-db"
+          accessMode: "ReadWriteOnce"
+          size: "{{ dbStorage }}"
+        # https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+        resourcesPreset: "micro"
+    service:
+      port: 80
+    persistence:
+      enabled: true
+      size: "{{ dataStorage }}"
+      storageClass: "shared-folder"
+    livenessProbe:
+      initialDelaySeconds: 60
+    readinessProbe:
+      initialDelaySeconds: 60
+    startupProbe:
+      enabled: true
+      initialDelaySeconds: 60
+      failureThreshold: 60
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nextcloud-websecure
+  namespace: nextcloud-app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`nextcloud.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: nextcloud
+          port: 80
+  tls: {}
