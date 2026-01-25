@@ -6,7 +6,7 @@ architecture:
   - armhf
   - arm64
 url: https://syncthing.net/
-recipeVersion: "1.0.0"
+recipeVersion: "1.1.0"
 appVersion:
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
