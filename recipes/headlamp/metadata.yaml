@@ -1,0 +1,15 @@
+name: Headlamp
+description: Headlamp is an easy-to-use and extensible Kubernetes web UI.
+section: net
+architecture:
+  - amd64
+  - arm64
+url: https://headlamp.dev/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://headlamp.dev/
+  - https://github.com/kubernetes-sigs/headlamp/
+  - https://headlamp.dev/docs/latest/installation/in-cluster/#using-helm/
