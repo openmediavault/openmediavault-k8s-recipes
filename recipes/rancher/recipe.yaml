@@ -12,7 +12,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: rancher
-  namespace: cattle-system
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: rancher
     app.kubernetes.io/name: rancher

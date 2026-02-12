@@ -7,7 +7,7 @@ architecture:
 depends:
   - ollama
 url: https://www.openwebui.com/
-recipeVersion: "1.0.1"
+recipeVersion: "1.0.2"
 appVersion:
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

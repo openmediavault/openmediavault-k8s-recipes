@@ -54,7 +54,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: paperless
-  namespace: paperless-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: paperless
     app.kubernetes.io/name: paperless

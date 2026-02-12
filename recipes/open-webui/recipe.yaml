@@ -12,7 +12,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: openwebui
-  namespace: openwebui-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/name: openwebui

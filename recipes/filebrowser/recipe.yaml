@@ -17,7 +17,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: filebrowser
-  namespace: filebrowser-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: filebrowser
     app.kubernetes.io/name: filebrowser

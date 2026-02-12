@@ -10,7 +10,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: speedtest
-  namespace: speedtest-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: speedtest
     app.kubernetes.io/name: speedtest

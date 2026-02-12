@@ -4,7 +4,7 @@ section: video
 architecture:
   - amd64
 url: https://www.plex.tv/
-recipeVersion: "1.2.3"
+recipeVersion: "1.2.4"
 appVersion:
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

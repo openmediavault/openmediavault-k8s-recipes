@@ -88,7 +88,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: penpot
-  namespace: penpot-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: penpot
     app.kubernetes.io/name: penpot

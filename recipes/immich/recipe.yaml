@@ -54,7 +54,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: immich
-  namespace: immich-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: immich

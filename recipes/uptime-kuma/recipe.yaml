@@ -13,7 +13,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: uptime-kuma
-  namespace: uptime-kuma-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/name: uptime-kuma

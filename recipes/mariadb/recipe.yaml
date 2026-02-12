@@ -20,7 +20,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: mariadb
-  namespace: mariadb-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: mariadb
     app.kubernetes.io/name: mariadb

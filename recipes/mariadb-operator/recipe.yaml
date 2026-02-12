@@ -9,7 +9,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: mariadb-operator-crds
-  namespace: mariadb-operator-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: mariadb-operator-crds
     app.kubernetes.io/name: mariadb-operator-crds
@@ -25,7 +25,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: mariadb-operator
-  namespace: mariadb-operator-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: mariadb-operator
     app.kubernetes.io/name: mariadb-operator

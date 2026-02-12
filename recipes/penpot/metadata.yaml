@@ -5,7 +5,7 @@ architecture:
   - amd64
   - arm64
 url: https://penpot.app/
-recipeVersion: "1.0.0"
+recipeVersion: "1.0.1"
 appVersion: "2.9.0"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

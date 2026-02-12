@@ -54,7 +54,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: plex-media-server
-  namespace: plex-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: plex-media-server
     app.kubernetes.io/name: plex-media-server

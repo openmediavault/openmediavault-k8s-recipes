@@ -15,7 +15,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: ollama
-  namespace: ollama-app
+  namespace: kube-system
   labels:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/name: ollama
