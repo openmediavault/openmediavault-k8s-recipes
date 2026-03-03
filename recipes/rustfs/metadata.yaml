@@ -1,5 +1,5 @@
 name: RustFS
-description: RustFS is a high-performance, distributed object storage system built in Rust.
+description: RustFS is a high-performance, distributed S3-compatible object storage system built in Rust.
 section: net
 architecture:
   - amd64
