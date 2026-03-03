@@ -12,12 +12,14 @@ This repository contains a recipe collection for easy deployment of container-ba
 
 The following rules should be observed in the recipes:
 
+- A recipe is targeting a 1-node Kubernetes cluster.
 - Create a namespace for each application according the schema: `<APPNAME>-app`
 - Traefik is used by the `openmediavault-k8s` plugin. So use `IngressRoute` over `Ingress`.
 - For HTTPS ingresses apply `tls: {}` to make use of the default TLS certificate.
 - The default entry points for `IngressRoute` are `web` (HTTP) and `websecure` (HTTPS).
 - Make use of a `NodePort` service only if the application does not work behind a reverse proxy.
 - Make use of the `HelmChart` resource if the application can be installed via Helm.
+- Make use of `hostPath` volumes to leverage [shared folders](https://docs.openmediavault.org/en/latest/administration/storage/sharedfolders.html) on the host system.
 
 # metadata.yaml
 
