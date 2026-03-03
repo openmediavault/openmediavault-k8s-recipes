@@ -19,7 +19,7 @@ The following rules should be observed in the recipes:
 - The default entry points for `IngressRoute` are `web` (HTTP) and `websecure` (HTTPS).
 - Make use of a `NodePort` service only if the application does not work behind a reverse proxy.
 - Make use of the `HelmChart` resource if the application can be installed via Helm.
-- Make use of `hostPath` volumes to leverage [shared folders](https://docs.openmediavault.org/en/latest/administration/storage/sharedfolders.html) on the host system.
+- Make use of [hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) volumes to leverage [shared folders](https://docs.openmediavault.org/en/latest/administration/storage/sharedfolders.html) on the host system.
 
 # metadata.yaml
 
