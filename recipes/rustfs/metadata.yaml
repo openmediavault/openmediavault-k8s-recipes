@@ -1,0 +1,18 @@
+name: RustFS
+description: RustFS is a high-performance, distributed object storage system built in Rust.
+section: net
+architecture:
+  - amd64
+  - arm64
+url: https://rustfs.com/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/rustfs/rustfs/
+  - https://github.com/rustfs/helm/
+  - https://docs.rustfs.com/
+  - https://charts.rustfs.com/
+  - https://artifacthub.io/packages/helm/rustfs/rustfs/
+  - https://hub.docker.com/r/rustfs/rustfs/
