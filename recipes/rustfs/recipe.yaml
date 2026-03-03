@@ -1,6 +1,8 @@
 # The app can be reached at https://rustfs.<FQDN>:8443
 {% set accessKey = 'admin' %}
 {% set secretKey = 'admin' %}
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
@@ -44,6 +46,11 @@ spec:
       name: shared-folder
       dataStorageSize: 2Gi
       logStorageSize: 256Mi
+    podSecurityContext:
+      runAsNonRoot: true
+      fsGroup: {{ gid(runAsGroup) }}
+      runAsUser: {{ uid(runAsUser) }}
+      runAsGroup: {{ gid(runAsGroup) }}
 ---
 apiVersion: v1
 kind: PersistentVolume
