@@ -1,0 +1,113 @@
+# The app can be reached at https://rustfs.<FQDN>:8443
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+{% set accessKey = 'admin' %}
+{% set secretKey = 'admin' %}
+{% set dataSharedFolderName = '<MODIFY>' %}
+{% set logSharedFolderName = '<MODIFY>' %}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rustfs-app
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: rustfs
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/instance: rustfs
+    app.kubernetes.io/name: rustfs
+spec:
+  repo: https://charts.rustfs.com/
+  chart: rustfs
+  targetNamespace: rustfs-app
+  valuesContent: |-
+    image:
+      rustfs:
+        tag: latest
+    mode:
+      standalone:
+        enabled: true
+      distributed:
+        enabled: false
+    secret:
+      rustfs:
+        access_key: {{ accessKey }}
+        secret_key: {{ secretKey }}
+    ingress:
+      className: traefik
+    storageclass:
+      name: shared-folder
+      dataStorageSize: 2Gi
+      logStorageSize: 256Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rustfs-data
+  labels:
+    app.kubernetes.io/instance: rustfs
+    app.kubernetes.io/name: rustfs
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: 2Gi
+  hostPath:
+    path: {{ sharedfolder_path(dataSharedFolderName) }}
+    type: Directory
+  accessModes:
+    - "ReadWriteOnce"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rustfs-logs
+  labels:
+    app.kubernetes.io/instance: rustfs
+    app.kubernetes.io/name: rustfs
+spec:
+  storageClassName: shared-folder
+  capacity:
+    storage: 256Mi
+  hostPath:
+    path: {{ sharedfolder_path(logSharedFolderName) }}
+    type: Directory
+  accessModes:
+    - "ReadWriteOnce"
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rustfs-websecure
+  namespace: rustfs-app
+  labels:
+    app.kubernetes.io/instance: rustfs
+    app.kubernetes.io/name: rustfs
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`rustfs.{{ fqdn() }}`)
+      kind: Rule
+      services:
+        - name: rustfs-svc
+          port: 9001
+  tls: {}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: rustfs-endpoint
+  namespace: rustfs-app
+  labels:
+    app.kubernetes.io/instance: rustfs
+    app.kubernetes.io/name: rustfs
+spec:
+  entryPoints:
+    - rustfs-endpoint
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: rustfs-svc
+      port: 9000
