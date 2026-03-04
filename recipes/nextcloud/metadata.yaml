@@ -1,0 +1,14 @@
+name: Nextcloud
+description: A safe home for all your data – community-driven, free & open source.
+section: net
+architecture:
+  - amd64
+  - arm64
+url: https://nextcloud.com/
+recipeVersion: "1.0.0"
+appVersion: production
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/nextcloud/helm/
+  - https://github.com/nextcloud/helm/blob/main/charts/nextcloud/README.md
