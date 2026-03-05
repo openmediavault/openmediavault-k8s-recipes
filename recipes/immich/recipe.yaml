@@ -1,12 +1,16 @@
 # The app can be reached at https://immich.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
+{% set runAsDbUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
+{% set dbPassword = 'immich' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
 {% set librarySharedFolderName = '<MODIFY>' %}
 {% set importSharedFolderName = '<MODIFY>' %}
+{% set dbSharedFolderName = '<MODIFY>' %}
+{% set mlCacheSharedFolderName = '<MODIFY>' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
@@ -50,6 +54,126 @@ spec:
       storage: "2Gi"
   volumeName: immich-library
 ---
+# PostgreSQL deployment (replaces the removed bitnami/postgres subchart).
+# Uses the CloudNative VectorChord image for pgvecto-rs/vector search support.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: immich-postgresql
+    app.kubernetes.io/name: immich-postgresql
+  name: immich-postgresql
+  namespace: immich-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: immich-postgresql
+      app.kubernetes.io/name: immich-postgresql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: immich-postgresql
+        app.kubernetes.io/name: immich-postgresql
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        # Specifies the UID for the process running in the container.
+        runAsUser: {{ uid(runAsDbUser) }}
+        # Specifies the GID for the process running in the container.
+        runAsGroup: {{ gid(runAsGroup) }}
+        # Ensures the data directory is owned by the correct GID.
+        fsGroup: {{ gid(runAsGroup) }}
+      containers:
+        - image: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.3
+          imagePullPolicy: IfNotPresent
+          name: postgresql
+          args:
+            - postgres
+            - -c
+            - shared_preload_libraries=vchord
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "immich"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: DB_PASSWORD
+            - name: POSTGRES_DB
+              value: "immich"
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
+            - name: db-run
+              mountPath: /var/run/postgresql
+            - name: db-init
+              mountPath: /docker-entrypoint-initdb.d
+      restartPolicy: Always
+      volumes:
+        - name: db-data
+          hostPath:
+            type: Directory
+            # Insert the name of the shared folder you want to use.
+            # Make sure the configured UID/GID the container is running
+            # with has access to that directory.
+            path: {{ sharedfolder_path(dbSharedFolderName) }}
+        - name: db-run
+          emptyDir: {}
+        - name: db-init
+          configMap:
+            name: immich-postgresql-init
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: immich-postgresql-init
+  namespace: immich-app
+  labels:
+    app.kubernetes.io/instance: immich-postgresql
+    app.kubernetes.io/name: immich-postgresql
+data:
+  create-extensions.sql: |
+    CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+    CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-postgresql
+  namespace: immich-app
+  labels:
+    app.kubernetes.io/instance: immich-postgresql
+    app.kubernetes.io/name: immich-postgresql
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app.kubernetes.io/instance: immich-postgresql
+    app.kubernetes.io/name: immich-postgresql
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: immich-db
+  namespace: immich-app
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: immich
+stringData:
+  DB_PASSWORD: "{{ dbPassword }}"
+---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
@@ -61,49 +185,98 @@ metadata:
 spec:
   repo: https://immich-app.github.io/immich-charts
   chart: immich
-  version: 0.9.0
+  version: 0.10.3
   targetNamespace: immich-app
   valuesContent: |-
-    securityContext:
-      runAsNonRoot: true
-      # Specifies the UID for the process running in the container.
-      runAsUser: {{ uid(runAsUser) }}
-      # Specifies the GID for the process running in the container.
-      runAsGroup: {{ gid(runAsGroup) }}
-    image:
-      tag: v1.119.0
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        # Specifies the UID for the process running in the container.
+        runAsUser: {{ uid(runAsUser) }}
+        # Specifies the GID for the process running in the container.
+        runAsGroup: {{ gid(runAsGroup) }}
+        # Ensures emptyDir volumes (e.g. the machine-learning model cache)
+        # are writable by the non-root user.
+        fsGroup: {{ gid(runAsGroup) }}
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              tag: v2.5.6
     immich:
       persistence:
         library:
           existingClaim: immich-library
-    useDeprecatedPostgresChart: true
-    postgresql:
+    valkey:
       enabled: true
-      primary:
-        # This fixes startup issues for a fresh install. See this issue
-        # for details:
-        # https://github.com/immich-app/immich-charts/issues/130#issuecomment-2410351150
-        resourcesPreset: large
     server:
-      probes:
-        startup:
-          spec:
-            # This fixes startup issues for a fresh install. See this issue
-            # for details:
-            # https://github.com/immich-app/immich-charts/issues/130#issuecomment-2414043494
-            failureThreshold: 360
-    redis:
-      enabled: true
+      controllers:
+        main:
+          containers:
+            main:
+              env:
+                DB_HOSTNAME: "immich-postgresql"
+                DB_USERNAME: "immich"
+                DB_DATABASE_NAME: "immich"
+                DB_PASSWORD:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-db
+                      key: DB_PASSWORD
+              probes:
+                liveness:
+                  spec:
+                    timeoutSeconds: 5
+                    failureThreshold: 5
+                readiness:
+                  spec:
+                    timeoutSeconds: 5
+                    failureThreshold: 5
+                startup:
+                  spec:
+                    # This fixes startup issues for a fresh install due to
+                    # library migration from /usr/src/app/upload to /data.
+                    # See this issue for details:
+                    # https://github.com/immich-app/immich-charts/issues/130#issuecomment-2414043494
+                    failureThreshold: 360
+    machine-learning:
+      controllers:
+        main:
+          containers:
+            main:
+              probes:
+                liveness:
+                  spec:
+                    timeoutSeconds: 5
+                    failureThreshold: 5
+                readiness:
+                  spec:
+                    timeoutSeconds: 5
+                    failureThreshold: 5
+                startup:
+                  spec:
+                    # Allow enough time for ML model download on first start.
+                    failureThreshold: 120
+      persistence:
+        cache:
+          enabled: true
+          type: hostPath
+          hostPath: {{ sharedfolder_path(mlCacheSharedFolderName) }}
+          hostPathType: Directory
+          globalMounts:
+            - path: /cache
     persistence:
       # This is the shared folder that is used to import existing files to the immich library.
       # See https://immich.app/docs/guides/external-library/ for more information.
       import:
         enabled: true # Set to false if you do not want to have an external library.
         type: hostPath
-        readOnly: true
-        mountPath: /srv/import # Use this path in the `Add Import Path` dialog.
         hostPath: {{ sharedfolder_path(importSharedFolderName) }}
         hostPathType: Directory
+        globalMounts:
+          - path: /srv/import # Use this path in the `Add Import Path` dialog.
+            readOnly: true
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
