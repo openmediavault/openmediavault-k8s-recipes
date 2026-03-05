@@ -1,5 +1,5 @@
 name: Pi-hole
-description: The Pi-hole® is a DNS sinkhole that protects your devices from unwanted content, without installing any client-side software.
+description: A DNS sinkhole that protects your devices from unwanted content, without installing any client-side software.
 section: net
 architecture:
   - i386
