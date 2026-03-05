@@ -73,10 +73,10 @@ spec:
   entryPoints:
     - st-listen
   routes:
-  - match: HostSNI(`*`)
-    services:
-    - name: syncthing
-      port: listen
+    - match: HostSNI(`*`)
+      services:
+        - name: syncthing
+          port: listen
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRouteUDP
@@ -90,6 +90,6 @@ spec:
   entryPoints:
     - st-discovery
   routes:
-  - services:
-    - name: syncthing
-      port: discovery
+    - services:
+        - name: syncthing
+          port: discovery
