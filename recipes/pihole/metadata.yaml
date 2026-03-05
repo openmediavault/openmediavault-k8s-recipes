@@ -1,0 +1,19 @@
+name: Pi-hole
+description: The Pi-hole® is a DNS sinkhole that protects your devices from unwanted content, without installing any client-side software.
+section: net
+architecture:
+  - i386
+  - amd64
+  - armel
+  - armhf
+  - arm64
+url: https://pi-hole.net/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/pi-hole/pi-hole/
+  - https://github.com/pi-hole/docker-pi-hole/
+  - https://docs.pi-hole.net/docker/
+  - https://hub.docker.com/r/pihole/pihole/
