@@ -1,17 +1,17 @@
 # The app can be reached at https://immich.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
-  {% set runAsUser = 'nobody' %}
-  {% set runAsDbUser = 'postgresql' %}
-  {% set runAsGroup = 'users' %}
-  {% set dbPassword = 'immich' %}
-  # Insert the name of the shared folder you want to use. Make sure the
-  # configured UID/GID the container is running with has access to that
-  # directory.
-  {% set librarySharedFolderName = '<MODIFY>' %}
-  {% set importSharedFolderName = '<MODIFY>' %}
-  {% set dbSharedFolderName = '<MODIFY>' %}
-  {% set mlCacheSharedFolderName = '<MODIFY>' %}
-  # !!! Only modify the following manifest if you need to make custom changes. !!!
+{% set runAsUser = 'nobody' %}
+{% set runAsDbUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+{% set dbPassword = 'immich' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set librarySharedFolderName = '<MODIFY>' %}
+{% set importSharedFolderName = '<MODIFY>' %}
+{% set dbSharedFolderName = '<MODIFY>' %}
+{% set mlCacheSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
 kind: Namespace

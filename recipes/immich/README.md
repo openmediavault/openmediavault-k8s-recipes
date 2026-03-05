@@ -21,11 +21,11 @@ Before deploying this recipe, create the following **shared folders** in
 Open the recipe and adjust the variables at the top of the file:
 
 ```yaml
-{% set runAsUser = 'nobody' %}       # System user that runs the Immich containers.
-{% set runAsDbUser = 'postgresql' %} # System user that runs the PostgreSQL container.
-{% set runAsGroup = 'users' %}       # Group shared by all containers and the host folders.
-{% set dbPassword = 'immich' %}      # Password for the PostgreSQL `immich` database user.
-                                     # Change this to a strong, unique password.
+{% set runAsUser   = 'nobody' %}    # System user that runs the Immich containers.
+{% set runAsDbUser = 'nobody' %}    # System user that runs the PostgreSQL container.
+{% set runAsGroup  = 'users' %}     # Group shared by all containers and the host folders.
+{% set dbPassword  = 'immich' %}    # Password for the PostgreSQL `immich` database user.
+                                    # Change this to a strong, unique password.
 
 {% set librarySharedFolderName = '<MODIFY>' %}    # Shared folder for the photo/video library.
 {% set importSharedFolderName  = '<MODIFY>' %}    # Shared folder for external library imports.
