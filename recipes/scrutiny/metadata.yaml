@@ -1,0 +1,14 @@
+name: Scrutiny
+description: Hard drive S.M.A.R.T monitoring dashboard.
+section: utils
+architecture:
+  - amd64
+  - arm64
+url: https://github.com/AnalogJ/scrutiny/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/AnalogJ/scrutiny
+  - https://github.com/AnalogJ/scrutiny/pkgs/container/scrutiny
