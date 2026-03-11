@@ -1,7 +1,5 @@
 # The app can be reached at https://scrutiny.<FQDN>:8443
 # Change the following variables to adapt the recipe to your needs.
-# Insert a comma separated list of block devices you want to monitor.
-{% set devices = '/dev/sda,/dev/sdb' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
@@ -43,6 +41,7 @@ spec:
             - name: TZ
               value: {{ tz() }}
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - SYS_RAWIO
@@ -52,6 +51,8 @@ spec:
             - containerPort: 8086
               protocol: TCP
           volumeMounts:
+            - name: dev
+              mountPath: /dev
             - name: udev
               mountPath: /run/udev
               readOnly: true
@@ -59,12 +60,12 @@ spec:
               mountPath: /opt/scrutiny/config
             - name: influxdb
               mountPath: /opt/scrutiny/influxdb
-{% for device in devices | split(',') %}
-            - name: dev-{{ loop.index }}
-              mountPath: "{{ device | trim }}"
-{% endfor %}
       restartPolicy: Always
       volumes:
+        - name: dev
+          hostPath:
+            type: Directory
+            path: /dev
         - name: udev
           hostPath:
             type: Directory
@@ -77,12 +78,6 @@ spec:
           hostPath:
             type: DirectoryOrCreate
             path: {{ sharedfolder_path(dataSharedFolderName) }}/influxdb
-{% for device in devices | split(',') %}
-        - name: dev-{{ loop.index }}
-          hostPath:
-            type: BlockDevice
-            path: "{{ device | trim }}"
-{% endfor %}
 ---
 apiVersion: v1
 kind: Service
