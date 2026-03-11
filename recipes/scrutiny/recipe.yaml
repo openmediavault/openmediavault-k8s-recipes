@@ -53,6 +53,7 @@ spec:
           volumeMounts:
             - name: dev
               mountPath: /dev
+              readOnly: true
             - name: udev
               mountPath: /run/udev
               readOnly: true
