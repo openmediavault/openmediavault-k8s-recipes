@@ -37,7 +37,6 @@ metadata:
   name: smokeping-web
   namespace: smokeping-app
   labels:
-    app.kubernetes.io/instance: smokeping
     app.kubernetes.io/name: smokeping
 spec:
   entryPoints:
@@ -55,7 +54,6 @@ metadata:
   name: smokeping
   namespace: smokeping-app
   labels:
-    app.kubernetes.io/instance: smokeping
     app.kubernetes.io/name: smokeping
 spec:
   ports:

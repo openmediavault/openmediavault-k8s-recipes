@@ -72,7 +72,6 @@ metadata:
   name: pihole
   namespace: pihole-app
   labels:
-    app.kubernetes.io/instance: pihole
     app.kubernetes.io/name: pihole
 stringData:
   FTLCONF_webserver_api_password: {{ password }}
@@ -83,7 +82,6 @@ metadata:
   name: pihole
   namespace: pihole-app
   labels:
-    app.kubernetes.io/instance: pihole
     app.kubernetes.io/name: pihole
 spec:
   type: ClusterIP
@@ -126,7 +124,6 @@ metadata:
   name: pihole-dns-tcp
   namespace: pihole-app
   labels:
-    app.kubernetes.io/instance: pihole
     app.kubernetes.io/name: pihole
 spec:
   entryPoints:
@@ -143,7 +140,6 @@ metadata:
   name: pihole-dns-udp
   namespace: pihole-app
   labels:
-    app.kubernetes.io/instance: pihole
     app.kubernetes.io/name: pihole
 spec:
   entryPoints:

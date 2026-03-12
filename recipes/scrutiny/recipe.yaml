@@ -86,7 +86,6 @@ metadata:
   name: scrutiny
   namespace: scrutiny-app
   labels:
-    app.kubernetes.io/instance: scrutiny
     app.kubernetes.io/name: scrutiny
 spec:
   type: ClusterIP
@@ -109,7 +108,6 @@ metadata:
   name: scrutiny-websecure
   namespace: scrutiny-app
   labels:
-    app.kubernetes.io/instance: scrutiny
     app.kubernetes.io/name: scrutiny
 spec:
   entryPoints:

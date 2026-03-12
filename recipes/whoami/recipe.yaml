@@ -15,7 +15,6 @@ metadata:
   name: whoami
   namespace: whoami-app
   labels:
-    app.kubernetes.io/instance: whoami
     app.kubernetes.io/name: whoami
 spec:
   ports:
@@ -86,7 +85,6 @@ metadata:
   name: whoami-websecure
   namespace: whoami-app
   labels:
-    app.kubernetes.io/instance: whoami
     app.kubernetes.io/name: whoami
 spec:
   entryPoints:

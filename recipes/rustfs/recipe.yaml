@@ -21,7 +21,6 @@ metadata:
   name: rustfs
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: rustfs
     app.kubernetes.io/name: rustfs
 spec:
   repo: https://charts.rustfs.com/
@@ -57,7 +56,6 @@ kind: PersistentVolume
 metadata:
   name: rustfs-data
   labels:
-    app.kubernetes.io/instance: rustfs
     app.kubernetes.io/name: rustfs
 spec:
   storageClassName: shared-folder
@@ -74,7 +72,6 @@ kind: PersistentVolume
 metadata:
   name: rustfs-logs
   labels:
-    app.kubernetes.io/instance: rustfs
     app.kubernetes.io/name: rustfs
 spec:
   storageClassName: shared-folder
@@ -92,7 +89,6 @@ metadata:
   name: rustfs-websecure
   namespace: rustfs-app
   labels:
-    app.kubernetes.io/instance: rustfs
     app.kubernetes.io/name: rustfs
 spec:
   entryPoints:
@@ -111,7 +107,6 @@ metadata:
   name: rustfs-endpoint
   namespace: rustfs-app
   labels:
-    app.kubernetes.io/instance: rustfs
     app.kubernetes.io/name: rustfs
 spec:
   entryPoints:

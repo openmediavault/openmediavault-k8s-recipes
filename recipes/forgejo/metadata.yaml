@@ -4,7 +4,7 @@ section: net
 architecture:
   - amd64
 url: https://forgejo.org/
-recipeVersion: "1.0.0"
+recipeVersion: "1.0.1"
 appVersion: "12"
 maintainers:
   - Jan Holthuis <jan.holthuis@ruhr-uni-bochum.de>

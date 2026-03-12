@@ -14,7 +14,6 @@ metadata:
   name: rancher
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: rancher
     app.kubernetes.io/name: rancher
 spec:
   repo: https://releases.rancher.com/server-charts/stable
@@ -33,7 +32,6 @@ metadata:
   name: rancher-websecure
   namespace: cattle-system
   labels:
-    app.kubernetes.io/instance: rancher
     app.kubernetes.io/name: rancher
 spec:
   entryPoints:

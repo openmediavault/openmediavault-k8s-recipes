@@ -18,7 +18,6 @@ kind: PersistentVolume
 metadata:
   name: config-dir
   labels:
-    app.kubernetes.io/instance: plex-media-server
     app.kubernetes.io/name: plex-media-server
 spec:
   storageClassName: shared-folder
@@ -39,7 +38,6 @@ metadata:
   name: config-dir
   namespace: plex-app
   labels:
-    app.kubernetes.io/instance: plex-media-server
     app.kubernetes.io/name: plex-media-server
 spec:
   storageClassName: shared-folder
@@ -56,7 +54,6 @@ metadata:
   name: plex-media-server
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: plex-media-server
     app.kubernetes.io/name: plex-media-server
 spec:
   repo: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
@@ -83,7 +80,6 @@ metadata:
   name: plex-media-server-websecure
   namespace: plex-app
   labels:
-    app.kubernetes.io/instance: plex-media-server
     app.kubernetes.io/name: plex-media-server
 spec:
   entryPoints:

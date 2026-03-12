@@ -5,7 +5,7 @@ architecture:
   - amd64
   - arm64
 url: https://www.rancher.com/
-recipeVersion: "1.0.4"
+recipeVersion: "1.0.5"
 appVersion: stable
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

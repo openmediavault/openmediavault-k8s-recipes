@@ -41,7 +41,6 @@ metadata:
   name: palmr-websecure
   namespace: palmr-app
   labels:
-    app.kubernetes.io/instance: palmr
     app.kubernetes.io/name: palmr
 spec:
   entryPoints:
@@ -60,7 +59,6 @@ metadata:
   name: palmr
   namespace: palmr-app
   labels:
-    app.kubernetes.io/instance: palmr
     app.kubernetes.io/name: palmr
 spec:
   ports:

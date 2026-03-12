@@ -71,7 +71,6 @@ metadata:
   name: shiori
   namespace: shiori-app
   labels:
-    app.kubernetes.io/instance: shiori
     app.kubernetes.io/name: shiori
 spec:
   type: ClusterIP
@@ -89,7 +88,6 @@ metadata:
   name: shiori-websecure
   namespace: shiori-app
   labels:
-    app.kubernetes.io/instance: shiori
     app.kubernetes.io/name: shiori
 spec:
   entryPoints:

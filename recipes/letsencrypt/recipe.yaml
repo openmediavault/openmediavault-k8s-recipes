@@ -47,7 +47,6 @@ metadata:
   name: letsencrypt{{ staging ? '-staging' }}
   namespace: letsencrypt-app
   labels:
-    app.kubernetes.io/instance: letsencrypt{{ staging ? '-staging' }}
     app.kubernetes.io/name: letsencrypt
 spec:
   acme:

@@ -98,7 +98,6 @@ metadata:
   name: minio-console
   namespace: minio-app
   labels:
-    app.kubernetes.io/instance: minio
     app.kubernetes.io/name: minio
 spec:
   selector:
@@ -116,7 +115,6 @@ metadata:
   name: minio-console-websecure
   namespace: minio-app
   labels:
-    app.kubernetes.io/instance: minio
     app.kubernetes.io/name: minio
 spec:
   entryPoints:

@@ -19,7 +19,6 @@ metadata:
   name: filebrowser
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: filebrowser
     app.kubernetes.io/name: filebrowser
 spec:
   repo: https://utkuozdemir.org/helm-charts
@@ -51,7 +50,6 @@ metadata:
   name: filebrowser-websecure
   namespace: filebrowser-app
   labels:
-    app.kubernetes.io/instance: filebrowser
     app.kubernetes.io/name: filebrowser
 spec:
   entryPoints:

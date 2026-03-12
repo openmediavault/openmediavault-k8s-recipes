@@ -73,7 +73,6 @@ metadata:
   name: home-assistant
   namespace: home-assistant-app
   labels:
-    app.kubernetes.io/instance: home-assistant
     app.kubernetes.io/name: home-assistant
 spec:
   type: ClusterIP

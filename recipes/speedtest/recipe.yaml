@@ -12,7 +12,6 @@ metadata:
   name: speedtest
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: speedtest
     app.kubernetes.io/name: speedtest
 spec:
   repo: https://openspeedtest.github.io/Helm-chart/
@@ -29,7 +28,6 @@ metadata:
   name: speedtest-websecure
   namespace: speedtest-app
   labels:
-    app.kubernetes.io/instance: speedtest
     app.kubernetes.io/name: speedtest
 spec:
   entryPoints:

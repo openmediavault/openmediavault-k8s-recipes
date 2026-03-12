@@ -19,7 +19,6 @@ metadata:
   name: syncthing
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: syncthing
 spec:
   repo: http://brandan-schmitz.github.io/helm-charts
@@ -48,7 +47,6 @@ metadata:
   name: syncthing-websecure
   namespace: syncthing-app
   labels:
-    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: syncthing
 spec:
   entryPoints:
@@ -67,7 +65,6 @@ metadata:
   name: syncthing-listen
   namespace: syncthing-app
   labels:
-    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: syncthing
 spec:
   entryPoints:
@@ -84,7 +81,6 @@ metadata:
   name: syncthing-discovery
   namespace: syncthing-app
   labels:
-    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: syncthing
 spec:
   entryPoints:

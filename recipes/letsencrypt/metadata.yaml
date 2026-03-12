@@ -6,7 +6,7 @@ architecture:
 depends:
   - reflector
 url: https://cert-manager.io/docs/configuration/acme/
-recipeVersion: "1.0.0"
+recipeVersion: "1.0.1"
 appVersion: latest
 maintainers:
   - Yuchen Shi <yuchenshi@google.com>

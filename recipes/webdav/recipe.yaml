@@ -21,7 +21,6 @@ metadata:
   name: webdav
   namespace: webdav-app
   labels:
-    app.kubernetes.io/instance: webdav
     app.kubernetes.io/name: webdav
 spec:
   type: ClusterIP
@@ -38,7 +37,6 @@ metadata:
   name: webdav
   namespace: webdav-app
   labels:
-    app.kubernetes.io/instance: webdav
     app.kubernetes.io/name: webdav
 stringData:
   WEBDAV_PASSWORD: "{{ userPassword }}"
@@ -123,7 +121,6 @@ metadata:
   name: webdav-websecure
   namespace: webdav-app
   labels:
-    app.kubernetes.io/instance: webdav
     app.kubernetes.io/name: webdav
 spec:
   entryPoints:

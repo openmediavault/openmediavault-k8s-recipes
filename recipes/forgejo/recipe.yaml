@@ -105,7 +105,6 @@ metadata:
   name: forgejo
   namespace: forgejo-app
   labels:
-    app.kubernetes.io/instance: forgejo
     app.kubernetes.io/name: forgejo
 spec:
   type: ClusterIP

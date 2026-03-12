@@ -36,7 +36,6 @@ metadata:
   name: mariadb-env
   namespace: piwigo-app
   labels:
-    app.kubernetes.io/instance: piwigo
     app.kubernetes.io/name: piwigo
 data:
   MARIADB_DATABASE: "{{ dbName }}"
@@ -48,7 +47,6 @@ metadata:
   name: mariadb
   namespace: piwigo-app
   labels:
-    app.kubernetes.io/instance: piwigo
     app.kubernetes.io/name: piwigo
 stringData:
   MARIADB_PASSWORD: "{{ dbPassword }}"
@@ -140,7 +138,6 @@ metadata:
   name: piwigo
   namespace: piwigo-app
   labels:
-    app.kubernetes.io/instance: piwigo
     app.kubernetes.io/name: piwigo
 spec:
   type: ClusterIP
@@ -158,7 +155,6 @@ metadata:
   name: mariadb
   namespace: piwigo-app
   labels:
-    app.kubernetes.io/instance: piwigo
     app.kubernetes.io/name: piwigo
 spec:
   type: ClusterIP
@@ -176,7 +172,6 @@ metadata:
   name: piwigo-websecure
   namespace: piwigo-app
   labels:
-    app.kubernetes.io/instance: piwigo
     app.kubernetes.io/name: piwigo
 spec:
   entryPoints:

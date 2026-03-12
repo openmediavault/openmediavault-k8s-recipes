@@ -15,7 +15,6 @@ metadata:
   name: uptime-kuma
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/name: uptime-kuma
 spec:
   repo: https://helm.irsigler.cloud
@@ -31,7 +30,6 @@ kind: PersistentVolume
 metadata:
   name: data-dir
   labels:
-    app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/name: uptime-kuma
 spec:
   storageClassName: shared-folder
@@ -52,7 +50,6 @@ metadata:
   name: uptime-kuma-websecure
   namespace: uptime-kuma-app
   labels:
-    app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/name: uptime-kuma
 spec:
   entryPoints:

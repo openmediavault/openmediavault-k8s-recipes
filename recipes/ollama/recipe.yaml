@@ -17,7 +17,6 @@ metadata:
   name: ollama
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: ollama
     app.kubernetes.io/name: ollama
 spec:
   repo: https://otwld.github.io/ollama-helm/
@@ -52,7 +51,6 @@ kind: PersistentVolume
 metadata:
   name: data-dir
   labels:
-    app.kubernetes.io/instance: ollama
     app.kubernetes.io/name: ollama
 spec:
   storageClassName: shared-folder

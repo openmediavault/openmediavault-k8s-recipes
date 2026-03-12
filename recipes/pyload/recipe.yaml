@@ -20,7 +20,6 @@ metadata:
   name: pyload-headers
   namespace: pyload-app
   labels:
-    app.kubernetes.io/instance: pyload
     app.kubernetes.io/name: pyload
 spec:
   headers:
@@ -33,7 +32,6 @@ metadata:
   name: pyload-web
   namespace: pyload-app
   labels:
-    app.kubernetes.io/instance: pyload
     app.kubernetes.io/name: pyload
 spec:
   entryPoints:
@@ -53,7 +51,6 @@ metadata:
   name: pyload
   namespace: pyload-app
   labels:
-    app.kubernetes.io/instance: pyload
     app.kubernetes.io/name: pyload
 spec:
   ports:

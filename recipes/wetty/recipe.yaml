@@ -55,7 +55,6 @@ metadata:
   name: wetty
   namespace: wetty-app
   labels:
-    app.kubernetes.io/instance: wetty
     app.kubernetes.io/name: wetty
 spec:
   type: ClusterIP
@@ -73,7 +72,6 @@ metadata:
   name: wetty-websecure
   namespace: wetty-app
   labels:
-    app.kubernetes.io/instance: wetty
     app.kubernetes.io/name: wetty
 spec:
   entryPoints:

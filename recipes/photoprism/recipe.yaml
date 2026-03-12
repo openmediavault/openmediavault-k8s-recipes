@@ -164,7 +164,6 @@ metadata:
   name: photoprism
   namespace: photoprism-app
   labels:
-    app.kubernetes.io/instance: photoprism
     app.kubernetes.io/name: photoprism
 stringData:
   PHOTOPRISM_ADMIN_PASSWORD: "admin"
@@ -176,7 +175,6 @@ metadata:
   name: mariadb
   namespace: photoprism-app
   labels:
-    app.kubernetes.io/instance: photoprism
     app.kubernetes.io/name: photoprism
 stringData:
   MARIADB_PASSWORD: "photoprism"
@@ -198,7 +196,6 @@ metadata:
   name: photoprism-db
   namespace: photoprism-app
   labels:
-    app.kubernetes.io/instance: photoprism
     app.kubernetes.io/name: photoprism
 data:
   PHOTOPRISM_DATABASE_DRIVER: "mysql"
@@ -212,7 +209,6 @@ metadata:
   name: mariadb
   namespace: photoprism-app
   labels:
-    app.kubernetes.io/instance: photoprism
     app.kubernetes.io/name: photoprism
 data:
   MARIADB_AUTO_UPGRADE: "1"
@@ -226,7 +222,6 @@ metadata:
   name: photoprism
   namespace: photoprism-app
   labels:
-    app.kubernetes.io/instance: photoprism
     app.kubernetes.io/name: photoprism
 spec:
   type: ClusterIP
@@ -244,7 +239,6 @@ metadata:
   name: mariadb
   namespace: photoprism-app
   labels:
-    app.kubernetes.io/instance: mariadb
     app.kubernetes.io/name: mariadb
 spec:
   type: ClusterIP
@@ -262,7 +256,6 @@ metadata:
   name: photoprism-websecure
   namespace: photoprism-app
   labels:
-    app.kubernetes.io/instance: photoprism
     app.kubernetes.io/name: photoprism
 spec:
   entryPoints:

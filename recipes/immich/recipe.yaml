@@ -23,7 +23,6 @@ kind: PersistentVolume
 metadata:
   name: immich-library
   labels:
-    app.kubernetes.io/instance: immich
     app.kubernetes.io/name: immich
 spec:
   storageClassName: shared-folder
@@ -43,7 +42,6 @@ metadata:
   name: immich-library
   namespace: immich-app
   labels:
-    app.kubernetes.io/instance: immich
     app.kubernetes.io/name: immich
 spec:
   storageClassName: shared-folder
@@ -138,7 +136,6 @@ metadata:
   name: immich-postgresql-init
   namespace: immich-app
   labels:
-    app.kubernetes.io/instance: immich-postgresql
     app.kubernetes.io/name: immich-postgresql
 data:
   create-extensions.sql: |
@@ -151,7 +148,6 @@ metadata:
   name: immich-postgresql
   namespace: immich-app
   labels:
-    app.kubernetes.io/instance: immich-postgresql
     app.kubernetes.io/name: immich-postgresql
 spec:
   type: ClusterIP
@@ -169,7 +165,6 @@ metadata:
   name: immich-db
   namespace: immich-app
   labels:
-    app.kubernetes.io/instance: immich
     app.kubernetes.io/name: immich
 stringData:
   DB_PASSWORD: "{{ dbPassword }}"
@@ -180,7 +175,6 @@ metadata:
   name: immich
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: immich
     app.kubernetes.io/name: immich
 spec:
   repo: https://immich-app.github.io/immich-charts
@@ -284,7 +278,6 @@ metadata:
   name: immich-websecure
   namespace: immich-app
   labels:
-    app.kubernetes.io/instance: immich
     app.kubernetes.io/name: immich
 spec:
   entryPoints:

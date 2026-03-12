@@ -45,7 +45,6 @@ metadata:
   name: paperless
   namespace: paperless-app
   labels:
-    app.kubernetes.io/instance: paperless
     app.kubernetes.io/name: paperless
 stringData:
   PAPERLESS_ADMIN_PASSWORD: "{{ adminPassword }}"
@@ -56,7 +55,6 @@ metadata:
   name: paperless
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: paperless
     app.kubernetes.io/name: paperless
 spec:
   repo: https://charts.gabe565.com
@@ -105,7 +103,6 @@ metadata:
   name: paperless-websecure
   namespace: paperless-app
   labels:
-    app.kubernetes.io/instance: paperless
     app.kubernetes.io/name: paperless
 spec:
   entryPoints:

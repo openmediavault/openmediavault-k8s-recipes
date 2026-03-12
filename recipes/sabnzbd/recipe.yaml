@@ -78,7 +78,6 @@ metadata:
   name: sabnzbd
   namespace: sabnzbd-app
   labels:
-    app.kubernetes.io/instance: sabnzbd
     app.kubernetes.io/name: sabnzbd
 spec:
   type: ClusterIP

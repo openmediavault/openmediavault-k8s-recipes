@@ -21,7 +21,6 @@ metadata:
   name: firefox
   namespace: firefox-app
   labels:
-    app.kubernetes.io/instance: firefox
     app.kubernetes.io/name: firefox
 stringData:
   PASSWORD: "{{ password }}"
@@ -95,7 +94,6 @@ metadata:
   name: firefox
   namespace: firefox-app
   labels:
-    app.kubernetes.io/instance: firefox
     app.kubernetes.io/name: firefox
 spec:
   type: ClusterIP
@@ -113,7 +111,6 @@ metadata:
   name: firefox-websecure
   namespace: firefox-app
   labels:
-    app.kubernetes.io/instance: firefox
     app.kubernetes.io/name: firefox
 spec:
   entryPoints:

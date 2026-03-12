@@ -105,7 +105,6 @@ metadata:
   name: transmission
   namespace: transmission-app
   labels:
-    app.kubernetes.io/instance: transmission
     app.kubernetes.io/name: transmission
 stringData:
   PASS: {{ password }}
@@ -116,7 +115,6 @@ metadata:
   name: transmission
   namespace: transmission-app
   labels:
-    app.kubernetes.io/instance: transmission
     app.kubernetes.io/name: transmission
 spec:
   type: ClusterIP

@@ -67,7 +67,6 @@ metadata:
   name: actual
   namespace: actual-app
   labels:
-    app.kubernetes.io/instance: actual
     app.kubernetes.io/name: actual
 spec:
   type: ClusterIP

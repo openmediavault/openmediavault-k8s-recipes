@@ -88,7 +88,6 @@ metadata:
   name: jellyfin
   namespace: jellyfin-app
   labels:
-    app.kubernetes.io/instance: jellyfin
     app.kubernetes.io/name: jellyfin
 spec:
   type: ClusterIP

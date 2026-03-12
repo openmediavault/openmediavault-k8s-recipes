@@ -12,7 +12,6 @@ metadata:
   name: headlamp
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: headlamp
     app.kubernetes.io/name: headlamp
 spec:
   repo: https://kubernetes-sigs.github.io/headlamp/
@@ -41,7 +40,6 @@ metadata:
   name: headlamp-websecure
   namespace: headlamp-app
   labels:
-    app.kubernetes.io/instance: headlamp
     app.kubernetes.io/name: headlamp
 spec:
   entryPoints:

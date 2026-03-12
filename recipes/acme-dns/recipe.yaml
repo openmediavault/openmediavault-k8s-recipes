@@ -24,7 +24,6 @@ metadata:
   name: acme-dns
   namespace: acme-dns-app
   labels:
-    app.kubernetes.io/instance: acme-dns
     app.kubernetes.io/name: acme-dns
 spec:
   type: NodePort
@@ -49,7 +48,6 @@ metadata:
   name: acme-dns-config
   namespace: acme-dns-app
   labels:
-    app.kubernetes.io/instance: acme-dns
     app.kubernetes.io/name: acme-dns
 data:
   config.cfg: |
@@ -166,7 +164,6 @@ metadata:
   name: acme-dns-websecure
   namespace: acme-dns-app
   labels:
-    app.kubernetes.io/instance: acme-dns
     app.kubernetes.io/name: acme-dns
 spec:
   entryPoints:

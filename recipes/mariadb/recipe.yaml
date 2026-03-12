@@ -22,7 +22,6 @@ metadata:
   name: mariadb
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: mariadb
     app.kubernetes.io/name: mariadb
 spec:
   repo: https://charts.bitnami.com/bitnami/
@@ -62,7 +61,6 @@ kind: PersistentVolume
 metadata:
   name: mariadb-data
   labels:
-    app.kubernetes.io/instance: mariadb
     app.kubernetes.io/name: mariadb
 spec:
   storageClassName: "shared-folder"

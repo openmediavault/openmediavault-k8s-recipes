@@ -21,7 +21,6 @@ kind: PersistentVolume
 metadata:
   name: penpot-data-assets
   labels:
-    app.kubernetes.io/instance: penpot
     app.kubernetes.io/name: penpot
 spec:
   storageClassName: shared-folder
@@ -39,7 +38,6 @@ metadata:
   name: penpot-data-assets
   namespace: penpot-app
   labels:
-    app.kubernetes.io/instance: penpot
     app.kubernetes.io/name: penpot
 spec:
   storageClassName: shared-folder
@@ -55,7 +53,6 @@ kind: PersistentVolume
 metadata:
   name: penpot-data-postgresql
   labels:
-    app.kubernetes.io/instance: penpot
     app.kubernetes.io/name: penpot
 spec:
   storageClassName: shared-folder
@@ -73,7 +70,6 @@ metadata:
   name: penpot-data-postgresql
   namespace: penpot-app
   labels:
-    app.kubernetes.io/instance: penpot
     app.kubernetes.io/name: penpot
 spec:
   storageClassName: shared-folder
@@ -90,7 +86,6 @@ metadata:
   name: penpot
   namespace: kube-system
   labels:
-    app.kubernetes.io/instance: penpot
     app.kubernetes.io/name: penpot
 spec:
   repo: http://helm.penpot.app
@@ -143,7 +138,6 @@ metadata:
   name: penpot-websecure
   namespace: penpot-app
   labels:
-    app.kubernetes.io/instance: penpot
     app.kubernetes.io/name: penpot
 spec:
   entryPoints:

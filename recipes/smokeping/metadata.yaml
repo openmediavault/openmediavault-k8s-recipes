@@ -5,7 +5,7 @@ architecture:
   - amd64
   - armhf
 url: https://oss.oetiker.ch/smokeping/
-recipeVersion: "1.2.2"
+recipeVersion: "1.2.3"
 appVersion: latest
 maintainers:
   - Moritz Meintker <moritz@thinksilicon.de>
