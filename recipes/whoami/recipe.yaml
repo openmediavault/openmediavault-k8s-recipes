@@ -31,7 +31,6 @@ metadata:
   namespace: whoami-app
   name: whoami
   labels:
-    app.kubernetes.io/instance: whoami
     app.kubernetes.io/name: whoami
 spec:
   replicas: 1

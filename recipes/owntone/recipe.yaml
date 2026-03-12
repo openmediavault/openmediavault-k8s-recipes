@@ -508,7 +508,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: owntone
     app.kubernetes.io/name: owntone
   name: owntone
   namespace: owntone-app
@@ -595,6 +594,8 @@ kind: IngressRoute
 metadata:
   name: owntone-websecure
   namespace: owntone-app
+  labels:
+    app.kubernetes.io/name: owntone
 spec:
   entryPoints:
     - websecure

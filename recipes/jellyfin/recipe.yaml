@@ -19,7 +19,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: jellyfin
     app.kubernetes.io/name: jellyfin
   name: jellyfin
   namespace: jellyfin-app
@@ -104,6 +103,8 @@ kind: IngressRoute
 metadata:
   name: jellyfin-websecure
   namespace: jellyfin-app
+  labels:
+    app.kubernetes.io/name: jellyfin
 spec:
   entryPoints:
     - websecure

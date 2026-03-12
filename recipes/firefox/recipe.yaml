@@ -30,6 +30,8 @@ kind: ConfigMap
 metadata:
   name: firefox-env
   namespace: firefox-app
+  labels:
+    app.kubernetes.io/name: firefox
 data:
   CUSTOM_USER: "{{ user }}"
   PUID: "{{ uid(runAsUser) }}"
@@ -45,7 +47,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: firefox
     app.kubernetes.io/name: firefox
   name: firefox
   namespace: firefox-app

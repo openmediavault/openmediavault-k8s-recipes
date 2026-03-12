@@ -10,15 +10,17 @@
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
-  name: multus
+  name: multus-dhcp
   namespace: kube-system
+  labels:
+    app.kubernetes.io/name: multus-dhcp
 spec:
   repo: https://rke2-charts.rancher.io
   chart: rke2-multus
   targetNamespace: kube-system
   valuesContent: |-
     config:
-      fullnameOverride: multus
+      fullnameOverride: multus-dhcp
       cni_conf:
         confDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
         binDir: /var/lib/rancher/k3s/data/cni/
@@ -31,6 +33,8 @@ kind: NetworkAttachmentDefinition
 metadata:
   name: multus-dhcp
   namespace: default
+  labels:
+    app.kubernetes.io/name: multus-dhcp
 spec:
   config: |
     {

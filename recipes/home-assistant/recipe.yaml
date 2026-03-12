@@ -14,7 +14,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: home-assistant
     app.kubernetes.io/name: home-assistant
   name: home-assistant
   namespace: home-assistant-app
@@ -89,6 +88,8 @@ kind: IngressRoute
 metadata:
   name: home-assistant-websecure
   namespace: home-assistant-app
+  labels:
+    app.kubernetes.io/name: home-assistant
 spec:
   entryPoints:
     - websecure

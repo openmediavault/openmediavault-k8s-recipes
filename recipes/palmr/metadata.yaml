@@ -5,7 +5,7 @@ architecture:
   - amd64
   - arm64
 url: https://palmr.kyantech.com.br/
-recipeVersion: "1.0.1"
+recipeVersion: "1.0.2"
 appVersion: "latest"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

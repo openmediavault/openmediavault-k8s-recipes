@@ -20,7 +20,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: photoprism
     app.kubernetes.io/name: photoprism
   name: photoprism
   namespace: photoprism-app
@@ -102,7 +101,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: mariadb
     app.kubernetes.io/name: mariadb
   name: mariadb
   namespace: photoprism-app
@@ -185,6 +183,8 @@ kind: ConfigMap
 metadata:
   name: photoprism
   namespace: photoprism-app
+  labels:
+    app.kubernetes.io/name: photoprism
 data:
   # https://docs.photoprism.app/getting-started/config-options/
   PHOTOPRISM_READONLY: "false"

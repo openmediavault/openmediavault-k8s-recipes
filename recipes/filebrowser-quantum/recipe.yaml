@@ -21,6 +21,8 @@ kind: ConfigMap
 metadata:
   name: filebrowser-quantum-config
   namespace: filebrowser-quantum-app
+  labels:
+    app.kubernetes.io/name: filebrowser-quantum
 data:
   config.yaml: |
     # https://github.com/gtsteffaniak/filebrowser/wiki/Full-Config-Example
@@ -58,7 +60,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: filebrowser-quantum
     app.kubernetes.io/name: filebrowser-quantum
   name: filebrowser-quantum
   namespace: filebrowser-quantum-app

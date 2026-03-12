@@ -69,7 +69,6 @@ metadata:
   name: pyload
   namespace: pyload-app
   labels:
-    app.kubernetes.io/instance: pyload
     app.kubernetes.io/name: pyload
 spec:
   strategy:

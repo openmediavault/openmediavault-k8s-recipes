@@ -46,6 +46,8 @@ kind: ConfigMap
 metadata:
   name: webdav-env
   namespace: webdav-app
+  labels:
+    app.kubernetes.io/name: webdav
 data:
   WEBDAV_USERNAME: "{{ userName }}"
   PUID: "{{ uid(runAsUser) }}"
@@ -59,7 +61,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app.kubernetes.io/instance: webdav
     app.kubernetes.io/name: webdav
   name: webdav
   namespace: webdav-app

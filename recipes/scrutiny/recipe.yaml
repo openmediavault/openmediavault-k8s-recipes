@@ -15,7 +15,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: scrutiny
     app.kubernetes.io/name: scrutiny
   name: scrutiny
   namespace: scrutiny-app

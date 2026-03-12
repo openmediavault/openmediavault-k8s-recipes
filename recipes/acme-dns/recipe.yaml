@@ -106,7 +106,6 @@ metadata:
   namespace: acme-dns-app
   name: acme-dns
   labels:
-    app.kubernetes.io/instance: acme-dns
     app.kubernetes.io/name: acme-dns
 spec:
   selector:

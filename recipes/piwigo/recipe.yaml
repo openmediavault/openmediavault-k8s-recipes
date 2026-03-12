@@ -25,6 +25,8 @@ kind: ConfigMap
 metadata:
   name: piwigo-env
   namespace: piwigo-app
+  labels:
+    app.kubernetes.io/name: piwigo
 data:
   PUID: "{{ uid(runAsUser) }}"
   PGID: "{{ gid(runAsGroup) }}"
@@ -56,7 +58,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: piwigo
     app.kubernetes.io/name: piwigo
   name: piwigo
   namespace: piwigo-app

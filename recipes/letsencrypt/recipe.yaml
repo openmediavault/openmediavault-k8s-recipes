@@ -74,6 +74,8 @@ kind: Secret
 metadata:
   name: acme-dns
   namespace: cert-manager # This has to be in the "cluster resource namespace".
+  labels:
+    app.kubernetes.io/name: letsencrypt
 type: Opaque
 stringData:
   acmedns.json: |
@@ -93,6 +95,8 @@ kind: Certificate
 metadata:
   name: letsencrypt-cert
   namespace: letsencrypt-app
+  labels:
+    app.kubernetes.io/name: letsencrypt
 spec:
   commonName: '{{ domain }}'
   dnsNames:

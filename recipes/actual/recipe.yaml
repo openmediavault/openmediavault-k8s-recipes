@@ -17,7 +17,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: actual
     app.kubernetes.io/name: actual
   name: actual
   namespace: actual-app
@@ -83,6 +82,8 @@ kind: IngressRoute
 metadata:
   name: actual-websecure
   namespace: actual-app
+  labels:
+    app.kubernetes.io/name: actual
 spec:
   entryPoints:
     - websecure

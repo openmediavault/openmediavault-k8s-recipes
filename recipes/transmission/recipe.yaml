@@ -21,7 +21,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: transmission
     app.kubernetes.io/name: transmission
   name: transmission
   namespace: transmission-app
@@ -137,6 +136,8 @@ kind: IngressRoute
 metadata:
   name: transmission-websecure
   namespace: transmission-app
+  labels:
+    app.kubernetes.io/name: transmission
 spec:
   entryPoints:
     - websecure

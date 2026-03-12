@@ -30,6 +30,8 @@ kind: Secret
 metadata:
   name: headlamp-admin
   namespace: headlamp-app
+  labels:
+    app.kubernetes.io/name: headlamp
   annotations:
     kubernetes.io/service-account.name: "headlamp-admin"
 type: kubernetes.io/service-account-token

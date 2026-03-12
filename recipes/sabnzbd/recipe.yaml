@@ -19,7 +19,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: sabnzbd
     app.kubernetes.io/name: sabnzbd
   name: sabnzbd
   namespace: sabnzbd-app
@@ -94,6 +93,8 @@ kind: IngressRoute
 metadata:
   name: sabnzbd-websecure
   namespace: sabnzbd-app
+  labels:
+    app.kubernetes.io/name: sabnzbd
 spec:
   entryPoints:
     - web

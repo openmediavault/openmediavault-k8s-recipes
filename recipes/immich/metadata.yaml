@@ -5,7 +5,7 @@ architecture:
   - amd64
   - arm64
 url: https://immich.app/
-recipeVersion: "1.2.1"
+recipeVersion: "1.2.2"
 appVersion: "v2.5.6"
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

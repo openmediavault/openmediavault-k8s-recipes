@@ -16,7 +16,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: pihole
     app.kubernetes.io/name: pihole
   name: pihole
   namespace: pihole-app
@@ -107,6 +106,8 @@ kind: IngressRoute
 metadata:
   name: pihole-websecure
   namespace: pihole-app
+  labels:
+    app.kubernetes.io/name: pihole
 spec:
   entryPoints:
     - websecure

@@ -17,7 +17,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: minio
     app.kubernetes.io/name: minio
   name: minio
   namespace: minio-app

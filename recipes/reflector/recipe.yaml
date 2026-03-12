@@ -5,6 +5,8 @@ kind: HelmChart
 metadata:
   name: reflector
   namespace: kube-system
+  labels:
+    app.kubernetes.io/name: reflector
 spec:
   repo: https://emberstack.github.io/helm-charts
   chart: reflector

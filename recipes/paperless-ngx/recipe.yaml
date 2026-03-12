@@ -27,6 +27,8 @@ kind: ConfigMap
 metadata:
   name: paperless
   namespace: paperless-app
+  labels:
+    app.kubernetes.io/name: paperless-ngx
 data:
   # https://docs.paperless-ngx.com/configuration/
   USERMAP_UID: "{{ uid(runAsUser) }}"

@@ -13,7 +13,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: wetty
     app.kubernetes.io/name: wetty
   name: wetty
   namespace: wetty-app

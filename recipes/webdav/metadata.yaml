@@ -5,7 +5,7 @@ architecture:
   - amd64
   - arm64
 url: https://github.com/dgraziotin/docker-nginx-webdav-nononsense/
-recipeVersion: "1.0.1"
+recipeVersion: "1.0.2"
 appVersion: latest
 maintainers:
   - Yuchen Shi <yuchenshi@google.com>

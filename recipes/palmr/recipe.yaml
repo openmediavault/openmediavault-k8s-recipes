@@ -18,6 +18,8 @@ kind: ConfigMap
 metadata:
   name: palmr-env
   namespace: palmr-app
+  labels:
+    app.kubernetes.io/name: palmr
 data:
   # Optional: Uncomment and configure as needed (if you don`t use, you can remove)
   # ENABLE_S3: true # Set to true to enable S3-compatible storage
@@ -77,7 +79,6 @@ metadata:
   name: palmr
   namespace: palmr-app
   labels:
-    app.kubernetes.io/instance: palmr
     app.kubernetes.io/name: palmr
 spec:
   strategy:

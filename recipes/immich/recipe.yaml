@@ -58,7 +58,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: immich-postgresql
     app.kubernetes.io/name: immich-postgresql
   name: immich-postgresql
   namespace: immich-app

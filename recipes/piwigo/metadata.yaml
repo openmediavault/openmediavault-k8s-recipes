@@ -5,7 +5,7 @@ architecture:
   - amd64
   - arm64
 url: https://www.piwigo.org/
-recipeVersion: "1.0.5"
+recipeVersion: "1.0.6"
 appVersion: latest
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

@@ -18,7 +18,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: forgejo
     app.kubernetes.io/name: forgejo
   name: forgejo
   namespace: forgejo-app
@@ -121,6 +120,8 @@ kind: IngressRoute
 metadata:
   name: forgejo-websecure
   namespace: forgejo-app
+  labels:
+    app.kubernetes.io/name: forgejo
 spec:
   entryPoints:
     - websecure

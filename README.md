@@ -1,5 +1,5 @@
-This repository contains a recipe collection for easy deployment of container-based applications with the 
-`openmediavault-k8s` Kubernetes plugin. 
+This repository contains a recipe collection for easy deployment of container-based applications with the
+`openmediavault-k8s` Kubernetes plugin.
 
 # Table of contents
 
@@ -33,13 +33,13 @@ Please note that the recipes do not have a package management-like function to a
 
 Use this translation table for the `architecture` field in the `metadata.yaml` file:
 
-| Architecture  | Also known as               |
-|---------------|-----------------------------|
-| `i386`        | `i386`                      |
-| `amd64`       | `x86_64`                    |
-| `armel`       | `armv6l`, `linux/arm/v6`    |
-| `armhf`       | `armv7l`, `linux/arm/v7`    |
-| `arm64`       | `aarch64`, `linux/arm64/v8` |
+| Architecture | Also known as               |
+| ------------ | --------------------------- |
+| `i386`       | `i386`                      |
+| `amd64`      | `x86_64`                    |
+| `armel`      | `armv6l`, `linux/arm/v6`    |
+| `armhf`      | `armv7l`, `linux/arm/v7`    |
+| `arm64`      | `aarch64`, `linux/arm64/v8` |
 
 The [architecture names](https://wiki.debian.org/SupportedArchitectures) are taken from the Debian project.
 
@@ -80,6 +80,7 @@ For the built-in features of the used template engine please have a look here:
 - [Filters](https://twig.symfony.com/doc/3.x/filters/index.html) and [functions](https://twig.symfony.com/doc/3.x/functions/index.html)
 
 ## Examples:
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -103,6 +104,7 @@ spec:
             - "--ssh-host {{ hostname() }}"
   ...
 ```
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -122,6 +124,7 @@ spec:
             path: {{ sharedfolder_path('images') }}
   ...
 ```
+
 ```yaml
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -145,8 +148,9 @@ spec:
 ## Why do recipes use subdomains instead of URL path prefixes?
 
 Using subdomains (e.g., app.mynas.internal) is preferred over path prefixes (e.g., mynas.internal/app) for accessing apps via the Traefik reverse proxy in the openmediavault Kubernetes plugin because:
-  - Cleaner and simpler routing – Subdomains keep Ingress rules modular and avoid complex path rewrites.
-  - Fewer compatibility issues – Many apps assume they run at / and break when served under a path prefix due to issues with relative URLs, static assets, or routing.
-  - Avoids URL rewriting problems – With path prefixes, you often need to rewrite URLs or modify the app, which can cause subtle bugs or failures.
-  - Better isolation and security – Subdomains help enforce security boundaries between apps.
-  - Easier scaling and maintenance – Apps on subdomains are more portable, scalable, and microservice-friendly.
+
+- Cleaner and simpler routing – Subdomains keep Ingress rules modular and avoid complex path rewrites.
+- Fewer compatibility issues – Many apps assume they run at / and break when served under a path prefix due to issues with relative URLs, static assets, or routing.
+- Avoids URL rewriting problems – With path prefixes, you often need to rewrite URLs or modify the app, which can cause subtle bugs or failures.
+- Better isolation and security – Subdomains help enforce security boundaries between apps.
+- Easier scaling and maintenance – Apps on subdomains are more portable, scalable, and microservice-friendly.
