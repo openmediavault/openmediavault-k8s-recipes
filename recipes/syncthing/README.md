@@ -1,7 +1,7 @@
 # Prerequisites
 
-To get Syncthing up and running, the K8s plugin must be configured accordingly.
-On the `Settings` page, the ports used by Syncthing must be added under `Load Balancer`.
+To get `Syncthing` up and running, the K8s plugin must be configured accordingly.
+On the `Settings` page, the ports used by `Syncthing` must be added under `Load Balancer`.
 
 Add the following ports:
 
