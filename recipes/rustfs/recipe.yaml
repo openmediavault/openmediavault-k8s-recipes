@@ -1,4 +1,8 @@
 # The app can be reached at https://rustfs.<FQDN>:8443
+{% set hostname = 'rustfs.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://rustfs.<IP>.sslip.io:8443
+# {% set hostname = 'rustfs.' ~ ipaddr() ~ '.sslip.io' %}
 {% set accessKey = 'admin' %}
 {% set secretKey = 'admin' %}
 {% set runAsUser = 'nobody' %}
@@ -94,7 +98,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`rustfs.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: rustfs-svc

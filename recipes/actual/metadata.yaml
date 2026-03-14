@@ -10,7 +10,7 @@ architecture:
   - armhf
   - arm64
 url: https://actualbudget.org/
-recipeVersion: "1.0.3"
+recipeVersion: "1.0.4"
 appVersion: "latest"
 maintainers:
   - Jan Holthuis <jan.holthuis@ruhr-uni-bochum.de>

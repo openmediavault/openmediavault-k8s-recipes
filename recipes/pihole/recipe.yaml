@@ -1,4 +1,8 @@
 # The app can be reached at https://pihole.<FQDN>:8443/admin/login
+{% set hostname = 'pihole.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://pihole.<IP>.sslip.io:8443
+# {% set hostname = 'pihole.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 {% set password = 'pihole' %}
 # Insert the name of the shared folder you want to use. Make sure the
@@ -112,7 +116,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`pihole.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: pihole

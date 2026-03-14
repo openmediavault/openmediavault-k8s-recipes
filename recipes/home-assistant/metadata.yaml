@@ -8,7 +8,7 @@ architecture:
   - armhf
   - arm64
 url: https://www.home-assistant.io/
-recipeVersion: "1.0.2"
+recipeVersion: "1.0.3"
 appVersion: stable
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>

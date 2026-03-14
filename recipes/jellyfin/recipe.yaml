@@ -1,4 +1,8 @@
 # The app can be reached at https://jellyfin.<FQDN>:8443
+{% set hostname = 'jellyfin.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://jellyfin.<IP>.sslip.io:8443
+# {% set hostname = 'jellyfin.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -109,7 +113,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`jellyfin.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: jellyfin

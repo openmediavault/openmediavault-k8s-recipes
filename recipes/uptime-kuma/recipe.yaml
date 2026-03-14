@@ -1,4 +1,8 @@
 # The app can be reached at https://uptime-kuma.<FQDN>:8443
+{% set hostname = 'uptime-kuma.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://uptime-kuma.<IP>.sslip.io:8443
+# {% set hostname = 'uptime-kuma.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 # Insert the name of the shared folder you want to use.
 {% set dataSharedFolderName = '<MODIFY>' %}
@@ -55,7 +59,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`uptime-kuma.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: uptime-kuma

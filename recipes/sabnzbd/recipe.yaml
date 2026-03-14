@@ -1,4 +1,8 @@
 # The app can be reached at https://sabnzbd.<FQDN>:8443
+{% set hostname = 'sabnzbd.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://sabnzbd.<IP>.sslip.io:8443
+# {% set hostname = 'sabnzbd.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -100,7 +104,7 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host(`sabnzbd.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: sabnzbd

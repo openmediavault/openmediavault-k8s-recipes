@@ -1,4 +1,8 @@
 # The app can be reached at https://filebrowser.<FQDN>:8443
+{% set hostname = 'filebrowser.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://filebrowser.<IP>.sslip.io:8443
+# {% set hostname = 'filebrowser.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -165,7 +169,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`filebrowser.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: filebrowser-quantum

@@ -1,4 +1,5 @@
 # The acme-dns API can be reached at https://acme-dns.<FQDN>:8443
+{% set hostname = 'acme-dns.' ~ fqdn() %}
 # Change the following variables to adapt the recipe to your needs.
 # Change this to the domain (zone) that ACME DNS should manage.
 {% set domain = 'auth.' ~ fqdn() %}
@@ -168,7 +169,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`acme-dns.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: acme-dns

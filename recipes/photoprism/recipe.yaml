@@ -1,4 +1,8 @@
 # The app can be reached at https://photoprism.<FQDN>:8443
+{% set hostname = 'photoprism.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://photoprism.<IP>.sslip.io:8443
+# {% set hostname = 'photoprism.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -261,7 +265,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`photoprism.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: photoprism

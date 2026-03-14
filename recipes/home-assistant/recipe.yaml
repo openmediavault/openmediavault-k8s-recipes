@@ -1,4 +1,8 @@
 # The app can be reached at https://home-assistant.<FQDN>:8443
+{% set hostname = 'home-assistant.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://home-assistant.<IP>.sslip.io:8443
+# {% set hostname = 'home-assistant.' ~ ipaddr() ~ '.sslip.io' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
@@ -94,7 +98,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`home-assistant.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: home-assistant

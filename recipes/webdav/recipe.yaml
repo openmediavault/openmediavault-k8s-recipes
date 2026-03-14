@@ -1,4 +1,8 @@
 # The app can be reached at https://webdav.<FQDN>:8443
+{% set hostname = 'webdav.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at: https://webdav.<IP>.sslip.io:8443
+# {% set hostname = 'webdav.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 {% set userName = 'admin' %}
 {% set userPassword = 'admin' %}
@@ -127,7 +131,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`webdav.{{ fqdn() }}`)
+    - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
         - name: webdav
