@@ -1,4 +1,4 @@
-# The app can be reached at https://<FQDN>:8080/smokeping
+# The app can be reached at http://<FQDN>:8080/smokeping
 # Change the following variables to adapt the recipe to your needs.
 {% set emailPass = '<MODIFY>' %}
 {% set emailUser = '<MODIFY>' %}
