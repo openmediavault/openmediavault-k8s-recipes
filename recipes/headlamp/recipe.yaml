@@ -1,7 +1,7 @@
 # The app can be reached at https://headlamp.<FQDN>:8443
 {% set hostname = 'headlamp.' ~ fqdn() %}
 # Alternatively, use sslip.io if you don't have a local DNS server.
-# The app can then be reached at: https://headlamp.<IP>.sslip.io:8443
+# The app can then be reached at https://headlamp.<IP>.sslip.io:8443
 # {% set hostname = 'headlamp.' ~ ipaddr() ~ '.sslip.io' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---

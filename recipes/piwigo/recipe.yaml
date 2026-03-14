@@ -1,7 +1,7 @@
 # The app can be reached at https://piwigo.<FQDN>:8443
 {% set hostname = 'piwigo.' ~ fqdn() %}
 # Alternatively, use sslip.io if you don't have a local DNS server.
-# The app can then be reached at: https://piwigo.<IP>.sslip.io:8443
+# The app can then be reached at https://piwigo.<IP>.sslip.io:8443
 # {% set hostname = 'piwigo.' ~ ipaddr() ~ '.sslip.io' %}
 # Use `mariadb` in the `MySQL-Host` form field.
 # Change the following variables to adapt the recipe to your needs.

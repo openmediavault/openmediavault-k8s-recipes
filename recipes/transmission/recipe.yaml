@@ -1,7 +1,7 @@
 # The app can be reached at https://transmission.<FQDN>:8443
 {% set hostname = 'transmission.' ~ fqdn() %}
 # Alternatively, use sslip.io if you don't have a local DNS server.
-# The app can then be reached at: https://transmission.<IP>.sslip.io:8443
+# The app can then be reached at https://transmission.<IP>.sslip.io:8443
 # {% set hostname = 'transmission.' ~ ipaddr() ~ '.sslip.io' %}
 # Change the following variables to adapt the recipe to your needs.
 {% set user = 'admin' %}
