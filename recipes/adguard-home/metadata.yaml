@@ -1,0 +1,18 @@
+name: AdGuard Home
+description: Network-wide software for blocking ads and tracking.
+section: net
+architecture:
+  - i386
+  - amd64
+  - armel
+  - armhf
+  - arm64
+url: https://adguard.com/en/adguard-home/overview.html
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/AdguardTeam/AdGuardHome/
+  - https://hub.docker.com/r/adguard/adguardhome/
+  - https://github.com/AdguardTeam/AdGuardHome/wiki/Docker
