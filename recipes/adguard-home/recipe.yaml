@@ -45,6 +45,9 @@ spec:
             - "/opt/adguardhome/conf/AdGuardHome.yaml"
             - "-w"
             - "/opt/adguardhome/work"
+          env:
+            - name: TZ
+              value: {{ tz() }}
           ports:
             - containerPort: 53
               protocol: TCP
