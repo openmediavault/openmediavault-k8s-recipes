@@ -115,19 +115,19 @@ spec:
       protocol: UDP
       port: 68
       targetPort: 68
-    - name: dot-tcp
+    - name: dot
       protocol: TCP
       port: 853
       targetPort: 853
-    - name: doq-udp
+    - name: doq
       protocol: UDP
       port: 784
       targetPort: 784
-    - name: dnstls-udp
+    - name: dnstls
       protocol: UDP
       port: 853
       targetPort: 853
-    - name: dnstls-alt-udp
+    - name: dnstls-alt
       protocol: UDP
       port: 8853
       targetPort: 8853

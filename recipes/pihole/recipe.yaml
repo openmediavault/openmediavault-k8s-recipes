@@ -48,6 +48,12 @@ spec:
               protocol: UDP
             - containerPort: 80
               protocol: TCP
+            - containerPort: 67
+              protocol: UDP
+            - containerPort: 68
+              protocol: UDP
+            - containerPort: 123
+              protocol: UDP
           env:
             - name: TZ
               value: {{ tz() }}
@@ -101,6 +107,18 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 80
+    - name: dhcp-server
+      protocol: UDP
+      port: 67
+      targetPort: 67
+    - name: dhcp-client
+      protocol: UDP
+      port: 68
+      targetPort: 68
+    - name: ntp
+      protocol: UDP
+      port: 123
+      targetPort: 123
   selector:
     app.kubernetes.io/instance: pihole
     app.kubernetes.io/name: pihole
