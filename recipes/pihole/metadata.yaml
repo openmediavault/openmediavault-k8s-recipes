@@ -8,7 +8,7 @@ architecture:
   - armhf
   - arm64
 url: https://pi-hole.net/
-recipeVersion: "1.0.3"
+recipeVersion: "1.0.4"
 appVersion: latest
 maintainers:
   - Volker Theile <volker.theile@openmediavault.org>
