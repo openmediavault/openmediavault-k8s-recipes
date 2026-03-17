@@ -1,0 +1,17 @@
+name: Kopia
+description: Kopia is a fast, secure, open-source backup server that stores encrypted snapshots of your data in any storage backend you choose.
+section: net
+architecture:
+  - amd64
+  - armhf
+  - arm64
+url: https://kopia.io/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://github.com/kopia/kopia/
+  - https://kopia.io/docs/
+  - https://raw.githubusercontent.com/kopia/kopia/master/tools/docker/docker-compose.yml
+  - https://hub.docker.com/r/kopia/kopia/
