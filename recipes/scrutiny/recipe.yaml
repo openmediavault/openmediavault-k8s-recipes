@@ -7,7 +7,7 @@
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
-{% set dataSharedFolderName = '<MODIFY>' %}
+{% set appDataSharedFolderName = '<MODIFY>' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
@@ -77,11 +77,11 @@ spec:
         - name: config
           hostPath:
             type: DirectoryOrCreate
-            path: {{ sharedfolder_path(dataSharedFolderName) }}/config
+            path: {{ sharedfolder_path(appDataSharedFolderName) }}/config
         - name: influxdb
           hostPath:
             type: DirectoryOrCreate
-            path: {{ sharedfolder_path(dataSharedFolderName) }}/influxdb
+            path: {{ sharedfolder_path(appDataSharedFolderName) }}/influxdb
 ---
 apiVersion: v1
 kind: Service
