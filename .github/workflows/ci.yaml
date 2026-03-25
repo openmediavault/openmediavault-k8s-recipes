@@ -1,0 +1,60 @@
+name: Continues Integration
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate recipe.yaml files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Validate recipe.yaml files
+        run: |
+          python3 - <<'EOF'
+          import sys
+          import re
+          import yaml
+          from pathlib import Path
+
+          errors = []
+          files = sorted(Path("recipes").rglob("recipe.yaml"))
+
+          if not files:
+              print("No recipe.yaml files found.")
+              sys.exit(1)
+
+          for path in files:
+              raw = path.read_text()
+              # Strip Jinja2 block tags ({% ... %}) and replace expressions
+              # ({{ ... }}) with a placeholder so the remainder is valid YAML.
+              stripped = re.sub(r"\{%-?\s*.*?-?%\}", "", raw)
+              stripped = re.sub(r"\{\{.*?\}\}", '__placeholder__', stripped)
+              # Remove comment lines left empty after stripping
+              stripped = "\n".join(
+                  line for line in stripped.splitlines() if line.strip() != ""
+              )
+              try:
+                  # A recipe file may contain multiple YAML documents (---)
+                  list(yaml.safe_load_all(stripped))
+                  print(f"OK  {path}")
+              except yaml.YAMLError as exc:
+                  print(f"FAIL {path}: {exc}")
+                  errors.append(str(path))
+
+          if errors:
+              print(f"\n{len(errors)} file(s) failed validation.")
+              sys.exit(1)
+          else:
+              print(f"\nAll {len(files)} recipe.yaml file(s) are valid.")
+          EOF
