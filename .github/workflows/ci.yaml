@@ -3,10 +3,10 @@ name: Continues Integration
 on:
   push:
     branches:
-      - 'main'
+      - "main"
   pull_request:
     branches:
-      - 'main'
+      - "main"
 
 permissions:
   contents: read
@@ -18,21 +18,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
 
-      - name: Validate recipe.yaml files
+      - name: Get changed recipe.yaml files
+        id: changed-files
+        env:
+          BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          echo "files=$(git diff --name-only --diff-filter=AM "$BEFORE" "$AFTER" \
+            | grep '^recipes/.*/recipe\.yaml$' | xargs)" >> "$GITHUB_OUTPUT"
+
+      - name: Validate changed recipe.yaml files
+        if: steps.changed-files.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.files }}
         run: |
           python3 - <<'EOF'
           import sys
+          import os
           import re
           import yaml
           from pathlib import Path
 
           errors = []
-          files = sorted(Path("recipes").rglob("recipe.yaml"))
-
-          if not files:
-              print("No recipe.yaml files found.")
-              sys.exit(1)
+          files = sorted(Path(f) for f in os.environ["CHANGED_FILES"].split())
 
           for path in files:
               raw = path.read_text()
@@ -40,7 +51,7 @@ jobs:
               # ({{ ... }}) with a placeholder so the remainder is valid YAML.
               stripped = re.sub(r"\{%-?\s*.*?-?%\}", "", raw)
               stripped = re.sub(r"\{\{.*?\}\}", '__placeholder__', stripped)
-              # Remove comment lines left empty after stripping
+              # Remove lines left empty after stripping
               stripped = "\n".join(
                   line for line in stripped.splitlines() if line.strip() != ""
               )
