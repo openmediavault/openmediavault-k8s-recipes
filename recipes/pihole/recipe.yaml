@@ -85,10 +85,15 @@ metadata:
 stringData:
   FTLCONF_webserver_api_password: {{ password }}
 ---
+# This Service is intentionally split into two separate Services (TCP and UDP)
+# to work around a known Kubernetes bug where applying a Service with duplicate
+# port numbers (same port, different protocols) silently drops one of the entries
+# when using `kubectl apply` (client-side apply).
+# See: https://github.com/kubernetes/kubernetes/issues/105610
 apiVersion: v1
 kind: Service
 metadata:
-  name: pihole
+  name: pihole-tcp
   namespace: pihole-app
   labels:
     app.kubernetes.io/name: pihole
@@ -99,14 +104,28 @@ spec:
       protocol: TCP
       port: 53
       targetPort: 53
-    - name: dns-udp
-      protocol: UDP
-      port: 53
-      targetPort: 53
     - name: web-interface
       protocol: TCP
       port: 80
       targetPort: 80
+  selector:
+    app.kubernetes.io/instance: pihole
+    app.kubernetes.io/name: pihole
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pihole-udp
+  namespace: pihole-app
+  labels:
+    app.kubernetes.io/name: pihole
+spec:
+  type: ClusterIP
+  ports:
+    - name: dns-udp
+      protocol: UDP
+      port: 53
+      targetPort: 53
     - name: dhcp-server
       protocol: UDP
       port: 67
@@ -137,7 +156,7 @@ spec:
     - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
-        - name: pihole
+        - name: pihole-tcp
           port: 80
   tls: {}
 ---
@@ -154,7 +173,7 @@ spec:
   routes:
     - match: HostSNI(`*`)
       services:
-        - name: pihole
+        - name: pihole-tcp
           port: dns-tcp
 ---
 apiVersion: traefik.io/v1alpha1
@@ -169,5 +188,5 @@ spec:
     - dns-udp
   routes:
     - services:
-      - name: pihole
+      - name: pihole-udp
         port: dns-udp
