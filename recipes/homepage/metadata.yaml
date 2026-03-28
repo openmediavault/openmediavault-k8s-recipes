@@ -1,0 +1,15 @@
+name: Homepage
+description: A modern, fully static, fast, secure fully proxied, highly customizable application dashboard.
+section: net
+architecture:
+  - amd64
+  - arm64
+url: https://gethomepage.dev/
+recipeVersion: "1.0.0"
+appVersion: latest
+maintainers:
+  - Volker Theile <volker.theile@openmediavault.org>
+sources:
+  - https://gethomepage.dev/
+  - https://github.com/gethomepage/homepage/
+  - https://gethomepage.dev/installation/k8s/
