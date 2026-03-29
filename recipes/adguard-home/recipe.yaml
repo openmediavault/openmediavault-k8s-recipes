@@ -88,15 +88,10 @@ spec:
             # with has access to that directory.
             path: {{ sharedfolder_path(configSharedFolderName) }}
 ---
-# This Service is intentionally split into two separate Services (TCP and UDP)
-# to work around a known Kubernetes bug where applying a Service with duplicate
-# port numbers (same port, different protocols) silently drops one of the entries
-# when using `kubectl apply` (client-side apply).
-# See: https://github.com/kubernetes/kubernetes/issues/105610
 apiVersion: v1
 kind: Service
 metadata:
-  name: adguard-home-tcp
+  name: adguard-home
   namespace: adguard-home-app
   labels:
     app.kubernetes.io/name: adguard-home
@@ -107,36 +102,14 @@ spec:
       protocol: TCP
       port: 53
       targetPort: 53
-    - name: web-interface
-      protocol: TCP
-      port: 80
-      targetPort: 80
-    - name: dot
-      protocol: TCP
-      port: 853
-      targetPort: 853
-    - name: dnscrypt-tcp
-      protocol: TCP
-      port: 5443
-      targetPort: 5443
-  selector:
-    app.kubernetes.io/instance: adguard-home
-    app.kubernetes.io/name: adguard-home
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: adguard-home-udp
-  namespace: adguard-home-app
-  labels:
-    app.kubernetes.io/name: adguard-home
-spec:
-  type: ClusterIP
-  ports:
     - name: dns-udp
       protocol: UDP
       port: 53
       targetPort: 53
+    - name: web-interface
+      protocol: TCP
+      port: 80
+      targetPort: 80
     - name: dhcp-server
       protocol: UDP
       port: 67
@@ -145,6 +118,10 @@ spec:
       protocol: UDP
       port: 68
       targetPort: 68
+    - name: dot
+      protocol: TCP
+      port: 853
+      targetPort: 853
     - name: doq
       protocol: UDP
       port: 784
@@ -157,6 +134,10 @@ spec:
       protocol: UDP
       port: 8853
       targetPort: 8853
+    - name: dnscrypt-tcp
+      protocol: TCP
+      port: 5443
+      targetPort: 5443
     - name: dnscrypt-udp
       protocol: UDP
       port: 5443
@@ -179,7 +160,7 @@ spec:
     - match: Host(`{{ hostname }}`)
       kind: Rule
       services:
-        - name: adguard-home-tcp
+        - name: adguard-home
           port: 80
   tls: {}
 ---
@@ -196,7 +177,7 @@ spec:
   routes:
     - match: HostSNI(`*`)
       services:
-        - name: adguard-home-tcp
+        - name: adguard-home
           port: dns-tcp
 ---
 apiVersion: traefik.io/v1alpha1
@@ -211,5 +192,5 @@ spec:
     - dns-udp
   routes:
     - services:
-      - name: adguard-home-udp
+      - name: adguard-home
         port: dns-udp
