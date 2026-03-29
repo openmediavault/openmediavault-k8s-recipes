@@ -20,6 +20,7 @@ The following rules should be observed in the recipes:
 - Make use of a `NodePort` service only if the application does not work behind a reverse proxy.
 - Make use of the `HelmChart` resource if the application can be installed via Helm.
 - Make use of [hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) volumes to leverage [shared folders](https://docs.openmediavault.org/en/latest/administration/storage/sharedfolders.html) on the host system.
+- If a recipe is going to expose a service over TCP and UDP on a same port, then please check this [article](https://ben-lab.github.io/kubernetes-UDP-TCP-bug-same-port/) how to workaround a [bug in Kubernetes](https://github.com/kubernetes/kubernetes/issues/105610).
 
 # metadata.yaml
 
