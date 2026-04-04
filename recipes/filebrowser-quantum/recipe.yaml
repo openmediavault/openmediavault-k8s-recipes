@@ -42,6 +42,9 @@ data:
         - path: "/srv"
           config:
             defaultEnabled: true
+      filesystem:
+        createFilePermission: "664"
+        createDirectoryPermission: "775"
     auth:
       adminUsername: "{{ adminUsername }}"
     userDefaults:
