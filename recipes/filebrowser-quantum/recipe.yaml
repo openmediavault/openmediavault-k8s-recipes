@@ -101,8 +101,6 @@ spec:
         env:
         - name: FILEBROWSER_CONFIG
           value: /data/config.yaml
-        - name: FILEBROWSER_DATABASE
-          value: /data/database.db
         envFrom:
         - secretRef:
             name: filebrowser-quantum
