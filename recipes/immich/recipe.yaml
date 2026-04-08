@@ -182,7 +182,7 @@ metadata:
 spec:
   repo: https://immich-app.github.io/immich-charts
   chart: immich
-  version: 0.10.3
+  version: 0.11.1
   targetNamespace: immich-app
   valuesContent: |-
     defaultPodOptions:
@@ -200,7 +200,9 @@ spec:
         containers:
           main:
             image:
-              tag: v2.5.6
+              # Use rolling major version tag to automatically pick latest 2.x release
+              tag: v2
+              pullPolicy: IfNotPresent
     immich:
       persistence:
         library:
