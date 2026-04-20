@@ -158,7 +158,7 @@ spec:
             # Insert the name of the shared folder you want to use.
             # Make sure the configured UID/GID the container is running
             # with has access to that directory.
-            path: {{ sharedfolder_path(mariadbSharedFolderName) }}
+            path: {{ sharedfolder_path(mariaDbSharedFolderName) }}
 ---
 apiVersion: v1
 kind: Secret
