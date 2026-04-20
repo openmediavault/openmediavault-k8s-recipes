@@ -79,8 +79,8 @@ spec:
     mariadb:
       enabled: true
       auth:
-        password: {{ dbPassword }}
-        rootPassword: {{ dbRootPassword }}
+        password: "{{ dbPassword }}"
+        rootPassword: "{{ dbRootPassword }}"
     persistence:
       data:
         enabled: true
