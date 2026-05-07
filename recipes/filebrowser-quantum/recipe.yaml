@@ -7,7 +7,7 @@
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
 {% set adminUsername = 'admin' %}
-{% set adminPassword = 'admin' %}
+# {% set adminPassword = 'admin' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
@@ -132,16 +132,16 @@ spec:
           # Make sure the configured UID/GID the container is running
           # with has access to that directory.
           path: {{ sharedfolder_path(rootSharedFolderName) }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: filebrowser-quantum
-  namespace: filebrowser-quantum-app
-  labels:
-    app.kubernetes.io/name: filebrowser-quantum
-stringData:
-  FILEBROWSER_ADMIN_PASSWORD: {{ adminPassword }}
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: filebrowser-quantum
+#   namespace: filebrowser-quantum-app
+#   labels:
+#     app.kubernetes.io/name: filebrowser-quantum
+# stringData:
+#   FILEBROWSER_ADMIN_PASSWORD: {{ adminPassword }}
 ---
 apiVersion: v1
 kind: Service
