@@ -92,12 +92,6 @@ spec:
       - name: pyload
         image: lscr.io/linuxserver/pyload-ng:latest
         imagePullPolicy: Always
-        securityContext:
-          runAsNonRoot: true
-          # Specifies the UID for the process running in the container.
-          runAsUser: {{ uid(runAsUser) }}
-          # Specifies the GID for the process running in the container.
-          runAsGroup: {{ gid(runAsGroup) }}
         ports:
         - containerPort: 8000
           name: http
@@ -113,9 +107,9 @@ spec:
             name: data
         env:
           - name: PUID
-            value: "1000"
+            value: "{{ uid(runAsUser) }}"
           - name: PGID
-            value: "1000"
+            value: "{{ gid(runAsGroup) }}"
           - name: TZ
             value: {{ tz() }}
       volumes:
