@@ -74,7 +74,7 @@ data:
 
     [database]
     # Database engine to use, sqlite3 or postgres
-    engine = "sqlite3"
+    engine = "sqlite"
     # Connection string, filename for sqlite3 and postgres://$username:$password@$host/$db_name for postgres
     connection = "/var/lib/acme-dns/acme-dns.db"
     # connection = "postgres://user:password@localhost/acmedns_db"
