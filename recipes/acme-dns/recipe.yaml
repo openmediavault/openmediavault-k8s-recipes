@@ -73,9 +73,9 @@ data:
     debug = false
 
     [database]
-    # Database engine to use, sqlite3 or postgres
+    # Database engine to use, sqlite or postgres
     engine = "sqlite"
-    # Connection string, filename for sqlite3 and postgres://$username:$password@$host/$db_name for postgres
+    # Connection string, filename for sqlite and postgres://$username:$password@$host/$db_name for postgres
     connection = "/var/lib/acme-dns/acme-dns.db"
     # connection = "postgres://user:password@localhost/acmedns_db"
 
