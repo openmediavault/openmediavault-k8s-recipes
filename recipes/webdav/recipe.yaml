@@ -57,7 +57,7 @@ data:
   PUID: "{{ uid(runAsUser) }}"
   PGID: "{{ gid(runAsGroup) }}"
   TZ: "{{ tz() }}"
-  SERVER_NAMES: "webdav.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}"
+  SERVER_NAMES: "webdav.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('lbports.item') | filter(p => p.name == 'websecure') | first | get('exposedport') }}"
   CLIENT_MAX_BODY_SIZE: "120M" # must end with M(egabytes) or G(igabytes)
   TIMEOUTS_S: "1200" # these are seconds
 ---

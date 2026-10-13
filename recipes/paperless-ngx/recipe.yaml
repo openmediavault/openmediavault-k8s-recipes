@@ -3,6 +3,7 @@
 # Alternatively, use sslip.io if you don't have a local DNS server.
 # The app can then be reached at https://paperless.<IP>.sslip.io:8443
 # {% set hostname = 'paperless.' ~ ipaddr() ~ '.sslip.io' %}
+{% set webSecurePort = conf_get('conf.service.k8s') | get('lbports.item') | filter(p => p.name == 'websecure') | first | get('exposedport') %}
 # Change the following variables to adapt the recipe to your needs.
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
@@ -40,9 +41,9 @@ data:
   PAPERLESS_ADMIN_USER: "{{ adminUser }}"
   PAPERLESS_FILENAME_DATE_ORDER: "YMD"
   PAPERLESS_DATE_ORDER: "DMY"
-  PAPERLESS_URL: "https://paperless.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}"
+  PAPERLESS_URL: "https://{{ hostname }}:{{ webSecurePort }}"
   PAPERLESS_CSRF_TRUSTED_ORIGINS: "https://*.{{ fqdn() }}"
-  PAPERLESS_ALLOWED_HOSTS: "paperless.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}"
+  PAPERLESS_ALLOWED_HOSTS: "{{ hostname }}:{{ webSecurePort }}"
   PAPERLESS_OCR_LANGUAGE: "{{ ocrLanguage }}"
 ---
 apiVersion: v1

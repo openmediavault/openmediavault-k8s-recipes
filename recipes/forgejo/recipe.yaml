@@ -51,7 +51,7 @@ spec:
             - name: FORGEJO__server__DOMAIN
               value: "forgejo.{{ fqdn() }}"
             - name: FORGEJO__server__ROOT_URL
-              value: "https://forgejo.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('websecureport') }}/"
+              value: "https://forgejo.{{ fqdn() }}:{{ conf_get('conf.service.k8s') | get('lbports.item') | filter(p => p.name == 'websecure') | first | get('exposedport') }}/"
             - name: FORGEJO__server__SSH_DOMAIN
               value: "{{ fqdn() }}"
             - name: FORGEJO__server__SSH_PORT
