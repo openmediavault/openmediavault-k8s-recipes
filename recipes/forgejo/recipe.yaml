@@ -10,7 +10,6 @@
 # configured UID/GID the container is running with has access to that
 # directory.
 {% set homeSharedFolderName = '<MODIFY>' %}
-{% set configSharedFolderName = '<MODIFY>' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
@@ -41,7 +40,7 @@ spec:
     spec:
       containers:
         - name: forgejo
-          image: codeberg.org/forgejo/forgejo:12-rootless
+          image: codeberg.org/forgejo/forgejo:15-rootless
           imagePullPolicy: Always
           env:
             - name: USER_UID
@@ -75,8 +74,6 @@ spec:
           volumeMounts:
              - name: home
                mountPath: /var/lib/gitea
-             - name: config
-               mountPath: /etc/gitea
              - name: timezone
                mountPath: /timezone
                readOnly: true
@@ -89,10 +86,6 @@ spec:
           hostPath:
             type: Directory
             path: {{ sharedfolder_path(homeSharedFolderName) }}
-        - name: config
-          hostPath:
-            type: Directory
-            path: {{ sharedfolder_path(configSharedFolderName) }}
         - name: timezone
           hostPath:
             type: File
