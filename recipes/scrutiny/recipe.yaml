@@ -64,6 +64,7 @@ spec:
               mountPath: /opt/scrutiny/config
             - name: influxdb
               mountPath: /opt/scrutiny/influxdb
+          terminationMessagePath: /var/run/termination-log
       restartPolicy: Always
       volumes:
         - name: dev
