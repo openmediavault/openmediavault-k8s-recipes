@@ -1,0 +1,101 @@
+# The app can be reached at https://radicale.<FQDN>:8443
+{% set hostname = 'radicale.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at https://radicale.<IP>.sslip.io:8443
+# {% set hostname = 'radicale.' ~ ipaddr() ~ '.sslip.io' %}
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set configSharedFolderName = '<MODIFY' %}
+{% set dataSharedFolderName = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: radicale-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: radicale
+  name: radicale
+  namespace: radicale-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: radicale
+      app.kubernetes.io/name: radicale
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: radicale
+        app.kubernetes.io/name: radicale
+    spec:
+      containers:
+        - image: ghcr.io/kozea/radicale:stable
+          imagePullPolicy: Always
+          name: radicale
+          ports:
+            - containerPort: 5232
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/radicale
+              name: config
+            - mountPath: /var/lib/radicale
+              name: data
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: {{ uid(runAsUser) }}
+            runAsGroup: {{ gid(runAsGroup) }}
+      restartPolicy: Always
+      volumes:
+        - name: config
+          hostPath:
+            type: Directory
+            path: {{ sharedfolder_path(configSharedFolderName) }}
+        - name: data
+          hostPath:
+            type: Directory
+            path: {{ sharedfolder_path(dataSharedFolderName) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: radicale
+  name: radicale
+  namespace: radicale-app
+spec:
+  ports:
+    - name: "5232"
+      port: 5232
+      targetPort: 5232
+  selector:
+    app.kubernetes.io/instance: radicale
+    app.kubernetes.io/name: radicale
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: radicale-websecure
+  namespace: radicale-app
+  labels:
+    app.kubernetes.io/name: radicale
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ hostname }}`)
+      kind: Rule
+      services:
+        - name: radicale
+          port: 5232
+  tls: {}
