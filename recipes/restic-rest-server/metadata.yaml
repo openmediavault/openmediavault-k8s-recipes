@@ -4,12 +4,11 @@ section: utils
 architecture:
   - i386
   - amd64
-  - armel
   - armhf
   - arm64
 url: https://restic.net/
 recipeVersion: "1.0.0"
-appVersion: "1.4.0"
+appVersion: "0.14.0"
 maintainers:
   - LogExE <awesome149712@gmail.com>
 sources:

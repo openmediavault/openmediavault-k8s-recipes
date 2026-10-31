@@ -1,13 +1,25 @@
-{%- set hostname = 'restic.' ~ fqdn() %}
-# Should match your shared folder name
-{%- set resticDataFolderName = 'restic-data' %}
-# Probably fine for default share settings. Change user/group if needed
-{%- set runAsUser = 'nobody' %}
-{%- set runAsGroup = 'users' %}
-{%- set resticOptions = '--private-repos --append-only' %}
-# You need to generate your entries using htpasswd linux utility
-# e.g. htpasswd -nB myuser (it will prompt password from terminal)
-{%- set resticHtpasswd = '<your-htpasswd-generated-entries>' -%}
+# The app can be reached at https://restic.<FQDN>:8443
+{% set hostname = 'restic.' ~ fqdn() %}
+# Alternatively, use sslip.io if you don't have a local DNS server.
+# The app can then be reached at https://restic.<IP>.sslip.io:8443
+# {% set hostname = 'restic.' ~ ipaddr() ~ '.sslip.io' %}
+# Change the following variables to adapt the recipe to your needs.
+{% set runAsUser = 'nobody' %}
+{% set runAsGroup = 'users' %}
+# Insert the name of the shared folder you want to use. Make sure the
+# configured UID/GID the container is running with has access to that
+# directory.
+{% set dataSharedFolderName = '<MODIFY>' %}
+# Additional rest-server options.
+# --private-repos: every user can only access repositories below their own
+#   path, e.g. rest:https://<user>:<password>@<hostname>:8443/<user>/
+# --append-only: clients can only add data, they can not delete or prune
+#   snapshots. Remove this option if you want to prune from the client.
+{% set resticOptions = '--private-repos --append-only' %}
+# Content of the .htpasswd file. Generate the entries with the htpasswd
+# utility, e.g. `htpasswd -nB myuser`. Separate multiple entries with '\n'.
+{% set resticHtpasswd = '<MODIFY>' %}
+# !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
 apiVersion: v1
 kind: Namespace
@@ -19,6 +31,8 @@ kind: Secret
 metadata:
   name: restic-rest-htpasswd
   namespace: restic-rest
+  labels:
+    app.kubernetes.io/name: restic-rest
 stringData:
   .htpasswd: |
     {{ resticHtpasswd }}
@@ -28,14 +42,21 @@ kind: Deployment
 metadata:
   name: restic-rest
   namespace: restic-rest
+  labels:
+    app.kubernetes.io/name: restic-rest
 spec:
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: restic-rest
+      app.kubernetes.io/instance: restic-rest
+      app.kubernetes.io/name: restic-rest
   template:
     metadata:
       labels:
-        app: restic-rest
+        app.kubernetes.io/instance: restic-rest
+        app.kubernetes.io/name: restic-rest
     spec:
       containers:
         - name: main
@@ -47,7 +68,10 @@ spec:
             - name: OPTIONS
               value: "{{ resticOptions }}"
           securityContext:
+            runAsNonRoot: true
+            # Specifies the UID for the process running in the container.
             runAsUser: {{ uid(runAsUser) }}
+            # Specifies the GID for the process running in the container.
             runAsGroup: {{ gid(runAsGroup) }}
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -56,18 +80,17 @@ spec:
             capabilities:
               drop:
                 - ALL
-          # TODO: enable when a new version will be released (/healthz added in main https://github.com/restic/rest-server/pull/259)
-          # readinessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: http
-          #   failureThreshold: 30
-          #   periodSeconds: 1
-          # livenessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: http
-          #   periodSeconds: 20
+          # TODO: switch to httpGet on /healthz when a new version is released
+          # (added in main https://github.com/restic/rest-server/pull/259).
+          readinessProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: 30
+            periodSeconds: 1
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 20
           volumeMounts:
             - name: data
               mountPath: /data
@@ -78,10 +101,11 @@ spec:
             - name: http
               protocol: TCP
               containerPort: 8000
+      restartPolicy: Always
       volumes:
         - name: data
           hostPath:
-            path: "{{ sharedfolder_path(resticDataFolderName) }}"
+            path: {{ sharedfolder_path(dataSharedFolderName) }}
             type: Directory
         - name: htpasswd
           secret:
@@ -92,10 +116,13 @@ kind: Service
 metadata:
   name: restic-rest
   namespace: restic-rest
+  labels:
+    app.kubernetes.io/name: restic-rest
 spec:
   type: ClusterIP
   selector:
-    app: restic-rest
+    app.kubernetes.io/instance: restic-rest
+    app.kubernetes.io/name: restic-rest
   ports:
     - name: http
       port: 8000
@@ -104,8 +131,10 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: restic-rest
+  name: restic-rest-websecure
   namespace: restic-rest
+  labels:
+    app.kubernetes.io/name: restic-rest
 spec:
   entryPoints:
     - websecure
