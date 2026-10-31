@@ -1,0 +1,118 @@
+{%- set hostname = 'restic.' ~ fqdn() %}
+# Should match your shared folder name
+{%- set resticDataFolderName = 'restic-data' %}
+# Probably fine for default share settings. Change user/group if needed
+{%- set runAsUser = 'nobody' %}
+{%- set runAsGroup = 'users' %}
+{%- set resticOptions = '--private-repos --append-only' %}
+# You need to generate your entries using htpasswd linux utility
+# e.g. htpasswd -nB myuser (it will prompt password from terminal)
+{%- set resticHtpasswd = '<your-htpasswd-generated-entries>' -%}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: restic-rest
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: restic-rest-htpasswd
+  namespace: restic-rest
+stringData:
+  .htpasswd: |
+    {{ resticHtpasswd }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restic-rest
+  namespace: restic-rest
+spec:
+  selector:
+    matchLabels:
+      app: restic-rest
+  template:
+    metadata:
+      labels:
+        app: restic-rest
+    spec:
+      containers:
+        - name: main
+          image: docker.io/restic/rest-server:0.14.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PASSWORD_FILE
+              value: "/run/secrets/restic-rest/.htpasswd"
+            - name: OPTIONS
+              value: "{{ resticOptions }}"
+          securityContext:
+            runAsUser: {{ uid(runAsUser) }}
+            runAsGroup: {{ gid(runAsGroup) }}
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          # TODO: enable when a new version will be released (/healthz added in main https://github.com/restic/rest-server/pull/259)
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: http
+          #   failureThreshold: 30
+          #   periodSeconds: 1
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: http
+          #   periodSeconds: 20
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: htpasswd
+              mountPath: /run/secrets/restic-rest
+              readOnly: true
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 8000
+      volumes:
+        - name: data
+          hostPath:
+            path: "{{ sharedfolder_path(resticDataFolderName) }}"
+            type: Directory
+        - name: htpasswd
+          secret:
+            secretName: restic-rest-htpasswd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restic-rest
+  namespace: restic-rest
+spec:
+  type: ClusterIP
+  selector:
+    app: restic-rest
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: restic-rest
+  namespace: restic-rest
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ hostname }}`)
+      kind: Rule
+      services:
+        - name: restic-rest
+          port: http
+  tls: {}
