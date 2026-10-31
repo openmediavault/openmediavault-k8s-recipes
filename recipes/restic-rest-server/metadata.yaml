@@ -1,0 +1,17 @@
+name: Restic REST Server
+description: "Restic REST server for remote backups"
+section: utils
+architecture:
+  - i386
+  - amd64
+  - armhf
+  - arm64
+url: https://restic.net/
+recipeVersion: "1.0.0"
+appVersion: "0.14.0"
+maintainers:
+  - LogExE <awesome149712@gmail.com>
+sources:
+  - https://github.com/restic/rest-server
+  - https://hub.docker.com/r/restic/rest-server/tags
+  - https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html#rest-server
