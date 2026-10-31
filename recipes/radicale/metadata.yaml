@@ -1,0 +1,18 @@
+name: Radicale
+description: >
+  Radicale is a small but powerful CalDAV (calendars, to-do lists) and
+  CardDAV (contacts) server.
+section: web
+architecture:
+  - amd64
+  - armhf
+  - arm64
+url: https://radicale.org/v3.html
+recipeVersion: "1.0.0"
+appVersion: "stable"
+maintainers:
+  - Aaron Nédélec <aaron@anedelec.ca>
+sources:
+  - https://radicale.org/v3.html
+  - https://github.com/Kozea/Radicale
+  - https://github.com/Kozea/Radicale/wiki/Installing-on-Docker
