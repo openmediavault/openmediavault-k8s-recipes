@@ -7,7 +7,6 @@
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
 {% set adminUsername = 'admin' %}
-# {% set adminPassword = 'admin' %}
 # Insert the name of the shared folder you want to use. Make sure the
 # configured UID/GID the container is running with has access to that
 # directory.
@@ -30,23 +29,36 @@ metadata:
 data:
   config.yaml: |
     # https://github.com/gtsteffaniak/filebrowser/wiki/Full-Config-Example
-    server:
-      disableUpdateCheck: true
+    http:
       port: 80
       baseURL: "/"
+    server:
+      disableUpdateCheck: true
       logging:
         - levels: "info|warning|error"
       cacheDir: "/data/tmp"
-      database: "/data/database.db"
+      # Uncomment this once to migrate an existing v1 database
+      # (/data/database.db) to the new SQLite database.
+      # database:
+      #   migrateFrom: "/data/database.db"
       sources:
         - path: "/srv"
           config:
             defaultEnabled: true
+            defaultPermissions:
+              view: true
+              download: true
+              modify: false
+              create: false
+              delete: false
       filesystem:
         createFilePermission: "664"
         createDirectoryPermission: "775"
     auth:
       adminUsername: "{{ adminUsername }}"
+      methods:
+        password:
+          enabled: true
     userDefaults:
       preview:
         image: true
@@ -54,14 +66,16 @@ data:
         video: false
         office: false
         highQuality: false
-      darkMode: true
-      disableSettings: false
-      singleClick: false
-      permissions:
-        admin: false
-        modify: false
-        share: false
-        api: false
+      ui:
+        darkMode: true
+      listing:
+        singleClick: false
+      account:
+        disableSettings: false
+        permissions:
+          admin: false
+          share: false
+          api: false
 ---
 apiVersion: apps/v1
 kind: Deployment
