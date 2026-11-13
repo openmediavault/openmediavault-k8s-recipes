@@ -180,9 +180,9 @@ metadata:
   labels:
     app.kubernetes.io/name: immich
 spec:
-  repo: https://immich-app.github.io/immich-charts
+  repo: oci://ghcr.io/immich-app/immich-charts/immich
   chart: immich
-  version: 0.11.1
+  version: 0.13.4
   targetNamespace: immich-app
   valuesContent: |-
     defaultPodOptions:
@@ -200,8 +200,8 @@ spec:
         containers:
           main:
             image:
-              # Use rolling major version tag to automatically pick latest 2.x release
-              tag: v2
+              # Use rolling major version tag to automatically pick latest 3.x release
+              tag: v3
               pullPolicy: IfNotPresent
     immich:
       persistence:

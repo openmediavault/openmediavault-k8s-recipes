@@ -52,6 +52,6 @@ avoids re-downloading them after a pod restart.
 
 ## Image versioning
 
-This recipe uses the **`v2`** rolling tag, which always points
-to the latest 2.x release of Immich. New versions are picked up
-automatically whenever the pod restarts and the existing v2 image was deleted before.
+This recipe uses the **`v3`** rolling tag, which always points
+to the latest 3.x release of Immich. New versions are picked up
+automatically whenever the pod restarts and the existing v3 image was deleted before.
