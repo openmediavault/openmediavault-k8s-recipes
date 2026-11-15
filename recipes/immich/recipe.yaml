@@ -180,8 +180,7 @@ metadata:
   labels:
     app.kubernetes.io/name: immich
 spec:
-  repo: oci://ghcr.io/immich-app/immich-charts/immich
-  chart: immich
+  chart: oci://ghcr.io/immich-app/immich-charts/immich
   version: 0.13.4
   targetNamespace: immich-app
   valuesContent: |-
