@@ -19,7 +19,7 @@ metadata:
   labels:
     app.kubernetes.io/name: ollama
 spec:
-  repo: https://otwld.github.io/ollama-helm/
+  repo: https://helm.otwld.com/
   chart: ollama
   targetNamespace: ollama-app
   valuesContent: |-
