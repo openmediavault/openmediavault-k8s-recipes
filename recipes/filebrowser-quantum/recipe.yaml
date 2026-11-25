@@ -7,10 +7,14 @@
 {% set runAsUser = 'nobody' %}
 {% set runAsGroup = 'users' %}
 {% set adminUsername = 'admin' %}
-# Insert the name of the shared folder you want to use. Make sure the
-# configured UID/GID the container is running with has access to that
-# directory.
+# Insert the names of the shared folders you want to use. Make sure the
+# configured UID/GID the container is running with has access to these
+# directories.
+# Shared folder for the application data (config, database and cache).
+# It is mounted at `/data` in the container.
 {% set dataSharedFolderName = '<MODIFY>' %}
+# Shared folder with the files that are browsed and managed via the web UI.
+# It is mounted at `/srv` in the container.
 {% set rootSharedFolderName = '<MODIFY>' %}
 # !!! Only modify the following manifest if you need to make custom changes. !!!
 ---
@@ -37,10 +41,11 @@ data:
       logging:
         - levels: "info|warning|error"
       cacheDir: "/data/tmp"
-      # Uncomment this once to migrate an existing v1 database
-      # (/data/database.db) to the new SQLite database.
-      # database:
-      #   migrateFrom: "/data/database.db"
+      database:
+        path: "/data/database.sqlite"
+        # Uncomment this once to migrate an existing v1 database
+        # (/data/database.db) to the new SQLite database.
+        # migrateFrom: "/data/database.db"
       sources:
         - path: "/srv"
           config:
@@ -115,9 +120,6 @@ spec:
         env:
         - name: FILEBROWSER_CONFIG
           value: /data/config.yaml
-        envFrom:
-        - secretRef:
-            name: filebrowser-quantum
         volumeMounts:
         - name: data
           mountPath: "/data"
@@ -146,16 +148,6 @@ spec:
           # Make sure the configured UID/GID the container is running
           # with has access to that directory.
           path: {{ sharedfolder_path(rootSharedFolderName) }}
-# ---
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: filebrowser-quantum
-#   namespace: filebrowser-quantum-app
-#   labels:
-#     app.kubernetes.io/name: filebrowser-quantum
-# stringData:
-#   FILEBROWSER_ADMIN_PASSWORD: {{ adminPassword }}
 ---
 apiVersion: v1
 kind: Service
